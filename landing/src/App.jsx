@@ -2,10 +2,10 @@ import { useState } from 'react'
 import './App.css'
 
 const SCREENS = [
-  { id: 'today',     label: 'Today',     src: '/screens/today.png',     title: 'Daily Dose Tracker', desc: "See all your medications for today at a glance. Mark them taken, snooze a reminder, or check what's coming next — in seconds." },
-  { id: 'meds',      label: 'My Meds',   src: '/screens/meds.png',      title: 'Your Digital Medicine Cabinet', desc: 'All your medications in one place. Continuous use, as-needed, and historical records — always organised and up to date.' },
-  { id: 'chat',      label: 'Assistant', src: '/screens/chat.png',       title: 'AI Health Assistant', desc: 'Not feeling well? Tell MedPal. It cross-checks your symptoms with your medication history and connects you to your care team when needed.' },
-  { id: 'analytics', label: 'Reports',   src: '/screens/analytics.png', title: 'Health Reports', desc: 'Track your adherence over time. Share a full medication history with your doctor in one tap — no guesswork, just real data.' },
+  { id: 'today',     label: 'Today',     src: '/screens/today.png',     title: 'Daily Dose Tracker', desc: "See every medication scheduled for today. Mark doses taken, snooze a reminder, or check what's next — in seconds, one-handed." },
+  { id: 'meds',      label: 'My Meds',   src: '/screens/meds.png',      title: 'Your Digital Medicine Cabinet', desc: 'Every medication in one place — daily use, as-needed, and past treatments. Scan a new prescription or add one manually at any time.' },
+  { id: 'chat',      label: 'Assistant', src: '/screens/chat.png',       title: 'MedPal Assistant', desc: "Feeling off? Tell MedPal. It cross-checks your symptoms against your current medications and can alert your doctor or care team if needed." },
+  { id: 'analytics', label: 'Reports',   src: '/screens/analytics.png', title: 'Reports & Adherence', desc: 'Track your adherence over 30 days. Log mood and side effects daily. Flip on Doctor Mode to share a clean summary at your next appointment.' },
 ]
 
 const FEATURE_GROUPS = [
@@ -13,47 +13,49 @@ const FEATURE_GROUPS = [
     category: 'Prescription Management',
     icon: '📋',
     features: [
-      'Automatic sync when your doctor sends a prescription',
-      'Snap any paper prescription — OCR extracts name, dosage & instructions instantly',
-      'Reads handwritten doctor notes accurately',
-      'Supports all standard prescription formats',
+      'Upload any PDF prescription — extracted directly, no AI needed, instant',
+      'Snap a photo of a paper or handwritten prescription — AI reads it in seconds',
+      'Review and confirm every medication before anything is saved — non-skippable safety gate',
+      'Drug names matched against the official INFARMED medical database',
     ],
   },
   {
     category: 'Smart Reminders & Tracking',
     icon: '🔔',
     features: [
-      'Personalised intake reminders based on your exact dosing schedule',
+      'Personalised intake reminders based on your exact schedule and routine',
       'Refill alerts before you run out — no gaps in treatment',
-      'AI voice calls for users who miss app notifications — built for elderly users',
+      'Daily mood check-in and side effect logging — know your patterns over time',
+      'AI voice calls for users who miss app notifications — designed for elderly users',
     ],
   },
   {
     category: 'Pill Organiser Verification',
     icon: '📦',
     features: [
-      'Snap a photo of your MedPal Smart Box',
-      'AI checks each slot — confirms correct medication and dosage',
-      'Flags mismatches or missing pills before you take them',
+      'Snap a photo of your filled MedPal Smart Box',
+      'AI verifies each slot — confirms correct medication and dose',
+      'Flags mismatches or empty slots before you take them',
     ],
   },
   {
     category: 'Medical Support Team',
     icon: '🩺',
     features: [
-      'Real doctors and pharmacists available to answer your prescription questions',
+      'Real doctors and pharmacists answer your prescription questions',
       'AI triages your question and routes it to the right specialist instantly',
-      'Fully context-aware — your team knows your exact prescriptions and history',
-      'No waiting rooms, no hold music — answers when you need them',
+      'Your team knows your exact medications and history — no re-explaining',
+      'No waiting rooms, no hold music',
     ],
   },
   {
     category: 'Analytics & Doctor Connectivity',
     icon: '📊',
     features: [
-      'Visual dashboard of all active, paused, and completed medications',
-      'One-tap sharing of adherence trends and full history with your doctor',
-      'Ready-to-share export for appointments and medical reviews',
+      'Clean dashboard of all active, paused, and completed medications',
+      'One-tap Doctor Mode — share adherence trends and full history instantly',
+      'Side effects and mood logged daily, visible to your care team',
+      'Export-ready report for appointments and medical reviews',
     ],
   },
   {
@@ -61,22 +63,34 @@ const FEATURE_GROUPS = [
     icon: '🎓',
     features: [
       'AI-generated visual guides for your medication or exercise routine',
-      'Step-by-step animated instructions appended to your care plan',
-      'Full calendar sync — your medication schedule in your existing calendar',
+      'Step-by-step animated instructions linked to your care plan',
+      'Full calendar sync — your medication schedule in Google or Apple Calendar',
     ],
   },
 ]
 
 const PATIENT_BENEFITS = [
-  { icon: '🛡️', title: 'Safety in every dose', desc: 'Smart reminders adapt to your routine, reducing errors and giving you peace of mind every day.' },
-  { icon: '🤝', title: 'A companion that cares', desc: 'A voice and chat assistant that listens to how you feel and checks in — more than a reminder, a health partner.' },
-  { icon: '⚡', title: 'Zero effort setup', desc: 'Use Magic Scan to configure everything in seconds. Point, scan, done — MedPal handles the rest automatically.' },
+  { icon: '⚡', title: 'Effortless independence', desc: 'Use Magic Scan to set everything up in seconds. Point the camera, confirm your medications, and MedPal organises your entire schedule automatically.' },
+  { icon: '🛡️', title: 'Safety in every dose', desc: 'Smart reminders adapt to your routine and confirm you loaded the box correctly. Reduce errors and feel relaxed every day.' },
+  { icon: '🤝', title: 'A friend who cares', desc: 'A voice and chat assistant that listens to how you feel and understands what you are going through — more than an alarm, a companion.' },
+]
+
+const CAREGIVER_BENEFITS = [
+  { icon: '🔔', title: 'Remote monitoring', desc: 'Receive real-time notifications when your family member takes — or forgets — their medication. Stay informed without being intrusive.' },
+  { icon: '📦', title: 'Proactive care', desc: 'MedPal alerts you when medication stocks are running low so you can reorder in time. No last-minute pharmacy runs.' },
+  { icon: '💬', title: 'Always in the loop', desc: 'Access a clear, simple view of their adherence and mood logs — the full picture, without needing to ask.' },
 ]
 
 const DOCTOR_BENEFITS = [
-  { icon: '📋', title: 'Real Adherence Reports', desc: 'See exactly how and when your patient takes their medication. Eliminate guesswork and make better clinical decisions.' },
-  { icon: '⏱️', title: 'Optimise Every Consultation', desc: 'Turn 10 minutes of history-taking into a 30-second review. Full medication timeline, ready when you walk in.' },
-  { icon: '⚠️', title: 'Interaction Alerts', desc: 'The AI monitors current medications in real time and surfaces potential interactions before they become serious events.' },
+  { icon: '📋', title: 'Real Adherence Reports', desc: 'See exactly when and how your patient takes their medication. Eliminate memory bias. Get a clear overview of the treatment routine between consultations.' },
+  { icon: '⏱️', title: 'Consultation Optimisation', desc: 'Transform "Doctor Mode" into a rapid diagnostic tool with clear charts. Spend less time collecting history and more time on direct care.' },
+  { icon: '⚠️', title: 'Interaction Alerts', desc: 'The assistant monitors patient-reported symptoms in real time and flags potential serious side effects or drug interactions proactively.' },
+]
+
+const DEMO_CARDS = [
+  { icon: '📷', title: 'Try Magic Scan', desc: 'Add prescriptions instantly using your camera.' },
+  { icon: '💬', title: 'Talk to Assistant', desc: 'Ask questions about your schedule by voice or text.' },
+  { icon: '📊', title: 'View Sample Report', desc: 'Track your adherence with clear charts.' },
 ]
 
 export default function App() {
@@ -94,7 +108,9 @@ export default function App() {
           <div className="nav-links">
             <a href="#features">Features</a>
             <a href="#screens">App</a>
-            <a href="#doctors">For Doctors</a>
+            <a href="#patients">Patients</a>
+            <a href="#doctors">Doctors</a>
+            <a href="#caregivers">Caregivers</a>
           </div>
           <a href="#download" className="btn btn-primary btn-sm">Get Started</a>
         </div>
@@ -105,23 +121,23 @@ export default function App() {
         <div className="hero-inner container">
           <div className="hero-text">
             <span className="badge">Human-First Healthcare</span>
-            <h1>Healthcare that<br /><span className="accent">understands you.</span></h1>
-            <p className="hero-sub">Manage your medications with clinical precision and human warmth. MedPal keeps you on track, keeps your doctor informed, and keeps you feeling supported — every single day.</p>
+            <h1>Care that<br /><span className="accent">understands you.</span></h1>
+            <p className="hero-sub">Manage your medications with technical precision and human warmth. MedPal keeps you on track, your doctor informed, and the people you love at peace — every single day.</p>
             <div className="hero-actions">
-              <a href="#download" className="btn btn-primary">Download Free</a>
+              <a href="#product" className="btn btn-primary">Order the Box — €19.99</a>
               <a href="#screens" className="btn btn-ghost">See how it works →</a>
             </div>
             <div className="hero-stats">
               <div className="stat"><strong>94%</strong><span>average adherence rate</span></div>
               <div className="stat-divider" />
-              <div className="stat"><strong>30 sec</strong><span>to add a prescription</span></div>
+              <div className="stat"><strong>30 sec</strong><span>to scan a prescription</span></div>
               <div className="stat-divider" />
-              <div className="stat"><strong>24/7</strong><span>AI companion</span></div>
+              <div className="stat"><strong>24/7</strong><span>medical support team</span></div>
             </div>
           </div>
           <div className="hero-image">
             <div className="phone-frame">
-              <img src="/screens/hero.png" alt="MedPal app hero screen" />
+              <img src="/screens/hero.png" alt="MedPal app" />
             </div>
           </div>
         </div>
@@ -133,7 +149,7 @@ export default function App() {
           <div className="section-header">
             <span className="badge">Everything Included</span>
             <h2>Six systems.<br />One box.</h2>
-            <p>MedPal combines hardware, AI, and clinical tools into a single product that works for patients, carers, and doctors alike.</p>
+            <p>MedPal combines hardware, AI, and a real medical team into a single product that works for patients, carers, and doctors alike.</p>
           </div>
           <div className="features-grid">
             {FEATURE_GROUPS.map(g => (
@@ -162,18 +178,18 @@ export default function App() {
             <div className="product-info">
               <span className="badge badge-green">The Product</span>
               <h2>The box that keeps everything on track.</h2>
-              <p className="product-lead">The <strong>MedPal Smart Box</strong> is a 7×4 weekly pill organiser with 28 individual compartments — one for each time of day, every day of the week. Built for clarity, built for independence.</p>
+              <p className="product-lead">The <strong>MedPal Smart Box</strong> is a 7×4 weekly pill organiser with 28 compartments — one for each time of day, every day of the week. Pair it with the app and it becomes a smart, connected system.</p>
               <ul className="product-features">
                 <li><span>✓</span> 28 compartments — Morning, Afternoon, Evening, Night</li>
-                <li><span>✓</span> Syncs with the MedPal app automatically</li>
-                <li><span>✓</span> Compact, travel-friendly design</li>
-                <li><span>✓</span> Transparent lid for quick visual check</li>
-                <li><span>✓</span> App included — no subscription</li>
+                <li><span>✓</span> Scan the box to verify each slot is filled correctly</li>
+                <li><span>✓</span> Compact, travel-friendly, transparent lid</li>
+                <li><span>✓</span> App included — no subscription, ever</li>
+                <li><span>✓</span> Medical support team included</li>
               </ul>
               <div className="product-price-block">
                 <div className="product-price">
                   <span className="price-value">€19.99</span>
-                  <span className="price-note">Box + App. One-time payment.</span>
+                  <span className="price-note">Box + App + Medical Support. One-time payment.</span>
                 </div>
                 <a href="#download" className="btn btn-primary">Order Now</a>
               </div>
@@ -226,8 +242,8 @@ export default function App() {
             </div>
             <div className="benefits-text">
               <span className="badge badge-green">For Patients</span>
-              <h2>Your health,<br />back in your hands.</h2>
-              <p className="benefits-lead">Simplify your care routine with an intelligent assistant that understands every step of your treatment.</p>
+              <h2>Your health back<br />in your hands.</h2>
+              <p className="benefits-lead">Simplify your care routine with a smart assistant that understands and protects every step of your treatment.</p>
               <ul className="benefit-list">
                 {PATIENT_BENEFITS.map(b => (
                   <li key={b.title} className="benefit-item">
@@ -239,7 +255,37 @@ export default function App() {
                   </li>
                 ))}
               </ul>
-              <a href="#download" className="btn btn-primary">Start for Free</a>
+              <a href="#download" className="btn btn-primary">Start Now</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CAREGIVER BENEFITS */}
+      <section className="benefits benefits-sage section" id="caregivers">
+        <div className="container">
+          <div className="benefits-inner">
+            <div className="benefits-text">
+              <span className="badge badge-green">For Caregivers & Family</span>
+              <h2>The peace of mind of knowing they are well.</h2>
+              <p className="benefits-lead">MedPal is the ideal partner for caregivers and family. Follow the health routine of those you love with safety, clarity, and empathy.</p>
+              <ul className="benefit-list">
+                {CAREGIVER_BENEFITS.map(b => (
+                  <li key={b.title} className="benefit-item">
+                    <span className="benefit-icon">{b.icon}</span>
+                    <div>
+                      <strong>{b.title}</strong>
+                      <p>{b.desc}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+              <a href="#download" className="btn btn-primary">Start Now</a>
+            </div>
+            <div className="benefits-image">
+              <div className="phone-frame phone-frame-sm">
+                <img src="/screens/caregiver.png" alt="Caregiver view" />
+              </div>
             </div>
           </div>
         </div>
@@ -251,8 +297,8 @@ export default function App() {
           <div className="benefits-inner benefits-inner-reverse">
             <div className="benefits-text">
               <span className="badge badge-light">For Healthcare Professionals</span>
-              <h2>Precise data for safer clinical decisions.</h2>
-              <p className="benefits-lead">Transform patient follow-up into a real-time view of their treatment journey — backed by actual data, not memory.</p>
+              <h2>Precise data for safe clinical decisions.</h2>
+              <p className="benefits-lead">Transform patient monitoring with real-time insights. MedPal connects you to the treatment journey — empathy backed by real data.</p>
               <ul className="benefit-list">
                 {DOCTOR_BENEFITS.map(b => (
                   <li key={b.title} className="benefit-item">
@@ -292,6 +338,37 @@ export default function App() {
         </div>
       </section>
 
+      {/* DEMO */}
+      <section className="demo section" id="demo">
+        <div className="container">
+          <div className="section-header">
+            <span className="badge">Try It First</span>
+            <h2>Explore MedPal.</h2>
+            <p>Discover how we simplify your health routine before committing to anything.</p>
+          </div>
+          <div className="demo-inner">
+            <div className="demo-phone">
+              <div className="phone-frame">
+                <img src="/screens/demo.png" alt="MedPal demo mode" />
+              </div>
+            </div>
+            <div className="demo-cards">
+              {DEMO_CARDS.map(c => (
+                <div className="demo-card" key={c.title}>
+                  <span className="demo-icon">{c.icon}</span>
+                  <div>
+                    <strong>{c.title}</strong>
+                    <p>{c.desc}</p>
+                  </div>
+                  <span className="demo-arrow">→</span>
+                </div>
+              ))}
+              <a href="#download" className="btn btn-primary" style={{marginTop: '8px'}}>Create My Account</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* DOWNLOAD CTA */}
       <section className="download section" id="download">
         <div className="container">
@@ -316,11 +393,12 @@ export default function App() {
       <footer className="footer">
         <div className="container footer-inner">
           <span className="nav-logo"><span className="logo-mark">✚</span> MedPal</span>
-          <p className="footer-copy">© 2024 MedPal Health. Human-First Healthcare.</p>
+          <p className="footer-copy">© 2024 MedPal Health. Human-First medication management.</p>
           <div className="footer-links">
             <a href="#">Features</a>
             <a href="#">Privacy Policy</a>
             <a href="#">Support</a>
+            <a href="#">Download</a>
           </div>
         </div>
       </footer>

@@ -111,6 +111,21 @@
 .benefits-dark .benefits-lead { color: rgba(255,255,255,0.7); }
 .benefits-dark .benefit-item p { color: rgba(255,255,255,0.65); }
 
+.benefits-sage { background: var(--secondary-container); }
+.benefits-sage .benefits-lead { color: var(--on-surface-variant); }
+
+/* ── Demo ─────────────────────────────────────── */
+.demo { background: var(--surface-low); }
+.demo-inner { display: grid; grid-template-columns: auto 1fr; gap: 80px; align-items: center; max-width: 900px; margin: 0 auto; }
+.demo-phone .phone-frame img { max-height: 480px; object-fit: cover; object-position: top; }
+.demo-cards { display: flex; flex-direction: column; gap: 16px; }
+.demo-card { display: flex; align-items: center; gap: 16px; background: var(--surface); padding: 20px 24px; border-radius: 14px; border: 1px solid var(--outline-variant); transition: box-shadow 0.2s, transform 0.15s; cursor: pointer; }
+.demo-card:hover { box-shadow: 0 6px 24px rgba(25,40,48,0.08); transform: translateX(4px); }
+.demo-icon { font-size: 28px; flex-shrink: 0; }
+.demo-card strong { display: block; font-size: 16px; font-weight: 600; margin-bottom: 2px; }
+.demo-card p { font-size: 14px; color: var(--on-surface-variant); margin: 0; }
+.demo-arrow { font-size: 18px; color: var(--outline); margin-left: auto; flex-shrink: 0; }
+
 /* ── Testimonial ─────────────────────────────── */
 .testimonial { background: var(--surface-low); }
 .testimonial-card { max-width: 720px; margin: 0 auto; text-align: center; padding: 56px 48px; background: var(--surface); border-radius: 24px; border: 1px solid var(--outline-variant); position: relative; }
