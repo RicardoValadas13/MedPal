@@ -1,5 +1,4 @@
-[project]
-project_id = "your-project-id"  # replace with your Supabase project ID
+project_id = "hpzyhjujieetlolpukrh"
 
 [api]
 enabled = true
