@@ -149,6 +149,29 @@ blockquote { font-size: 17px; line-height: 1.7; color: var(--on-surface); font-w
 .testimonial-author strong { display: block; font-size: 15px; }
 .testimonial-author span { font-size: 13px; color: var(--on-surface-variant); }
 
+/* Partnerships */
+.partners { background: var(--surface-low); }
+.partner-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+.partner-card { background: var(--surface); padding: 22px 20px; border-radius: 14px; border: 1px solid var(--outline-variant); display: flex; flex-direction: column; gap: 6px; }
+.partner-icon { font-size: 28px; display: block; }
+.partner-name { font-size: 18px; font-weight: 700; color: var(--primary); }
+.partner-area { font-size: 13px; font-weight: 600; color: var(--secondary); text-transform: uppercase; letter-spacing: 0.04em; }
+.partner-detail { font-size: 14px; color: var(--on-surface-variant); line-height: 1.5; margin-top: 2px; }
+.partner-tag { margin-top: auto; align-self: flex-start; font-size: 12px; font-weight: 600; color: var(--secondary); background: var(--secondary-container); padding: 4px 10px; border-radius: 999px; }
+.partner-cta { background: var(--surface); border: 1px solid var(--outline-variant); border-radius: 18px; padding: 28px 24px; max-width: 640px; margin: 32px auto 0; text-align: center; }
+.partner-cta h3 { font-size: 20px; font-weight: 700; color: var(--primary); letter-spacing: -0.01em; }
+.partner-cta-sub { font-size: 15px; color: var(--on-surface-variant); line-height: 1.5; margin: 8px 0 20px; }
+.partner-form { display: flex; flex-direction: column; gap: 12px; text-align: left; }
+.partner-form-row { display: flex; flex-direction: column; gap: 12px; }
+.partner-form input, .partner-form select, .partner-form textarea { width: 100%; padding: 13px 14px; font: inherit; font-size: 15px; color: var(--on-surface); background: var(--bg); border: 1px solid var(--outline-variant); border-radius: 8px; }
+.partner-form input:focus, .partner-form select:focus, .partner-form textarea:focus { outline: none; border-color: var(--secondary); }
+.partner-form textarea { resize: vertical; min-height: 96px; }
+.partner-form .btn { margin-top: 4px; }
+.partner-thanks { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.partner-thanks-icon { font-size: 36px; }
+.partner-thanks h3 { font-size: 20px; font-weight: 700; color: var(--secondary); }
+.partner-thanks p { font-size: 15px; color: var(--on-surface-variant); line-height: 1.5; }
+
 /* Download */
 .download { background: var(--primary); color: #fff; text-align: center; }
 .download-inner { display: flex; flex-direction: column; align-items: center; gap: 20px; }
@@ -204,6 +227,9 @@ blockquote { font-size: 17px; line-height: 1.7; color: var(--on-surface); font-w
   .stat strong { font-size: 22px; }
   .stat span { font-size: 12px; }
   .features-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .partner-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .partner-form-row { flex-direction: row; }
+  .partner-form-row > * { flex: 1; }
   .product-images { position: relative; }
   .product-img-secondary { display: block; width: 160px; border-radius: 12px; box-shadow: 0 10px 28px rgba(25,40,48,0.10); position: absolute; bottom: -12px; right: -8px; border: 3px solid var(--bg); }
   .screen-phone img { width: 220px; }
@@ -239,6 +265,7 @@ blockquote { font-size: 17px; line-height: 1.7; color: var(--on-surface); font-w
   .phone-frame { width: 220px; }
 
   .features-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .partner-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; }
   .feature-card { padding: 28px 24px; }
 
   .video-wrapper { border-radius: 20px; max-width: 860px; margin: 0 auto; box-shadow: 0 24px 64px rgba(25,40,48,0.14); }

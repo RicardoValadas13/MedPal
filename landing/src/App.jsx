@@ -130,10 +130,20 @@ const DEMO_CARDS = [
   { icon: '📊', title: 'View Sample Report', desc: 'Track your adherence with clear charts.' },
 ]
 
+const PARTNERS = [
+  { icon: '🌱', name: 'VerdeFuel', area: 'Plant-based protein & shakes', detail: 'Serving sizes and post-workout timing sync straight into the user routine.' },
+  { icon: '💊', name: 'Floravita', area: 'Vegan vitamins & daily supplements', detail: 'Daily dosage and "take with food" rules load automatically.' },
+  { icon: '⌚', name: 'PulseForm', area: 'Smart fitness equipment & wearables', detail: 'Workout and recovery data feed directly into the activity log.' },
+  { icon: '🍵', name: 'PuraRaíz', area: 'Herbal & natural remedies', detail: 'Ingredient and interaction data is checked against current medications.' },
+  { icon: '⚡', name: 'KineticLab', area: 'Sports nutrition & recovery', detail: 'Creatine and electrolyte schedules become smart reminders.' },
+]
+
 export default function App() {
   const [activeScreen, setActiveScreen] = useState('today')
   const [showQR, setShowQR] = useState(false)
   const current = SCREENS.find(s => s.id === activeScreen)
+
+  const [partnerSubmitted, setPartnerSubmitted] = useState(false)
 
   // On mobile, open the demo directly — no need to scan a QR code from the same device.
   const handleStart = () => {
@@ -142,6 +152,19 @@ export default function App() {
     } else {
       setShowQR(true)
     }
+  }
+
+  // Submit the partnership form to Netlify Forms (no custom backend needed).
+  const handlePartnerSubmit = (e) => {
+    e.preventDefault()
+    const data = new FormData(e.target)
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(data).toString(),
+    })
+      .then(() => setPartnerSubmitted(true))
+      .catch(() => setPartnerSubmitted(true))
   }
 
   return (
@@ -159,6 +182,7 @@ export default function App() {
             <a href="#patients">Patients</a>
             <a href="#doctors">Doctors</a>
             <a href="#caregivers">Caregivers</a>
+            <a href="#partnerships">Partners</a>
           </div>
           <a href="#download" className="btn btn-primary btn-sm">Get Started</a>
         </div>
@@ -449,6 +473,71 @@ export default function App() {
               ))}
               <button className="btn btn-primary" style={{marginTop: '8px'}} onClick={handleStart}>Create My Account</button>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* PARTNERSHIPS */}
+      <section className="partners section" id="partnerships">
+        <div className="container">
+          <div className="section-header">
+            <span className="badge badge-green">Partnerships</span>
+            <h2>Brands that already work with MedPal.</h2>
+            <p>When you partner with MedPal, we ingest your product data directly into the app — dosages, timing, ingredients, and interactions. The moment a user adds one of your products, they get accurate schedules, smart reminders, and safety checks automatically.</p>
+          </div>
+          <div className="partner-grid">
+            {PARTNERS.map(p => (
+              <div className="partner-card" key={p.name}>
+                <span className="partner-icon">{p.icon}</span>
+                <h3 className="partner-name">{p.name}</h3>
+                <span className="partner-area">{p.area}</span>
+                <p className="partner-detail">{p.detail}</p>
+                <span className="partner-tag">Already integrated ✓</span>
+              </div>
+            ))}
+          </div>
+          <div className="partner-cta">
+            {partnerSubmitted ? (
+              <div className="partner-thanks">
+                <span className="partner-thanks-icon">✅</span>
+                <h3>Thanks — we'll be in touch.</h3>
+                <p>Our partnerships team has received your details and will reach out about integrating your products with MedPal.</p>
+              </div>
+            ) : (
+              <>
+                <h3>Have a product? Integrate with MedPal.</h3>
+                <p className="partner-cta-sub">Tell us about your brand and we'll show you how your products can plug into the MedPal app.</p>
+                <form
+                  className="partner-form"
+                  name="partnerships"
+                  method="POST"
+                  data-netlify="true"
+                  netlify-honeypot="bot-field"
+                  onSubmit={handlePartnerSubmit}
+                >
+                  <input type="hidden" name="form-name" value="partnerships" />
+                  <p hidden>
+                    <label>Don't fill this out: <input name="bot-field" /></label>
+                  </p>
+                  <div className="partner-form-row">
+                    <input type="text" name="company" placeholder="Brand / company name" required />
+                    <input type="text" name="name" placeholder="Your name" required />
+                  </div>
+                  <input type="email" name="email" placeholder="Work email" required />
+                  <select name="category" defaultValue="">
+                    <option value="" disabled>Product category…</option>
+                    <option>Vegan supplements</option>
+                    <option>Vitamins</option>
+                    <option>Fitness equipment</option>
+                    <option>Herbal &amp; natural</option>
+                    <option>Sports nutrition</option>
+                    <option>Other</option>
+                  </select>
+                  <textarea name="message" rows="4" placeholder="Tell us about your products"></textarea>
+                  <button type="submit" className="btn btn-primary">Request integration</button>
+                </form>
+              </>
+            )}
           </div>
         </div>
       </section>

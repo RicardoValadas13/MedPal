@@ -10,6 +10,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   </head>
   <body>
+    <!-- Static stub so Netlify detects the React-rendered partnerships form at build time -->
+    <form name="partnerships" data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <input type="text" name="company" />
+      <input type="text" name="name" />
+      <input type="email" name="email" />
+      <select name="category"></select>
+      <textarea name="message"></textarea>
+    </form>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
