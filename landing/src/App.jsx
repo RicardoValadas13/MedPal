@@ -186,6 +186,7 @@ export default function App() {
             <a href="#doctors">Doctors</a>
             <a href="#caregivers">Caregivers</a>
             <a href="#partnerships">Partners</a>
+            <a href="#download">Pricing</a>
           </div>
           <a href="#download" className="btn btn-primary btn-sm">Get Started</a>
         </div>
