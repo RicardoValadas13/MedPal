@@ -174,7 +174,7 @@ export default function App() {
       <nav className="nav">
         <div className="nav-inner container">
           <span className="nav-logo">
-            <span className="logo-mark">✚</span> MedPal
+            <img className="logo-img" src="/logo.png" alt="" /> MedPal
           </span>
           <div className="nav-links">
             <a href="#features">Features</a>
@@ -575,13 +575,13 @@ export default function App() {
               <button className="btn btn-primary" onClick={handleStart}>Start Monthly</button>
             </div>
             <div className="price-card price-card-featured">
-              <span className="price-badge">Save 30%</span>
+              <span className="price-badge">Save 30%+</span>
               <span className="price-card-name">Annual</span>
-              <div className="price-card-amount"><strong>€33.52</strong><span>/year</span></div>
-              <p className="price-card-billing">Just €2.79/month · billed yearly</p>
+              <div className="price-card-amount"><strong>€29.99</strong><span>/year</span></div>
+              <p className="price-card-billing">Just €2.50/month · billed yearly</p>
               <ul className="price-card-list">
                 <li><span>✓</span> Everything in Monthly</li>
-                <li><span>✓</span> 30% off vs paying monthly</li>
+                <li><span>✓</span> More than 30% off vs paying monthly</li>
                 <li><span>🎁</span> Free MedPal Smart Box</li>
               </ul>
               <button className="btn btn-primary" onClick={handleStart}>Start Annual — Best Value</button>
@@ -603,7 +603,7 @@ export default function App() {
       {/* FOOTER */}
       <footer className="footer">
         <div className="container footer-inner">
-          <span className="nav-logo"><span className="logo-mark">✚</span> MedPal</span>
+          <span className="nav-logo"><img className="logo-img" src="/logo.png" alt="" /> MedPal</span>
           <p className="footer-copy">© 2024 MedPal Health. Human-First medication management.</p>
           <div className="footer-links">
             <a href="#">Features</a>
