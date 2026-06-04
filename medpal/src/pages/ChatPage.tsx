@@ -14,6 +14,7 @@ export function ChatPage() {
   const [input, setInput] = useState('')
   const [sending, setSending] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [emergency, setEmergency] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -55,6 +56,7 @@ export function ChatPage() {
     setConversationId(null)
     setMessages([])
     setError(null)
+    setEmergency(false)
   }
 
   async function handleSend(e: React.FormEvent) {
@@ -79,6 +81,7 @@ export function ChatPage() {
     }
 
     setConversationId(data.conversation_id)
+    setEmergency(Boolean(data.emergency))
     setMessages(prev => [...prev, { role: 'assistant', content: data.reply }])
   }
 
@@ -102,6 +105,12 @@ export function ChatPage() {
       <p className="text-[13px] font-medium text-[#73787b] bg-[#f4f4f0] rounded-lg px-3 py-2 mb-4">
         {pt.chat.disclaimer}
       </p>
+
+      {emergency && (
+        <p className="text-sm font-semibold text-white bg-red-600 rounded-lg px-4 py-3 mb-4">
+          {pt.chat.emergencyBanner}
+        </p>
+      )}
 
       <div className="flex-1 overflow-y-auto space-y-3">
         {messages.length === 0 && !sending && (

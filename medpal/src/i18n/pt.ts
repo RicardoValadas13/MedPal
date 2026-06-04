@@ -98,6 +98,7 @@ export const pt = {
     thinking: 'Thinking...',
     newConversation: 'New conversation',
     errorSend: 'Could not send the message. Please try again.',
+    emergencyBanner: 'This sounds like it could be an emergency. Call 112 now.',
   },
   // Common
   common: {

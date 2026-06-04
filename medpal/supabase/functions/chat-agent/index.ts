@@ -1,5 +1,4 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-import Anthropic from 'https://esm.sh/@anthropic-ai/sdk@0.27.0'
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -7,6 +6,9 @@ const CORS_HEADERS = {
 }
 
 const HISTORY_LIMIT = 20
+
+const GEMINI_URL =
+  'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent'
 
 const SYSTEM_PROMPT = `You are the MedPal assistant — a careful, friendly helper inside a medication-management app for patients in Portugal.
 
@@ -17,8 +19,92 @@ Hard rules:
 - Never invent medication leaflet content. For official leaflet details, point the user to the "patient leaflet" link on the medication in the app (sourced from INFARMED's Infomed).
 - If the user describes symptoms that could be an emergency (chest pain, trouble breathing, stroke signs, severe allergic reaction, overdose, self-harm), tell them to call 112 immediately.
 - For anything beyond general information or the user's own data, recommend their doctor or pharmacist.
-- Reply in the language the user writes in.
-- Be concise: short paragraphs, plain language, no medical jargon without explanation.`
+- Reply ONLY in English or Portuguese: match the user's language, and default to English if they write in any other language.
+- Be friendly and concise: short paragraphs, plain language, no medical jargon without explanation.`
+
+// Emergency keyword screen (English + Portuguese). This is a coarse safety
+// net on the user's message — the model is additionally instructed to
+// escalate to 112 on its own judgement.
+const EMERGENCY_KEYWORDS = [
+  // English
+  'chest pain',
+  "can't breathe",
+  'cannot breathe',
+  'difficulty breathing',
+  'shortness of breath',
+  'heart attack',
+  'stroke',
+  'overdose',
+  'suicide',
+  'suicidal',
+  'self-harm',
+  'severe bleeding',
+  'unconscious',
+  'seizure',
+  'anaphyla',
+  // Portuguese
+  'dor no peito',
+  'não consigo respirar',
+  'nao consigo respirar',
+  'falta de ar',
+  'ataque cardíaco',
+  'ataque cardiaco',
+  'avc',
+  'derrame',
+  'suicídio',
+  'suicidio',
+  'automutilação',
+  'automutilacao',
+  'hemorragia',
+  'inconsciente',
+  'convulsão',
+  'convulsao',
+  'anafila',
+]
+
+function detectEmergency(text: string): boolean {
+  const t = text.toLowerCase()
+  return EMERGENCY_KEYWORDS.some((k) => t.includes(k))
+}
+
+async function askGemini(
+  apiKey: string,
+  systemPrompt: string,
+  history: Array<{ role: 'user' | 'assistant'; content: string }>,
+  userMessage: string
+): Promise<string> {
+  const response = await fetch(`${GEMINI_URL}?key=${apiKey}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      system_instruction: {
+        parts: [{ text: systemPrompt }],
+      },
+      contents: [
+        ...history.map((m) => ({
+          role: m.role === 'assistant' ? 'model' : 'user',
+          parts: [{ text: m.content }],
+        })),
+        { role: 'user', parts: [{ text: userMessage }] },
+      ],
+      generationConfig: { maxOutputTokens: 1024 },
+    }),
+  })
+
+  if (!response.ok) {
+    const body = await response.text()
+    throw new Error(`Gemini API error ${response.status}: ${body}`)
+  }
+
+  const data = await response.json()
+  const text: string =
+    data?.candidates?.[0]?.content?.parts
+      ?.map((p: { text?: string }) => p.text ?? '')
+      .join('') ?? ''
+
+  if (!text) throw new Error('Empty response from Gemini')
+  return text
+}
 
 interface ContextMedication {
   id: string
@@ -76,7 +162,7 @@ Deno.serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!
     const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!
-    const anthropicKey = Deno.env.get('ANTHROPIC_API_KEY')!
+    const geminiKey = Deno.env.get('GEMINI_API_KEY')!
 
     // User-scoped client: every query below runs under the caller's JWT,
     // so RLS guarantees we only ever touch this user's rows.
@@ -196,35 +282,31 @@ Deno.serve(async (req) => {
       } | null) ?? null
     )
 
-    const anthropic = new Anthropic({ apiKey: anthropicKey })
-    const response = await anthropic.messages.create({
-      model: 'claude-opus-4-8',
-      max_tokens: 1024,
-      system: `${SYSTEM_PROMPT}\n\n${contextBlock}`,
-      messages: [
-        ...(history ?? []).map((m) => ({
-          role: m.role as 'user' | 'assistant',
-          content: m.content as string,
-        })),
-        { role: 'user' as const, content: message.trim() },
-      ],
-    })
+    const emergency = detectEmergency(message)
 
-    const reply = response.content[0].type === 'text' ? response.content[0].text : ''
-    if (!reply) throw new Error('Empty response from model')
+    const reply = await askGemini(
+      geminiKey,
+      `${SYSTEM_PROMPT}\n\n${contextBlock}`,
+      (history ?? []).map((m) => ({
+        role: m.role as 'user' | 'assistant',
+        content: m.content as string,
+      })),
+      message.trim()
+    )
 
     // Persist the assistant message, recording which rows informed it
     const { error: assistantMsgError } = await supabase.from('messages').insert({
       conversation_id: conversationId,
       role: 'assistant',
       content: reply,
-      context_refs: { medication_ids: contextMeds.map((m) => m.id) },
+      context_refs: { medication_ids: contextMeds.map((m) => m.id), emergency },
     })
     if (assistantMsgError) throw new Error('Failed to save reply')
 
-    return new Response(JSON.stringify({ conversation_id: conversationId, reply }), {
-      headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
-    })
+    return new Response(
+      JSON.stringify({ conversation_id: conversationId, reply, emergency }),
+      { headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } }
+    )
   } catch (err) {
     console.error('chat-agent error:', err)
     return new Response(
