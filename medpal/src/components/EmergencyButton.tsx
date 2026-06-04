@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Phone, PhoneCall } from 'lucide-react'
+import { playEmergencyAnnouncement } from '../lib/emergencyVoice'
 import { pt } from '../i18n/pt'
 
 // Shared 2.5D treatment: solid face + darker bottom edge for depth,
@@ -63,7 +64,13 @@ export function EmergencyButton({
               {pt.emergency.confirmTitle}
             </p>
             <p className="text-lg text-[#43474a] mb-6">{pt.emergency.confirmHint}</p>
-            <a href="tel:112" className={`${FACE} w-full min-h-[68px] text-2xl mb-3`}>
+            <a
+              href="tel:112"
+              // Start the spoken announcement (name + address, 5x with 2s
+              // pauses) in parallel with opening the dialer — never blocking.
+              onClick={() => void playEmergencyAnnouncement()}
+              className={`${FACE} w-full min-h-[68px] text-2xl mb-3`}
+            >
               <Phone size={28} strokeWidth={2.5} aria-hidden />
               {pt.emergency.callButton}
             </a>
