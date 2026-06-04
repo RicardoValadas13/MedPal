@@ -77,7 +77,13 @@ export function ChatPage() {
     setSending(false)
 
     if (fnError || !data?.reply) {
-      setError(pt.chat.errorSend)
+      // Try to read the actual error body from FunctionsHttpError
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const ctx = (fnError as any)?.context
+      const errorBody = ctx ? await ctx.json().catch(() => null) : null
+      console.error('chat-agent error:', fnError, data, errorBody)
+      const detail = errorBody?.error || data?.error || fnError?.message || ''
+      setError(detail ? `${pt.chat.errorSend} (${detail})` : pt.chat.errorSend)
       return
     }
 

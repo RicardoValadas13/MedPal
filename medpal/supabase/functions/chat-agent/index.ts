@@ -7,8 +7,8 @@ const CORS_HEADERS = {
 
 const HISTORY_LIMIT = 20
 
-const GEMINI_URL =
-  'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent'
+const OPENAI_URL = 'https://api.openai.com/v1/chat/completions'
+const OPENAI_MODEL = 'gpt-4o-mini'
 
 const SYSTEM_PROMPT = `You are the MedPal assistant — a careful, friendly helper inside a medication-management app for patients in Portugal.
 
@@ -67,42 +67,38 @@ function detectEmergency(text: string): boolean {
   return EMERGENCY_KEYWORDS.some((k) => t.includes(k))
 }
 
-async function askGemini(
+async function askOpenAI(
   apiKey: string,
   systemPrompt: string,
   history: Array<{ role: 'user' | 'assistant'; content: string }>,
   userMessage: string
 ): Promise<string> {
-  const response = await fetch(`${GEMINI_URL}?key=${apiKey}`, {
+  const response = await fetch(OPENAI_URL, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`,
+    },
     body: JSON.stringify({
-      system_instruction: {
-        parts: [{ text: systemPrompt }],
-      },
-      contents: [
-        ...history.map((m) => ({
-          role: m.role === 'assistant' ? 'model' : 'user',
-          parts: [{ text: m.content }],
-        })),
-        { role: 'user', parts: [{ text: userMessage }] },
+      model: OPENAI_MODEL,
+      max_tokens: 1024,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        ...history.map((m) => ({ role: m.role, content: m.content })),
+        { role: 'user', content: userMessage },
       ],
-      generationConfig: { maxOutputTokens: 1024 },
     }),
   })
 
   if (!response.ok) {
     const body = await response.text()
-    throw new Error(`Gemini API error ${response.status}: ${body}`)
+    throw new Error(`OpenAI API error ${response.status}: ${body}`)
   }
 
   const data = await response.json()
-  const text: string =
-    data?.candidates?.[0]?.content?.parts
-      ?.map((p: { text?: string }) => p.text ?? '')
-      .join('') ?? ''
+  const text: string = data?.choices?.[0]?.message?.content ?? ''
 
-  if (!text) throw new Error('Empty response from Gemini')
+  if (!text) throw new Error('Empty response from OpenAI')
   return text
 }
 
@@ -161,32 +157,13 @@ Deno.serve(async (req) => {
 
   try {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!
-    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!
-    const geminiKey = Deno.env.get('GEMINI_API_KEY')!
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+    const openaiKey = Deno.env.get('OPENAI_API_KEY')!
 
-    // User-scoped client: every query below runs under the caller's JWT,
-    // so RLS guarantees we only ever touch this user's rows.
-    const authHeader = req.headers.get('Authorization')
-    if (!authHeader) {
-      return new Response(JSON.stringify({ error: 'Missing authorization header' }), {
-        status: 401,
-        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
-      })
-    }
+    const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
-    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-      global: { headers: { Authorization: authHeader } },
-    })
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-    if (!user) {
-      return new Response(JSON.stringify({ error: 'Not authenticated' }), {
-        status: 401,
-        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
-      })
-    }
+    // Demo mode: use fixed demo user ID (no real auth)
+    const user = { id: '00000000-0000-0000-0000-000000000001' }
 
     const { conversation_id, message } = await req.json()
     if (typeof message !== 'string' || !message.trim()) {
@@ -284,8 +261,8 @@ Deno.serve(async (req) => {
 
     const emergency = detectEmergency(message)
 
-    const reply = await askGemini(
-      geminiKey,
+    const reply = await askOpenAI(
+      openaiKey,
       `${SYSTEM_PROMPT}\n\n${contextBlock}`,
       (history ?? []).map((m) => ({
         role: m.role as 'user' | 'assistant',

@@ -8,12 +8,11 @@ import {
 import { supabase } from '../lib/supabase'
 import { pt } from '../i18n/pt'
 
-// Shared 2.5D treatment: solid face + darker bottom edge for depth,
-// pressed state sinks the face into the edge.
+// 2.5D face: gradient + deeper bottom edge + pressed-state sink
 const FACE =
-  'bg-[#dc2626] text-white font-extrabold uppercase tracking-[0.06em] select-none ' +
+  'bg-gradient-to-b from-[#ef4444] to-[#dc2626] text-white font-extrabold uppercase tracking-[0.08em] select-none ' +
   'rounded-2xl border-b-[6px] border-[#7f1d1d] ' +
-  'shadow-[0_10px_24px_rgba(220,38,38,0.35)] ' +
+  'shadow-[0_12px_28px_rgba(220,38,38,0.45),inset_0_1px_0_rgba(255,255,255,0.15)] ' +
   'active:translate-y-[4px] active:border-b-2 active:shadow-[0_4px_12px_rgba(220,38,38,0.3)] ' +
   'transition-[transform,border-width,box-shadow] duration-75 ' +
   'flex items-center justify-center gap-3'
@@ -67,14 +66,19 @@ export function EmergencyButton({
     variant === 'floating' ? (
       // Sits above the bottom nav (72px) inside the 430px app frame.
       <div className="fixed bottom-[88px] left-1/2 -translate-x-1/2 w-full max-w-[430px] px-5 z-30 pointer-events-none">
-        <button
-          onClick={openConfirm}
-          aria-label={pt.emergency.confirmTitle}
-          className={`${FACE} animate-emergency-pulse pointer-events-auto w-full min-h-[72px] text-[26px]`}
-        >
-          <PhoneCall size={30} strokeWidth={2.5} aria-hidden />
-          {pt.emergency.button}
-        </button>
+        <div className="relative pointer-events-auto">
+          {/* expanding rings */}
+          <span className="animate-emergency-ring absolute inset-0 rounded-2xl bg-[#dc2626] pointer-events-none" />
+          <span className="animate-emergency-ring2 absolute inset-0 rounded-2xl bg-[#dc2626] pointer-events-none" />
+          <button
+            onClick={openConfirm}
+            aria-label={pt.emergency.confirmTitle}
+            className={`${FACE} animate-emergency-pulse relative w-full min-h-[72px] text-[26px]`}
+          >
+            <PhoneCall size={32} strokeWidth={2.5} aria-hidden />
+            {pt.emergency.button}
+          </button>
+        </div>
       </div>
     ) : (
       <button
