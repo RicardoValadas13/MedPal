@@ -361,6 +361,37 @@ export interface Database {
           updated_at?: string
         }
       }
+      family_contacts: {
+        Row: {
+          id: string
+          user_id: string
+          name: string
+          relationship: 'son' | 'daughter' | 'partner' | 'friend' | 'caregiver'
+          phone: string
+          priority: number
+          notify_missed_meds: boolean
+          notify_emergency: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          name: string
+          relationship: 'son' | 'daughter' | 'partner' | 'friend' | 'caregiver'
+          phone: string
+          priority?: number
+          notify_missed_meds?: boolean
+          notify_emergency?: boolean
+        }
+        Update: {
+          name?: string
+          relationship?: 'son' | 'daughter' | 'partner' | 'friend' | 'caregiver'
+          phone?: string
+          priority?: number
+          notify_missed_meds?: boolean
+          notify_emergency?: boolean
+        }
+      }
       calendar_links: {
         Row: {
           id: string
@@ -397,3 +428,5 @@ export type Conversation = Database['public']['Tables']['conversations']['Row']
 export type Message = Database['public']['Tables']['messages']['Row']
 export type PatientProfile = Database['public']['Tables']['patient_profiles']['Row']
 export type CaregiverSettings = Database['public']['Tables']['caregiver_settings']['Row']
+export type FamilyContact = Database['public']['Tables']['family_contacts']['Row']
+export type ContactRelationship = FamilyContact['relationship']

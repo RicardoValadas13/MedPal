@@ -5,6 +5,7 @@ import {
   prefetchEmergencyAnnouncement,
   type AnnouncementPlayback,
 } from '../lib/emergencyVoice'
+import { supabase } from '../lib/supabase'
 import { pt } from '../i18n/pt'
 
 // Shared 2.5D treatment: solid face + darker bottom edge for depth,
@@ -47,6 +48,9 @@ export function EmergencyButton({
   // the dialer takes the foreground — then open the dialer.
   async function handleConfirm() {
     setStage('announcing')
+    // SMS the family contacts in parallel; strictly fire-and-forget so
+    // it can never delay or break the call chain.
+    void supabase.functions.invoke('emergency-alert').catch(() => {})
     const playback = await playEmergencyAnnouncement()
     playbackRef.current = playback
     await playback.finished

@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { Lock, ShieldCheck } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { ChevronDown, ChevronUp, GripVertical, Lock, Plus, ShieldCheck, Trash2 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import { pt } from '../i18n/pt'
@@ -11,7 +11,16 @@ import {
   recordFailedAttempt,
   verifyPin,
 } from '../lib/pin'
-import type { CaregiverSettings, PatientProfile, UserMedication } from '../types/database'
+import type {
+  CaregiverSettings,
+  ContactRelationship,
+  FamilyContact,
+  PatientProfile,
+  UserMedication,
+} from '../types/database'
+
+const MAX_CONTACTS = 5
+const RELATIONSHIPS: ContactRelationship[] = ['son', 'daughter', 'partner', 'friend', 'caregiver']
 
 type Stage = 'loading' | 'create' | 'confirm' | 'enter' | 'unlocked'
 
@@ -38,6 +47,9 @@ export function CaregiverSettingsPage() {
   > | null>(null)
   const [profile, setProfile] = useState<Partial<PatientProfile>>({ country: 'Portugal' })
   const [medications, setMedications] = useState<UserMedication[]>([])
+  const [contacts, setContacts] = useState<FamilyContact[]>([])
+  const deletedContactIds = useRef<string[]>([])
+  const dragIndex = useRef<number | null>(null)
   const [saving, setSaving] = useState(false)
   const [saveMessage, setSaveMessage] = useState<string | null>(null)
 
@@ -73,19 +85,25 @@ export function CaregiverSettingsPage() {
   }, [lockSeconds])
 
   async function loadProtectedData() {
-    const [{ data: cs }, { data: pp }, { data: meds }] = await Promise.all([
+    const [{ data: cs }, { data: pp }, { data: meds }, { data: fc }] = await Promise.all([
       supabase
         .from('caregiver_settings')
         .select('missed_med_alert, emergency_voice, critical_med_ids')
         .maybeSingle(),
       supabase.from('patient_profiles').select('*').maybeSingle(),
       supabase.from('user_medications').select('*').eq('is_active', true),
+      supabase
+        .from('family_contacts')
+        .select('*')
+        .order('priority', { ascending: true }),
     ])
     setSettings(
       cs ?? { missed_med_alert: true, emergency_voice: true, critical_med_ids: [] }
     )
     if (pp) setProfile(pp)
     setMedications((meds as UserMedication[]) ?? [])
+    setContacts((fc as FamilyContact[]) ?? [])
+    deletedContactIds.current = []
   }
 
   async function handlePinSubmit(e: React.FormEvent) {
@@ -149,6 +167,43 @@ export function CaregiverSettingsPage() {
     }
   }
 
+  function addContact() {
+    if (!user || contacts.length >= MAX_CONTACTS) return
+    setContacts([
+      ...contacts,
+      {
+        id: crypto.randomUUID(),
+        user_id: user.id,
+        name: '',
+        relationship: 'caregiver',
+        phone: '',
+        priority: contacts.length + 1,
+        notify_missed_meds: true,
+        notify_emergency: true,
+        created_at: new Date().toISOString(),
+      },
+    ])
+  }
+
+  function updateContact(id: string, patch: Partial<FamilyContact>) {
+    setContacts(prev => prev.map(c => (c.id === id ? { ...c, ...patch } : c)))
+  }
+
+  function removeContact(id: string) {
+    deletedContactIds.current.push(id)
+    setContacts(prev => prev.filter(c => c.id !== id))
+  }
+
+  function moveContact(from: number, to: number) {
+    if (to < 0 || to >= contacts.length || from === to) return
+    setContacts(prev => {
+      const next = [...prev]
+      const [moved] = next.splice(from, 1)
+      next.splice(to, 0, moved)
+      return next
+    })
+  }
+
   function toggleCritical(medId: string) {
     if (!settings) return
     const ids = settings.critical_med_ids.includes(medId)
@@ -163,6 +218,29 @@ export function CaregiverSettingsPage() {
     setSaveMessage(null)
 
     const now = new Date().toISOString()
+    // Persist contacts: priority follows the list order; only rows with
+    // a name and phone are saved.
+    const validContacts = contacts.filter(c => c.name.trim() && c.phone.trim())
+    const contactOps = Promise.all([
+      deletedContactIds.current.length > 0
+        ? supabase.from('family_contacts').delete().in('id', deletedContactIds.current)
+        : Promise.resolve({ error: null }),
+      validContacts.length > 0
+        ? supabase.from('family_contacts').upsert(
+            validContacts.map((c, i) => ({
+              id: c.id,
+              user_id: user.id,
+              name: c.name.trim(),
+              relationship: c.relationship,
+              phone: c.phone.trim(),
+              priority: i + 1,
+              notify_missed_meds: c.notify_missed_meds,
+              notify_emergency: c.notify_emergency,
+            }))
+          )
+        : Promise.resolve({ error: null }),
+    ])
+
     const [{ error: e1 }, { error: e2 }] = await Promise.all([
       supabase
         .from('caregiver_settings')
@@ -181,9 +259,17 @@ export function CaregiverSettingsPage() {
         updated_at: now,
       }),
     ])
+    const [{ error: e3 }, { error: e4 }] = await contactOps
 
     setSaving(false)
-    setSaveMessage(e1 || e2 ? pt.caregiver.errorSave : pt.caregiver.saved)
+    if (e1 || e2 || e3 || e4) {
+      setSaveMessage(pt.caregiver.errorSave)
+    } else {
+      setSaveMessage(pt.caregiver.saved)
+      deletedContactIds.current = []
+      // Reflect the persisted priorities in local state
+      setContacts(validContacts.map((c, i) => ({ ...c, priority: i + 1 })))
+    }
   }
 
   if (stage === 'loading') {
@@ -273,6 +359,43 @@ export function CaregiverSettingsPage() {
           checked={settings?.emergency_voice ?? true}
           onChange={v => settings && setSettings({ ...settings, emergency_voice: v })}
         />
+      </section>
+
+      {/* Family contacts */}
+      <section>
+        <h2 className="text-lg font-semibold text-[#192830] mb-1">
+          {pt.caregiver.contactsTitle}
+        </h2>
+        <p className="text-sm text-[#43474a] mb-3">{pt.caregiver.contactsHint}</p>
+        <div className="space-y-3">
+          {contacts.map((contact, i) => (
+            <ContactCard
+              key={contact.id}
+              contact={contact}
+              index={i}
+              total={contacts.length}
+              onChange={patch => updateContact(contact.id, patch)}
+              onRemove={() => removeContact(contact.id)}
+              onMove={to => moveContact(i, to)}
+              onDragStart={() => (dragIndex.current = i)}
+              onDropOn={() => {
+                if (dragIndex.current !== null) moveContact(dragIndex.current, i)
+                dragIndex.current = null
+              }}
+            />
+          ))}
+        </div>
+        {contacts.length < MAX_CONTACTS ? (
+          <button
+            onClick={addContact}
+            className="mt-3 w-full min-h-[48px] flex items-center justify-center gap-2 rounded-2xl border-[1.5px] border-dashed border-[#c3c7ca] text-base font-semibold text-[#49654d] hover:bg-[#f4f4f0] transition"
+          >
+            <Plus size={18} />
+            {pt.caregiver.contactsAdd}
+          </button>
+        ) : (
+          <p className="mt-3 text-sm text-[#73787b] text-center">{pt.caregiver.contactsMax}</p>
+        )}
       </section>
 
       {/* Critical medications */}
@@ -378,6 +501,119 @@ export function CaregiverSettingsPage() {
       >
         {saving ? pt.caregiver.saving : pt.caregiver.save}
       </button>
+    </div>
+  )
+}
+
+function ContactCard({
+  contact,
+  index,
+  total,
+  onChange,
+  onRemove,
+  onMove,
+  onDragStart,
+  onDropOn,
+}: {
+  contact: FamilyContact
+  index: number
+  total: number
+  onChange: (patch: Partial<FamilyContact>) => void
+  onRemove: () => void
+  onMove: (to: number) => void
+  onDragStart: () => void
+  onDropOn: () => void
+}) {
+  return (
+    <div
+      draggable
+      onDragStart={onDragStart}
+      onDragOver={e => e.preventDefault()}
+      onDrop={onDropOn}
+      className="bg-white rounded-2xl border border-[#c3c7ca]/40 p-4 space-y-3"
+    >
+      <div className="flex items-center gap-2">
+        <GripVertical size={18} className="text-[#73787b] cursor-grab shrink-0" aria-hidden />
+        <span className="w-7 h-7 rounded-full bg-[#cbebcd] text-[#49654d] text-sm font-bold flex items-center justify-center shrink-0">
+          {index + 1}
+        </span>
+        <span className="flex-1" />
+        <button
+          onClick={() => onMove(index - 1)}
+          disabled={index === 0}
+          aria-label="Move up"
+          className="w-9 h-9 flex items-center justify-center rounded-full text-[#192830] hover:bg-[#efeeea] disabled:opacity-30 transition"
+        >
+          <ChevronUp size={18} />
+        </button>
+        <button
+          onClick={() => onMove(index + 1)}
+          disabled={index === total - 1}
+          aria-label="Move down"
+          className="w-9 h-9 flex items-center justify-center rounded-full text-[#192830] hover:bg-[#efeeea] disabled:opacity-30 transition"
+        >
+          <ChevronDown size={18} />
+        </button>
+        <button
+          onClick={onRemove}
+          aria-label={pt.caregiver.contactRemove}
+          className="w-9 h-9 flex items-center justify-center rounded-full text-[#ba1a1a] hover:bg-[#ffdad6]/50 transition"
+        >
+          <Trash2 size={18} />
+        </button>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3">
+        <Field
+          label={pt.caregiver.contactName}
+          value={contact.name}
+          onChange={v => onChange({ name: v })}
+        />
+        <Field
+          label={pt.caregiver.contactPhone}
+          type="tel"
+          value={contact.phone}
+          onChange={v => onChange({ phone: v })}
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-[#43474a] mb-1">
+          {pt.caregiver.contactRelationship}
+        </label>
+        <select
+          value={contact.relationship}
+          onChange={e => onChange({ relationship: e.target.value as ContactRelationship })}
+          className={inputClass}
+        >
+          {RELATIONSHIPS.map(r => (
+            <option key={r} value={r}>
+              {pt.caregiver.relationships[r]}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="flex gap-4">
+        <label className="flex items-center gap-2 text-sm font-medium text-[#43474a] cursor-pointer">
+          <input
+            type="checkbox"
+            checked={contact.notify_missed_meds}
+            onChange={e => onChange({ notify_missed_meds: e.target.checked })}
+            className="w-5 h-5 accent-[#49654d]"
+          />
+          {pt.caregiver.notifyMissedShort}
+        </label>
+        <label className="flex items-center gap-2 text-sm font-medium text-[#43474a] cursor-pointer">
+          <input
+            type="checkbox"
+            checked={contact.notify_emergency}
+            onChange={e => onChange({ notify_emergency: e.target.checked })}
+            className="w-5 h-5 accent-[#ba1a1a]"
+          />
+          {pt.caregiver.notifyEmergencyShort}
+        </label>
+      </div>
     </div>
   )
 }
