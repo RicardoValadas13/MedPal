@@ -301,6 +301,97 @@ export interface Database {
           context_refs?: Json | null
         }
       }
+      patient_profiles: {
+        Row: {
+          id: string
+          full_name: string | null
+          address: string | null
+          floor: string | null
+          emergency_contact_name: string | null
+          emergency_contact_phone: string | null
+          caregiver_contact_name: string | null
+          caregiver_contact_phone: string | null
+          country: string
+          updated_at: string
+        }
+        Insert: {
+          id: string
+          full_name?: string | null
+          address?: string | null
+          floor?: string | null
+          emergency_contact_name?: string | null
+          emergency_contact_phone?: string | null
+          caregiver_contact_name?: string | null
+          caregiver_contact_phone?: string | null
+          country?: string
+        }
+        Update: {
+          full_name?: string | null
+          address?: string | null
+          floor?: string | null
+          emergency_contact_name?: string | null
+          emergency_contact_phone?: string | null
+          caregiver_contact_name?: string | null
+          caregiver_contact_phone?: string | null
+          country?: string
+          updated_at?: string
+        }
+      }
+      caregiver_settings: {
+        Row: {
+          user_id: string
+          pin_hash: string
+          missed_med_alert: boolean
+          emergency_voice: boolean
+          critical_med_ids: string[]
+          updated_at: string
+        }
+        Insert: {
+          user_id: string
+          pin_hash: string
+          missed_med_alert?: boolean
+          emergency_voice?: boolean
+          critical_med_ids?: string[]
+        }
+        Update: {
+          pin_hash?: string
+          missed_med_alert?: boolean
+          emergency_voice?: boolean
+          critical_med_ids?: string[]
+          updated_at?: string
+        }
+      }
+      family_contacts: {
+        Row: {
+          id: string
+          user_id: string
+          name: string
+          relationship: 'son' | 'daughter' | 'partner' | 'friend' | 'caregiver'
+          phone: string
+          priority: number
+          notify_missed_meds: boolean
+          notify_emergency: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          name: string
+          relationship: 'son' | 'daughter' | 'partner' | 'friend' | 'caregiver'
+          phone: string
+          priority?: number
+          notify_missed_meds?: boolean
+          notify_emergency?: boolean
+        }
+        Update: {
+          name?: string
+          relationship?: 'son' | 'daughter' | 'partner' | 'friend' | 'caregiver'
+          phone?: string
+          priority?: number
+          notify_missed_meds?: boolean
+          notify_emergency?: boolean
+        }
+      }
       calendar_links: {
         Row: {
           id: string
@@ -333,3 +424,9 @@ export type UserMedication = Database['public']['Tables']['user_medications']['R
 export type Schedule = Database['public']['Tables']['schedules']['Row']
 export type IntakeEvent = Database['public']['Tables']['intake_events']['Row']
 export type Checkin = Database['public']['Tables']['checkins']['Row']
+export type Conversation = Database['public']['Tables']['conversations']['Row']
+export type Message = Database['public']['Tables']['messages']['Row']
+export type PatientProfile = Database['public']['Tables']['patient_profiles']['Row']
+export type CaregiverSettings = Database['public']['Tables']['caregiver_settings']['Row']
+export type FamilyContact = Database['public']['Tables']['family_contacts']['Row']
+export type ContactRelationship = FamilyContact['relationship']

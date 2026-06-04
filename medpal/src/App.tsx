@@ -9,6 +9,8 @@ import { ConfirmPrescriptionPage } from './pages/ConfirmPrescriptionPage'
 import { MedicationsPage } from './pages/MedicationsPage'
 import { AddMedicationPage } from './pages/AddMedicationPage'
 import { CheckinPage } from './pages/CheckinPage'
+import { ChatPage } from './pages/ChatPage'
+import { CaregiverSettingsPage } from './pages/CaregiverSettingsPage'
 
 function AppRoutes() {
   const { session, loading } = useAuth()
@@ -39,6 +41,8 @@ function AppRoutes() {
         <Route path="/medications" element={<MedicationsPage />} />
         <Route path="/medications/add" element={<AddMedicationPage />} />
         <Route path="/checkin" element={<CheckinPage />} />
+        <Route path="/assistant" element={<ChatPage />} />
+        <Route path="/caregiver" element={<CaregiverSettingsPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

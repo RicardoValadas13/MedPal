@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Plus, Clock, Check } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
+import { EmergencyButton } from '../components/EmergencyButton'
 import { pt } from '../i18n/pt'
 import type { UserMedication, IntakeEvent } from '../types/database'
 
@@ -65,7 +66,10 @@ export function HomePage() {
   const nextMed = medications.find(m => !m.taken_today)
 
   return (
-    <div className="px-5 py-md flex flex-col gap-md">
+    // Extra bottom padding so the floating emergency button never covers content
+    <div className="px-5 py-md pb-[112px] flex flex-col gap-md">
+
+      <EmergencyButton />
 
       {/* Tip card */}
       <section className="bg-[#ffffff] rounded-2xl p-sm border border-[#c3c7ca]/30 flex items-start gap-sm">
