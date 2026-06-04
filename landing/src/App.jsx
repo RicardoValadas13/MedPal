@@ -159,7 +159,6 @@ export default function App() {
             <video
               controls
               playsInline
-              poster="/screens/hero.png"
               className="promo-video"
             >
               <source src="/medpal-promo.mp4" type="video/mp4" />
