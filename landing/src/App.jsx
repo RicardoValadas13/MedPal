@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import QRModal, { DEMO_URL } from './QRModal.jsx'
+import ReportModal from './ReportModal.jsx'
 
 const SCREENS = [
   { id: 'today',     label: 'Today',     src: '/screens/today.png',     title: 'Your Day at a Glance', desc: 'All your medications for the day — morning to night — with one tap to mark each dose taken. Plus upcoming appointments and notes, all in one place.' },
@@ -125,9 +126,9 @@ const DOCTOR_BENEFITS = [
 ]
 
 const DEMO_CARDS = [
-  { icon: '📷', title: 'Try Magic Scan', desc: 'Add prescriptions instantly using your camera.' },
-  { icon: '💬', title: 'Talk to Assistant', desc: 'Ask questions about your schedule by voice or text.' },
-  { icon: '📊', title: 'View Sample Report', desc: 'Track your adherence with clear charts.' },
+  { icon: '📷', title: 'Try Magic Scan', desc: 'Add prescriptions instantly using your camera.', action: 'app' },
+  { icon: '💬', title: 'Talk to Assistant', desc: 'Ask questions about your schedule by voice or text.', action: 'app' },
+  { icon: '📊', title: 'View Sample Report', desc: 'Track your adherence with clear charts.', action: 'report' },
 ]
 
 const PARTNERS = [
@@ -144,6 +145,7 @@ export default function App() {
   const current = SCREENS.find(s => s.id === activeScreen)
 
   const [partnerSubmitted, setPartnerSubmitted] = useState(false)
+  const [showReport, setShowReport] = useState(false)
 
   // On mobile, open the demo directly — no need to scan a QR code from the same device.
   const handleStart = () => {
@@ -170,6 +172,7 @@ export default function App() {
   return (
     <div className="app">
       {showQR && <QRModal onClose={() => setShowQR(false)} />}
+      {showReport && <ReportModal onClose={() => setShowReport(false)} />}
       {/* NAV */}
       <nav className="nav">
         <div className="nav-inner container">
@@ -466,14 +469,19 @@ export default function App() {
             </div>
             <div className="demo-cards">
               {DEMO_CARDS.map(c => (
-                <div className="demo-card" key={c.title}>
+                <button
+                  type="button"
+                  className="demo-card"
+                  key={c.title}
+                  onClick={() => c.action === 'report' ? setShowReport(true) : handleStart()}
+                >
                   <span className="demo-icon">{c.icon}</span>
                   <div>
                     <strong>{c.title}</strong>
                     <p>{c.desc}</p>
                   </div>
                   <span className="demo-arrow">→</span>
-                </div>
+                </button>
               ))}
               <button className="btn btn-primary" style={{marginTop: '8px'}} onClick={handleStart}>Create My Account</button>
             </div>

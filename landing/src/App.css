@@ -136,7 +136,7 @@
 .demo-inner { display: flex; flex-direction: column; gap: 28px; }
 .demo-phone { display: none; }
 .demo-cards { display: flex; flex-direction: column; gap: 12px; }
-.demo-card { display: flex; align-items: center; gap: 14px; background: var(--surface); padding: 18px 20px; border-radius: 14px; border: 1px solid var(--outline-variant); cursor: pointer; transition: box-shadow 0.2s; }
+.demo-card { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; font: inherit; color: inherit; background: var(--surface); padding: 18px 20px; border-radius: 14px; border: 1px solid var(--outline-variant); cursor: pointer; transition: box-shadow 0.2s; }
 .demo-card:hover { box-shadow: 0 6px 24px rgba(25,40,48,0.08); }
 .demo-icon { font-size: 26px; flex-shrink: 0; }
 .demo-card strong { display: block; font-size: 15px; font-weight: 600; margin-bottom: 2px; }
