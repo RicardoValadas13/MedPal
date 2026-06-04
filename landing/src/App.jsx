@@ -333,6 +333,10 @@ export default function App() {
               <div className="screen-info">
                 <h3>{current.title}</h3>
                 <p>{current.desc}</p>
+                <div className="screen-cta">
+                  <span className="screen-brand"><img className="logo-img" src="/logo.png" alt="" /> MedPal</span>
+                  <button className="btn btn-primary" onClick={handleStart}>Try the App</button>
+                </div>
               </div>
             </div>
           </div>

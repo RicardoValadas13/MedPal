@@ -110,6 +110,8 @@
 .screen-info { text-align: center; }
 .screen-info h3 { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 12px; }
 .screen-info p { color: var(--on-surface-variant); font-size: 16px; line-height: 1.7; }
+.screen-cta { margin-top: 28px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.screen-brand { display: inline-flex; align-items: center; gap: 6px; font-size: 20px; font-weight: 700; color: var(--primary); }
 
 /* Benefits */
 .benefits-inner { display: flex; flex-direction: column; gap: 32px; }
@@ -287,6 +289,7 @@ blockquote { font-size: 17px; line-height: 1.7; color: var(--on-surface); font-w
   .screen-info { text-align: left; }
   .screen-info h3 { font-size: 28px; }
   .screen-info p { font-size: 18px; }
+  .screen-cta { align-items: flex-start; }
   .screen-tabs { margin-bottom: 48px; }
 
   .benefits-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
