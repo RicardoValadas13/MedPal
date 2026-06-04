@@ -65,6 +65,15 @@
 .feature-list li { display: flex; gap: 8px; font-size: 14px; color: var(--on-surface-variant); line-height: 1.5; }
 .feat-check { color: var(--secondary); font-weight: 700; flex-shrink: 0; font-size: 13px; margin-top: 1px; }
 
+/* ── Trust Strip ─────────────────────────────── */
+.trust-strip { background: var(--primary); padding: 28px 0; }
+.trust-items { display: flex; align-items: center; justify-content: center; gap: 0; flex-wrap: wrap; }
+.trust-item { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 0 40px; text-align: center; }
+.trust-item > span:first-child { font-size: 24px; }
+.trust-item strong { font-size: 15px; font-weight: 600; color: #fff; }
+.trust-sub { font-size: 13px; color: rgba(255,255,255,0.55); }
+.trust-divider { width: 1px; height: 48px; background: rgba(255,255,255,0.15); flex-shrink: 0; }
+
 /* ── Product Box ─────────────────────────────── */
 .product { background: var(--surface-low); }
 .product-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }

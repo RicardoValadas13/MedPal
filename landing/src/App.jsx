@@ -47,6 +47,7 @@ const FEATURE_GROUPS = [
       'AI triages your question and routes it to the right specialist instantly',
       'Your team knows your exact medications and history — no re-explaining',
       'No waiting rooms, no hold music',
+      'End-to-end encrypted messages — every conversation stays private',
     ],
   },
   {
@@ -166,6 +167,21 @@ export default function App() {
                 </ul>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* TRUST STRIP */}
+      <section className="trust-strip">
+        <div className="container">
+          <div className="trust-items">
+            <div className="trust-item"><span>🔒</span><strong>End-to-end encrypted</strong><span className="trust-sub">All messages and health data</span></div>
+            <div className="trust-divider" />
+            <div className="trust-item"><span>🇪🇺</span><strong>GDPR compliant</strong><span className="trust-sub">Your data belongs to you</span></div>
+            <div className="trust-divider" />
+            <div className="trust-item"><span>🩺</span><strong>Verified medical team</strong><span className="trust-sub">Certified doctors & pharmacists</span></div>
+            <div className="trust-divider" />
+            <div className="trust-item"><span>🔐</span><strong>Zero data selling</strong><span className="trust-sub">Never shared with third parties</span></div>
           </div>
         </div>
       </section>
