@@ -20,7 +20,7 @@ export default function QRModal({ onClose }) {
             includeMargin={false}
           />
         </div>
-        <p className="qr-url">{DEMO_URL}</p>
+        <a className="qr-url" href={DEMO_URL} target="_blank" rel="noopener noreferrer">{DEMO_URL}</a>
         <p className="qr-note">Point your phone camera at the code to open the demo instantly — no app store needed.</p>
       </div>
     </div>
