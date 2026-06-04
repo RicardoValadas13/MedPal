@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import './App.css'
+import QRModal from './QRModal.jsx'
 
 const SCREENS = [
   { id: 'today',     label: 'Today',     src: '/screens/today.png',     title: 'Daily Dose Tracker', desc: "See every medication scheduled for today. Mark doses taken, snooze a reminder, or check what's next — in seconds, one-handed." },
@@ -95,10 +96,12 @@ const DEMO_CARDS = [
 
 export default function App() {
   const [activeScreen, setActiveScreen] = useState('today')
+  const [showQR, setShowQR] = useState(false)
   const current = SCREENS.find(s => s.id === activeScreen)
 
   return (
     <div className="app">
+      {showQR && <QRModal onClose={() => setShowQR(false)} />}
       {/* NAV */}
       <nav className="nav">
         <div className="nav-inner container">
@@ -255,7 +258,7 @@ export default function App() {
                   </li>
                 ))}
               </ul>
-              <a href="#download" className="btn btn-primary">Start Now</a>
+              <button className="btn btn-primary" onClick={() => setShowQR(true)}>Start Now</button>
             </div>
           </div>
         </div>
@@ -280,7 +283,7 @@ export default function App() {
                   </li>
                 ))}
               </ul>
-              <a href="#download" className="btn btn-primary">Start Now</a>
+              <button className="btn btn-primary" onClick={() => setShowQR(true)}>Start Now</button>
             </div>
             <div className="benefits-image">
               <div className="phone-frame phone-frame-sm">
@@ -363,7 +366,7 @@ export default function App() {
                   <span className="demo-arrow">→</span>
                 </div>
               ))}
-              <a href="#download" className="btn btn-primary" style={{marginTop: '8px'}}>Create My Account</a>
+              <button className="btn btn-primary" style={{marginTop: '8px'}} onClick={() => setShowQR(true)}>Create My Account</button>
             </div>
           </div>
         </div>
