@@ -211,7 +211,7 @@ blockquote { font-size: 17px; line-height: 1.7; color: var(--on-surface); font-w
   .trust-item { padding: 0 28px; }
   .trust-divider { display: block; width: 1px; height: 44px; background: rgba(255,255,255,0.15); align-self: center; }
   .store-buttons { flex-direction: row; max-width: none; width: auto; }
-  .pricing-grid { flex-direction: row; justify-content: center; align-items: stretch; max-width: 720px; margin-left: auto; margin-right: auto; }
+  .pricing-grid { flex-direction: row; justify-content: center; align-items: stretch; max-width: 1040px; margin-left: auto; margin-right: auto; }
   .price-card { flex: 1; }
   .footer-inner { flex-direction: row; flex-wrap: wrap; justify-content: space-between; text-align: left; }
   .demo-phone { display: flex; justify-content: center; }

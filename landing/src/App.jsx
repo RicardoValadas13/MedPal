@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './App.css'
-import QRModal from './QRModal.jsx'
+import QRModal, { DEMO_URL } from './QRModal.jsx'
 
 const SCREENS = [
   { id: 'today',     label: 'Today',     src: '/screens/today.png',     title: 'Your Day at a Glance', desc: 'All your medications for the day — morning to night — with one tap to mark each dose taken. Plus upcoming appointments and notes, all in one place.' },
@@ -69,6 +69,41 @@ const FEATURE_GROUPS = [
       'Full calendar sync — your medication schedule in Google or Apple Calendar',
     ],
   },
+  {
+    category: 'AI Chat Agent',
+    icon: '🤖',
+    features: [
+      'Medical assistant powered by Gemini 2.5 Flash',
+      'Answers medication questions, app support, and basic health guidance',
+      'Available in English and Portuguese',
+      'Never diagnoses or changes dosages — always refers you to your doctor',
+      'Detects emergency keywords and triggers the emergency banner automatically',
+      'Full conversation history saved securely, with a disclaimer banner always visible',
+    ],
+  },
+  {
+    category: 'Emergency System',
+    icon: '🚨',
+    features: [
+      'Big red 2.5D emergency button — always visible, bottom-centre, full width',
+      'Pulse animation drawing attention for elderly users with low vision (respects reduced-motion)',
+      'AAA contrast — white on red, 26px extrabold',
+      'Safety gate — "Call 112?" confirmation before it dials, then opens tel:112 instantly',
+      'ElevenLabs voice plays your details once connected: name, address and floor',
+      'Repeats 5× with 2-second pauses so the operator can write everything down — EN + PT',
+    ],
+  },
+  {
+    category: 'Caregiver Mode',
+    icon: '🔒',
+    features: [
+      '4-digit PIN set by the caregiver, stored as a bcrypt hash',
+      'Locks for 30 seconds after 3 wrong attempts',
+      'Toggle missed-medication alerts and the emergency voice on or off',
+      'Mark which medications are critical',
+      'Edit the patient address and emergency info',
+    ],
+  },
 ]
 
 const PATIENT_BENEFITS = [
@@ -99,6 +134,15 @@ export default function App() {
   const [activeScreen, setActiveScreen] = useState('today')
   const [showQR, setShowQR] = useState(false)
   const current = SCREENS.find(s => s.id === activeScreen)
+
+  // On mobile, open the demo directly — no need to scan a QR code from the same device.
+  const handleStart = () => {
+    if (typeof window !== 'undefined' && window.matchMedia('(max-width: 639px)').matches) {
+      window.open(DEMO_URL, '_blank', 'noopener,noreferrer')
+    } else {
+      setShowQR(true)
+    }
+  }
 
   return (
     <div className="app">
@@ -173,7 +217,7 @@ export default function App() {
         <div className="container">
           <div className="section-header">
             <span className="badge">Everything Included</span>
-            <h2>Six systems.<br />One subscription.</h2>
+            <h2>Nine systems.<br />One subscription.</h2>
             <p>Your MedPal plan combines AI, a real medical team, and a free Smart Box into one service that works for patients, carers, and doctors alike.</p>
           </div>
           <div className="features-grid">
@@ -295,7 +339,7 @@ export default function App() {
                   </li>
                 ))}
               </ul>
-              <button className="btn btn-primary" onClick={() => setShowQR(true)}>Start Now</button>
+              <button className="btn btn-primary" onClick={handleStart}>Start Now</button>
             </div>
           </div>
         </div>
@@ -320,7 +364,7 @@ export default function App() {
                   </li>
                 ))}
               </ul>
-              <button className="btn btn-primary" onClick={() => setShowQR(true)}>Start Now</button>
+              <button className="btn btn-primary" onClick={handleStart}>Start Now</button>
             </div>
             <div className="benefits-image">
               <div className="phone-frame phone-frame-sm">
@@ -403,7 +447,7 @@ export default function App() {
                   <span className="demo-arrow">→</span>
                 </div>
               ))}
-              <button className="btn btn-primary" style={{marginTop: '8px'}} onClick={() => setShowQR(true)}>Create My Account</button>
+              <button className="btn btn-primary" style={{marginTop: '8px'}} onClick={handleStart}>Create My Account</button>
             </div>
           </div>
         </div>
@@ -419,15 +463,27 @@ export default function App() {
           </div>
           <div className="pricing-grid">
             <div className="price-card">
+              <span className="price-card-name">Free</span>
+              <div className="price-card-amount"><strong>€0</strong><span>/forever</span></div>
+              <p className="price-card-billing">Ad-supported · no card needed</p>
+              <ul className="price-card-list">
+                <li><span>✓</span> Core reminders, tracking & AI chat agent</li>
+                <li><span>✓</span> Emergency button included</li>
+                <li><span>📺</span> Shows occasional ads</li>
+                <li><span>—</span> Smart Box not included</li>
+              </ul>
+              <button className="btn btn-ghost" onClick={handleStart}>Start Free</button>
+            </div>
+            <div className="price-card">
               <span className="price-card-name">Monthly</span>
               <div className="price-card-amount"><strong>€3.99</strong><span>/month</span></div>
               <p className="price-card-billing">Billed monthly · cancel anytime</p>
               <ul className="price-card-list">
-                <li><span>✓</span> Full app — all six systems</li>
+                <li><span>✓</span> Full app — all nine systems, ad-free</li>
                 <li><span>✓</span> 24/7 medical support team</li>
                 <li><span>🎁</span> Free MedPal Smart Box</li>
               </ul>
-              <button className="btn btn-primary" onClick={() => setShowQR(true)}>Start Monthly</button>
+              <button className="btn btn-primary" onClick={handleStart}>Start Monthly</button>
             </div>
             <div className="price-card price-card-featured">
               <span className="price-badge">Save 30%</span>
@@ -439,7 +495,7 @@ export default function App() {
                 <li><span>✓</span> 30% off vs paying monthly</li>
                 <li><span>🎁</span> Free MedPal Smart Box</li>
               </ul>
-              <button className="btn btn-primary" onClick={() => setShowQR(true)}>Start Annual — Best Value</button>
+              <button className="btn btn-primary" onClick={handleStart}>Start Annual — Best Value</button>
             </div>
           </div>
           <div className="store-buttons">
