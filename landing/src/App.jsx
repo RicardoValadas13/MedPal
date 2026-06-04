@@ -213,16 +213,15 @@ export default function App() {
           <div className="product-inner">
             <div className="product-images">
               <img className="product-img-main" src="/screens/box1.png" alt="MedPal Smart Box" />
-              <img className="product-img-secondary" src="/screens/box2.png" alt="MedPal Smart Box numbered" />
             </div>
             <div className="product-info">
               <span className="badge badge-green">The Product</span>
               <h2>The box that keeps everything on track.</h2>
-              <p className="product-lead">The <strong>MedPal Smart Box</strong> is a 7×4 weekly pill organiser with 28 compartments — one for each time of day, every day of the week. Pair it with the app and it becomes a smart, connected system.</p>
+              <p className="product-lead">The <strong>MedPal Smart Box</strong> is a 28-slot monthly pill organiser with numbered compartments — one per day. Compact, clean, and built to pair seamlessly with the MedPal app.</p>
               <ul className="product-features">
-                <li><span>✓</span> 28 compartments — Morning, Afternoon, Evening, Night</li>
+                <li><span>✓</span> 28 numbered compartments — one per day of the month</li>
                 <li><span>✓</span> Scan the box to verify each slot is filled correctly</li>
-                <li><span>✓</span> Compact, travel-friendly, transparent lid</li>
+                <li><span>✓</span> Compact, travel-friendly, translucent lid</li>
                 <li><span>✓</span> App included — no subscription, ever</li>
                 <li><span>✓</span> Medical support team included</li>
               </ul>

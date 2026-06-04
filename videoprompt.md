@@ -42,12 +42,12 @@ Actions:
 
 ### Veo 3
 
-Static macro close-up, then slow pull back. A flat white box sits on the clean kitchen table in soft morning light. The woman's hands — warm-toned, slightly aged — lift the lid. Inside: the MedPal Smart Box (matching @Image-Box), a translucent-lid pill organiser with a charcoal-grey frame, 28 labelled compartments, the MedPal logo subtly embossed. Morning light catches the transparent surface as she lifts it out of the packaging. Eggshell and sage palette throughout. Style: product-photography warmth, photorealistic, no lens flare.
+Static macro close-up, then slow pull back. A flat white box sits on the clean kitchen table in soft morning light. The woman's hands — warm-toned, slightly aged — lift the lid. Inside: the MedPal Smart Box (matching @Image-Box), a clean white translucent-lid pill organiser with 28 numbered compartments (1–28), "Medpal" branding on the left panel, sitting on a soft pale fabric surface. Morning light catches the transparent surface as she lifts it out of the packaging. Eggshell and sage palette throughout. Style: product-photography warmth, photorealistic, no lens flare.
 SFX: soft cardboard opening, then a clean satisfying click as the transparent lid pops open. Ambient: faint birds. No music.
 
 ### Sora
 
-A flat white box sits on a clean pale oak table in warm morning light. A woman's hands — warm-toned, natural age texture — lift the lid to reveal a translucent pill organiser with a charcoal-grey frame and 28 labelled compartments, a logo subtly embossed on the lid. Morning backlight catches the clear surface.
+A flat white box sits on a clean pale oak table in warm morning light. A woman's hands — warm-toned, natural age texture — lift the lid to reveal a clean white translucent pill organiser with 28 numbered compartments (1–28) and "Medpal" branding on the side panel. Morning backlight catches the clear surface.
 
 Cinematography:
 Camera shot: macro close-up, static, then slow pull back as lid opens, soft window backlight
