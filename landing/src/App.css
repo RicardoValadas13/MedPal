@@ -43,18 +43,44 @@
 .hero-image { display: flex; justify-content: center; }
 
 /* ── Phone Frame ─────────────────────────────── */
-.phone-frame { position: relative; width: 280px; }
-.phone-frame img { width: 100%; border-radius: 36px; box-shadow: 0 32px 80px rgba(25,40,48,0.18), 0 4px 16px rgba(25,40,48,0.08); }
-.phone-frame-sm { width: 240px; }
+.phone-frame { position: relative; width: 220px; }
+.phone-frame img { width: 100%; border-radius: 32px; box-shadow: 0 24px 60px rgba(25,40,48,0.16), 0 4px 16px rgba(25,40,48,0.08); }
+.phone-frame-sm { width: 210px; }
+
+/* Hero phone: clip to top ~60% of the image so it doesn't stretch too tall */
+.hero-image .phone-frame img {
+  max-height: 480px;
+  object-fit: cover;
+  object-position: top;
+}
 
 /* ── Features ─────────────────────────────────── */
 .features { background: var(--surface-low); }
-.features-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
-.feature-card { background: var(--surface); padding: 36px 32px; border-radius: 16px; border: 1px solid var(--outline-variant); transition: box-shadow 0.2s, transform 0.2s; }
+.features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.feature-card { background: var(--surface); padding: 28px 24px; border-radius: 16px; border: 1px solid var(--outline-variant); transition: box-shadow 0.2s, transform 0.2s; display: flex; flex-direction: column; gap: 12px; }
 .feature-card:hover { box-shadow: 0 8px 32px rgba(25,40,48,0.08); transform: translateY(-2px); }
-.feature-icon { font-size: 32px; display: block; margin-bottom: 16px; }
-.feature-card h3 { font-size: 20px; font-weight: 600; margin-bottom: 10px; }
-.feature-card p { color: var(--on-surface-variant); line-height: 1.6; }
+.feature-icon { font-size: 28px; display: block; }
+.feature-card h3 { font-size: 17px; font-weight: 600; color: var(--primary); }
+.feature-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.feature-list li { display: flex; gap: 8px; font-size: 14px; color: var(--on-surface-variant); line-height: 1.5; }
+.feat-check { color: var(--secondary); font-weight: 700; flex-shrink: 0; font-size: 13px; margin-top: 1px; }
+
+/* ── Product Box ─────────────────────────────── */
+.product { background: var(--surface-low); }
+.product-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+.product-images { position: relative; display: flex; justify-content: center; align-items: flex-end; gap: -24px; }
+.product-img-main { width: 320px; border-radius: 20px; box-shadow: 0 24px 64px rgba(25,40,48,0.14); z-index: 2; }
+.product-img-secondary { width: 180px; border-radius: 14px; box-shadow: 0 12px 32px rgba(25,40,48,0.10); position: absolute; bottom: -16px; right: 0; border: 4px solid var(--bg); }
+.product-info { display: flex; flex-direction: column; gap: 20px; }
+.product-info h2 { font-size: clamp(28px, 3vw, 40px); font-weight: 700; line-height: 1.2; letter-spacing: -0.02em; margin: 8px 0; }
+.product-lead { color: var(--on-surface-variant); font-size: 18px; line-height: 1.65; }
+.product-features { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.product-features li { display: flex; gap: 12px; align-items: flex-start; font-size: 16px; color: var(--on-surface); }
+.product-features li span { color: var(--secondary); font-weight: 700; font-size: 16px; flex-shrink: 0; }
+.product-price-block { display: flex; align-items: center; gap: 24px; padding-top: 8px; flex-wrap: wrap; }
+.product-price { display: flex; flex-direction: column; }
+.price-value { font-size: 40px; font-weight: 700; color: var(--primary); letter-spacing: -0.02em; line-height: 1; }
+.price-note { font-size: 14px; color: var(--on-surface-variant); margin-top: 4px; }
 
 /* ── App Screens ─────────────────────────────── */
 .screens { background: var(--bg); }
@@ -118,10 +144,14 @@ blockquote { font-size: 20px; line-height: 1.7; color: var(--on-surface); font-w
 
 /* ── Responsive ─────────────────────────────── */
 @media (max-width: 900px) {
-  .hero-inner, .benefits-inner, .screen-content { grid-template-columns: 1fr; gap: 48px; }
+  .hero-inner, .benefits-inner, .screen-content, .product-inner { grid-template-columns: 1fr; gap: 48px; }
   .benefits-inner-reverse { direction: ltr; }
   .benefits-image { order: -1; }
   .hero-image { order: -1; }
+  .features-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
   .features-grid { grid-template-columns: 1fr; }
   .nav-links { display: none; }
   .section { padding: 64px 0; }

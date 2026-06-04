@@ -8,26 +8,62 @@ const SCREENS = [
   { id: 'analytics', label: 'Reports',   src: '/screens/analytics.png', title: 'Health Reports', desc: 'Track your adherence over time. Share a full medication history with your doctor in one tap — no guesswork, just real data.' },
 ]
 
-const FEATURES = [
+const FEATURE_GROUPS = [
   {
-    icon: '📷',
-    title: 'Magic Scan',
-    desc: 'Point your camera at any prescription label or box. MedPal reads it instantly, organises everything, and sets up your schedule — no manual typing required.',
+    category: 'Prescription Management',
+    icon: '📋',
+    features: [
+      'Automatic sync when your doctor sends a prescription',
+      'Snap any paper prescription — OCR extracts name, dosage & instructions instantly',
+      'Reads handwritten doctor notes accurately',
+      'Supports all standard prescription formats',
+    ],
   },
   {
+    category: 'Smart Reminders & Tracking',
     icon: '🔔',
-    title: 'Proactive Reminders',
-    desc: 'Smart reminders that adapt to your routine. MedPal learns when you take your medications and adjusts so you never miss a critical dose.',
+    features: [
+      'Personalised intake reminders based on your exact dosing schedule',
+      'Refill alerts before you run out — no gaps in treatment',
+      'AI voice calls for users who miss app notifications — built for elderly users',
+    ],
   },
   {
+    category: 'Pill Organiser Verification',
+    icon: '📦',
+    features: [
+      'Snap a photo of your MedPal Smart Box',
+      'AI checks each slot — confirms correct medication and dosage',
+      'Flags mismatches or missing pills before you take them',
+    ],
+  },
+  {
+    category: 'Medical Support Team',
+    icon: '🩺',
+    features: [
+      'Real doctors and pharmacists available to answer your prescription questions',
+      'AI triages your question and routes it to the right specialist instantly',
+      'Fully context-aware — your team knows your exact prescriptions and history',
+      'No waiting rooms, no hold music — answers when you need them',
+    ],
+  },
+  {
+    category: 'Analytics & Doctor Connectivity',
     icon: '📊',
-    title: 'Medical Reports',
-    desc: 'Share your complete medication history with your doctor at the push of a button. Clear, professional, and always accurate.',
+    features: [
+      'Visual dashboard of all active, paused, and completed medications',
+      'One-tap sharing of adherence trends and full history with your doctor',
+      'Ready-to-share export for appointments and medical reviews',
+    ],
   },
   {
-    icon: '💬',
-    title: 'AI Companion',
-    desc: 'More than an alarm — MedPal listens. Chat freely about how you are feeling, and it will flag anything that needs medical attention.',
+    category: 'Visual Learning & Calendar',
+    icon: '🎓',
+    features: [
+      'AI-generated visual guides for your medication or exercise routine',
+      'Step-by-step animated instructions appended to your care plan',
+      'Full calendar sync — your medication schedule in your existing calendar',
+    ],
   },
 ]
 
@@ -95,18 +131,53 @@ export default function App() {
       <section className="features section" id="features">
         <div className="container">
           <div className="section-header">
-            <span className="badge">Core Features</span>
-            <h2>Everything you need.<br />Nothing you don't.</h2>
-            <p>MedPal strips away the complexity of medication management and replaces it with calm, reliable tools that work around you.</p>
+            <span className="badge">Everything Included</span>
+            <h2>Six systems.<br />One box.</h2>
+            <p>MedPal combines hardware, AI, and clinical tools into a single product that works for patients, carers, and doctors alike.</p>
           </div>
           <div className="features-grid">
-            {FEATURES.map(f => (
-              <div className="feature-card" key={f.title}>
-                <span className="feature-icon">{f.icon}</span>
-                <h3>{f.title}</h3>
-                <p>{f.desc}</p>
+            {FEATURE_GROUPS.map(g => (
+              <div className="feature-card" key={g.category}>
+                <span className="feature-icon">{g.icon}</span>
+                <h3>{g.category}</h3>
+                <ul className="feature-list">
+                  {g.features.map(f => (
+                    <li key={f}><span className="feat-check">✓</span>{f}</li>
+                  ))}
+                </ul>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* PRODUCT BOX */}
+      <section className="product section" id="product">
+        <div className="container">
+          <div className="product-inner">
+            <div className="product-images">
+              <img className="product-img-main" src="/screens/box1.png" alt="MedPal Smart Box" />
+              <img className="product-img-secondary" src="/screens/box2.png" alt="MedPal Smart Box numbered" />
+            </div>
+            <div className="product-info">
+              <span className="badge badge-green">The Product</span>
+              <h2>The box that keeps everything on track.</h2>
+              <p className="product-lead">The <strong>MedPal Smart Box</strong> is a 7×4 weekly pill organiser with 28 individual compartments — one for each time of day, every day of the week. Built for clarity, built for independence.</p>
+              <ul className="product-features">
+                <li><span>✓</span> 28 compartments — Morning, Afternoon, Evening, Night</li>
+                <li><span>✓</span> Syncs with the MedPal app automatically</li>
+                <li><span>✓</span> Compact, travel-friendly design</li>
+                <li><span>✓</span> Transparent lid for quick visual check</li>
+                <li><span>✓</span> App included — no subscription</li>
+              </ul>
+              <div className="product-price-block">
+                <div className="product-price">
+                  <span className="price-value">€19.99</span>
+                  <span className="price-note">Box + App. One-time payment.</span>
+                </div>
+                <a href="#download" className="btn btn-primary">Order Now</a>
+              </div>
+            </div>
           </div>
         </div>
       </section>
