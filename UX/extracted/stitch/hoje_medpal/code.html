@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Medpal - Today</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#ffffff",
+                        "primary-container": "#2f3e46",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-primary": "#b9c9d3",
+                        "on-tertiary-fixed": "#3c0800",
+                        "error": "#ba1a1a",
+                        "surface-container-highest": "#e3e2df",
+                        "on-primary-container": "#99a9b2",
+                        "primary": "#192830",
+                        "on-secondary-fixed": "#06200e",
+                        "background": "#faf9f5",
+                        "surface-container": "#efeeea",
+                        "secondary": "#49654d",
+                        "surface-dim": "#dbdad6",
+                        "on-secondary-container": "#4f6b53",
+                        "on-error-container": "#93000a",
+                        "on-surface-variant": "#43474a",
+                        "surface-container-high": "#e9e8e4",
+                        "surface-container-low": "#f4f4f0",
+                        "primary-fixed": "#d5e5ef",
+                        "tertiary-container": "#6d230f",
+                        "surface-variant": "#e3e2df",
+                        "tertiary": "#4f0e00",
+                        "tertiary-fixed": "#ffdbd2",
+                        "secondary-fixed": "#cbebcd",
+                        "on-secondary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed-variant": "#3a4951",
+                        "on-primary-fixed": "#0e1d25",
+                        "tertiary-fixed-dim": "#ffb4a1",
+                        "on-primary": "#ffffff",
+                        "outline": "#73787b",
+                        "on-tertiary-fixed-variant": "#7c2e19",
+                        "surface": "#faf9f5",
+                        "on-background": "#1b1c1a",
+                        "secondary-container": "#cbebcd",
+                        "secondary-fixed-dim": "#afceb2",
+                        "on-tertiary-container": "#f3896d",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#f2f1ed",
+                        "outline-variant": "#c3c7ca",
+                        "surface-bright": "#faf9f5",
+                        "primary-fixed-dim": "#b9c9d3",
+                        "on-secondary-fixed-variant": "#324d37",
+                        "on-surface": "#1b1c1a",
+                        "surface-tint": "#516169",
+                        "inverse-surface": "#2f312e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px",
+                        "2xl": "1rem",
+                        "3xl": "1.5rem"
+                    },
+                    "spacing": {
+                        "lg": "32px",
+                        "base": "8px",
+                        "md": "24px",
+                        "xs": "4px",
+                        "sm": "12px",
+                        "container-margin": "20px",
+                        "xl": "48px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Inter"],
+                        "caption": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-xl": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["22px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "caption": ["14px", {"lineHeight": "18px", "fontWeight": "500"}],
+                        "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-xl": ["20px", {"lineHeight": "30px", "fontWeight": "400"}],
+                        "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-md": ["18px", {"lineHeight": "26px", "fontWeight": "400"}],
+                        "label-lg": ["16px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+        }
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.35s;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="antialiased min-h-screen pb-24 font-body-md text-body-md">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-40 bg-background dark:bg-background flex justify-between items-center w-full px-container-margin py-sm">
+<div class="flex items-center gap-sm">
+<img alt="Profile Photo" class="w-12 h-12 rounded-full object-cover border-2 border-surface-container-highest" data-alt="A close-up portrait of a friendly young man with a warm smile, set against a soft, well-lit background. The lighting is natural and bright, conveying a sense of health and well-being. The image fits perfectly within a modern, empathetic healthcare app design using a soft color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBb41m1_eYgvq_UHZyuDcP-PrgPbHsnbMpb6mtA6O-9x1S9Tjyj_fG7_IH4VdGWdfJzdIc-StDut3eSY6e0tDpJIaVT4iFsg5CjphfOjp6rUQBLZLQ82F4S0UhyYTDEL42--yjyEINRNLRwgy2Dv3MOxr-LSzrYSL7ynAQJA1nvdxkSuKQRGSFK8gQiTU1P4cSM_moR73-VfX5vfMTZ942J9rdS5bF9LFY5Mz5HmQhD_gKuJSP6V0TNPN3PqwDWdvEuh_kK8zUrbyjQ"/>
+<div>
+<p class="font-caption text-caption text-on-surface-variant">Bom dia,</p>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary dark:text-primary-fixed">João</h1>
+</div>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-primary dark:text-primary-fixed hover:bg-surface-container dark:hover:bg-surface-container-high transition-colors active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+</button>
+</header>
+<main class="px-container-margin py-md flex flex-col gap-md max-w-lg mx-auto">
+<!-- Greeting / Tip Card -->
+<section class="bg-surface-container-lowest rounded-2xl p-md border border-outline-variant/30 flex items-start gap-sm">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-secondary-container" style="font-variation-settings: 'FILL' 1;">wb_sunny</span>
+</div>
+<div>
+<h2 class="font-label-lg text-label-lg text-primary mb-xs">Stay Hydrated</h2>
+<p class="font-caption text-caption text-on-surface-variant">Remember to drink a glass of water with your morning medications.</p>
+</div>
+</section>
+<!-- Progress Overview Bento -->
+<section class="grid grid-cols-2 gap-sm">
+<div class="bg-surface-container-lowest rounded-2xl p-md border border-outline-variant/30 flex flex-col items-center justify-center text-center">
+<div class="relative w-24 h-24 mb-sm">
+<svg class="w-full h-full" viewbox="0 0 100 100">
+<circle class="text-surface-container-highest stroke-current" cx="50" cy="50" fill="transparent" r="40" stroke-width="8"></circle>
+<circle class="text-secondary stroke-current progress-ring__circle" cx="50" cy="50" fill="transparent" r="40" stroke-dasharray="251.2" stroke-dashoffset="125.6" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-primary font-bold">2/4</span>
+</div>
+</div>
+<span class="font-caption text-caption text-on-surface-variant">Daily Doses</span>
+</div>
+<div class="flex flex-col gap-sm">
+<div class="bg-surface-container-lowest rounded-2xl p-sm border border-outline-variant/30 flex-1 flex flex-col justify-center">
+<div class="flex items-center gap-xs mb-1">
+<span class="material-symbols-outlined text-secondary text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-caption text-caption text-on-surface-variant">Completed</span>
+</div>
+<span class="font-body-xl text-body-xl text-primary font-semibold">2</span>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl p-sm border border-outline-variant/30 flex-1 flex flex-col justify-center">
+<div class="flex items-center gap-xs mb-1">
+<span class="material-symbols-outlined text-tertiary text-[20px]" style="font-variation-settings: 'FILL' 1;">pending</span>
+<span class="font-caption text-caption text-on-surface-variant">Upcoming</span>
+</div>
+<span class="font-body-xl text-body-xl text-primary font-semibold">2</span>
+</div>
+</div>
+</section>
+<!-- Next Dose Card -->
+<section class="flex flex-col gap-sm">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">Next Dose</h2>
+<div class="bg-surface-container-lowest rounded-3xl p-md shadow-[0_8px_30px_rgb(47,62,70,0.08)] border-l-4 border-l-primary relative overflow-hidden">
+<!-- Subtle background pattern/gradient -->
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary-fixed/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"></div>
+<div class="flex justify-between items-start mb-md relative z-10">
+<div>
+<div class="flex items-center gap-xs mb-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">schedule</span>
+<span class="font-caption text-caption text-on-surface-variant">10:00 AM</span>
+</div>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-primary mb-xs">Lisinopril</h3>
+<div class="inline-flex items-center px-2 py-1 rounded-md bg-surface-container text-on-surface-variant font-caption text-caption">
+                            20mg • 1 Pill
+                        </div>
+</div>
+<div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">pill</span>
+</div>
+</div>
+<div class="flex gap-sm relative z-10">
+<button class="flex-1 min-h-[56px] bg-primary text-on-primary rounded-xl font-label-lg text-label-lg flex items-center justify-center gap-xs hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined text-[20px]">check</span>
+                        Take Now
+                    </button>
+<button class="flex-1 min-h-[56px] bg-surface-container text-primary rounded-xl font-label-lg text-label-lg flex items-center justify-center gap-xs hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[20px]">snooze</span>
+                        Snooze
+                    </button>
+</div>
+</div>
+</section>
+<!-- Completed Today List -->
+<section class="flex flex-col gap-sm mt-sm">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">Completed Today</h2>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 overflow-hidden divide-y divide-surface-container">
+<div class="p-sm flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-secondary-container" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div class="flex-1">
+<p class="font-label-lg text-label-lg text-primary line-through opacity-70">Metformin, 500mg</p>
+<p class="font-caption text-caption text-on-surface-variant">Taken at 08:15 AM</p>
+</div>
+</div>
+<div class="p-sm flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-secondary-container" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div class="flex-1">
+<p class="font-label-lg text-label-lg text-primary line-through opacity-70">Vitamin D3</p>
+<p class="font-caption text-caption text-on-surface-variant">Taken at 08:15 AM</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface dark:bg-surface-container-lowest rounded-t-xl">
+<a class="flex flex-col items-center justify-center bg-secondary-container dark:bg-secondary text-on-secondary-container dark:text-on-secondary rounded-full px-4 py-1 active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">today</span>
+<span class="font-label-lg text-label-lg mt-xs text-[12px]">Today</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant p-2 hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-full active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">pill</span>
+<span class="font-label-lg text-label-lg mt-xs text-[12px]">Meds</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant p-2 hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-full active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">chat_bubble</span>
+<span class="font-label-lg text-label-lg mt-xs text-[12px]">Chat</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant p-2 hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-full active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">analytics</span>
+<span class="font-label-lg text-label-lg mt-xs text-[12px]">Analytics</span>
+</a>
+</nav>
+</body></html>

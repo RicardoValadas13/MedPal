@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Medpal - Meus Remédios</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#ffffff",
+                        "primary-container": "#2f3e46",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-primary": "#b9c9d3",
+                        "on-tertiary-fixed": "#3c0800",
+                        "error": "#ba1a1a",
+                        "surface-container-highest": "#e3e2df",
+                        "on-primary-container": "#99a9b2",
+                        "primary": "#192830",
+                        "on-secondary-fixed": "#06200e",
+                        "background": "#faf9f5",
+                        "surface-container": "#efeeea",
+                        "secondary": "#49654d",
+                        "surface-dim": "#dbdad6",
+                        "on-secondary-container": "#4f6b53",
+                        "on-error-container": "#93000a",
+                        "on-surface-variant": "#43474a",
+                        "surface-container-high": "#e9e8e4",
+                        "surface-container-low": "#f4f4f0",
+                        "primary-fixed": "#d5e5ef",
+                        "tertiary-container": "#6d230f",
+                        "surface-variant": "#e3e2df",
+                        "tertiary": "#4f0e00",
+                        "tertiary-fixed": "#ffdbd2",
+                        "secondary-fixed": "#cbebcd",
+                        "on-secondary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed-variant": "#3a4951",
+                        "on-primary-fixed": "#0e1d25",
+                        "tertiary-fixed-dim": "#ffb4a1",
+                        "on-primary": "#ffffff",
+                        "outline": "#73787b",
+                        "on-tertiary-fixed-variant": "#7c2e19",
+                        "surface": "#faf9f5",
+                        "on-background": "#1b1c1a",
+                        "secondary-container": "#cbebcd",
+                        "secondary-fixed-dim": "#afceb2",
+                        "on-tertiary-container": "#f3896d",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#f2f1ed",
+                        "outline-variant": "#c3c7ca",
+                        "surface-bright": "#faf9f5",
+                        "primary-fixed-dim": "#b9c9d3",
+                        "on-secondary-fixed-variant": "#324d37",
+                        "on-surface": "#1b1c1a",
+                        "surface-tint": "#516169",
+                        "inverse-surface": "#2f312e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "32px",
+                        "base": "8px",
+                        "md": "24px",
+                        "xs": "4px",
+                        "sm": "12px",
+                        "container-margin": "20px",
+                        "xl": "48px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Inter"],
+                        "caption": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-xl": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["22px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "caption": ["14px", { "lineHeight": "18px", "fontWeight": "500" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-xl": ["20px", { "lineHeight": "30px", "fontWeight": "400" }],
+                        "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-md": ["18px", { "lineHeight": "26px", "fontWeight": "400" }],
+                        "label-lg": ["16px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background antialiased min-h-screen pb-24 font-body-md text-body-md selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-container-margin py-sm bg-background dark:bg-background docked full-width top-0 sticky z-30">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-variant flex items-center justify-center shrink-0">
+<img alt="User profile photo" class="w-full h-full object-cover" data-alt="A close-up headshot of a smiling person with a warm, approachable expression, set against a soft, bright background that fits a modern, clean light-mode UI aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQKaTkCr7Qs6yO1YLzwOlFK2dbLmS2Vvz-GMv6tqXbGYEC7y14C0NEJ8NKHILYhw79Vb75vckaaeV9k2nccZYHOvST8Fnjfx8tLF_o64P11NH6xHdo23cb8yrCtZpDensRij7p-TscdPWRY_ihaTOm-bzAl5H4NlNyUZZAj6JuO5yPFEsmuPh8HjyOzmu5di8cwDNfDvmZObwAq-r2I-47MQX6OSAgvzSZn3ORUPOagxuBF8V4fjO3SE0a4ONLdp3LdLpO4AzCsN1z"/>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary dark:text-primary-fixed text-center flex-1">
+            Medpal
+        </h1>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-primary dark:text-primary-fixed hover:bg-surface-container dark:hover:bg-surface-container-high transition-colors active:scale-95 duration-200 shrink-0">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="max-w-7xl mx-auto px-container-margin mt-md flex flex-col gap-xl">
+<!-- Page Title -->
+<div>
+<h2 class="font-display-lg text-display-lg text-primary mb-sm">Meus Remédios</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Seu armário digital de saúde.</p>
+</div>
+<!-- Active Prescriptions -->
+<section class="flex flex-col gap-md">
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-on-background flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary" data-weight="fill" style="font-variation-settings: 'FILL' 1;">prescriptions</span>
+                Uso Contínuo
+            </h3>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-md">
+<!-- Card 1: Lisinopril -->
+<div class="bg-surface-container-lowest rounded-xl p-md border-l-[4px] border-secondary shadow-sm flex flex-col gap-sm hover:shadow-md transition-shadow relative overflow-hidden group cursor-pointer">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">Lisinopril</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">10mg • Comprimido</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">more_vert</span>
+</div>
+<div class="flex flex-wrap gap-xs mt-sm">
+<span class="bg-surface-container text-on-surface-variant px-sm py-xs rounded-full font-label-lg text-label-lg flex items-center gap-xs">
+<span class="material-symbols-outlined text-[18px]">schedule</span> 1x ao dia
+                        </span>
+<span class="bg-secondary-container text-on-secondary-container px-sm py-xs rounded-full font-label-lg text-label-lg flex items-center gap-xs">
+<span class="material-symbols-outlined text-[18px]">light_mode</span> Manhã
+                        </span>
+</div>
+</div>
+<!-- Card 2: Albuterol -->
+<div class="bg-surface-container-lowest rounded-xl p-md border-l-[4px] border-primary-fixed-dim shadow-sm flex flex-col gap-sm hover:shadow-md transition-shadow relative overflow-hidden group cursor-pointer">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">Albuterol Inhaler</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">90mcg • Inalador</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">more_vert</span>
+</div>
+<div class="flex flex-wrap gap-xs mt-sm">
+<span class="bg-primary-container text-on-primary-container px-sm py-xs rounded-full font-label-lg text-label-lg flex items-center gap-xs">
+<span class="material-symbols-outlined text-[18px]">emergency</span> Se necessário
+                        </span>
+</div>
+</div>
+<!-- Card 3: Vitamin D -->
+<div class="bg-surface-container-lowest rounded-xl p-md border-l-[4px] border-secondary shadow-sm flex flex-col gap-sm hover:shadow-md transition-shadow relative overflow-hidden group cursor-pointer">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">Vitamina D</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">2000 UI • Cápsula</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">more_vert</span>
+</div>
+<div class="flex flex-wrap gap-xs mt-sm">
+<span class="bg-surface-container text-on-surface-variant px-sm py-xs rounded-full font-label-lg text-label-lg flex items-center gap-xs">
+<span class="material-symbols-outlined text-[18px]">schedule</span> 1x ao dia
+                        </span>
+<span class="bg-surface-variant text-on-surface-variant px-sm py-xs rounded-full font-label-lg text-label-lg flex items-center gap-xs">
+<span class="material-symbols-outlined text-[18px]">restaurant</span> Com comida
+                        </span>
+</div>
+</div>
+</div>
+</section>
+<!-- Past Medications -->
+<section class="flex flex-col gap-md opacity-80">
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-outline flex items-center gap-sm">
+<span class="material-symbols-outlined" data-weight="fill" style="font-variation-settings: 'FILL' 1;">history</span>
+                Histórico
+            </h3>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-md">
+<!-- Past Card: Amoxicillin -->
+<div class="bg-surface-container-low rounded-xl p-md border-l-[4px] border-outline-variant flex flex-col gap-sm">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface-variant">Amoxicilina</h4>
+<p class="font-body-md text-body-md text-outline">500mg • Concluído em Out 2023</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant">done_all</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Floating Action Button (FAB) -->
+<div class="fixed bottom-[100px] right-container-margin z-40">
+<button class="bg-primary hover:bg-primary-container text-on-primary rounded-full h-[64px] pl-md pr-lg flex items-center gap-sm shadow-[0_12px_24px_rgba(47,62,70,0.2)] transition-transform hover:scale-105 active:scale-95 duration-200">
+<span class="material-symbols-outlined text-[28px]" data-icon="document_scanner">document_scanner</span>
+<span class="font-label-lg text-label-lg">Escanear Receita</span>
+</button>
+</div>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface dark:bg-surface-container-lowest rounded-t-xl pt-3 pb-safe shadow-md dark:shadow-none border-t-0 md:hidden">
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant p-2 hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-full active:scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined mb-1" data-icon="today">today</span>
+<span class="font-caption text-caption">Today</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-secondary-container dark:bg-secondary text-on-secondary-container dark:text-on-secondary rounded-full px-4 py-1 hover:bg-surface-container-high dark:hover:bg-surface-variant active:scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined mb-1" data-icon="pill" data-weight="fill" style="font-variation-settings: 'FILL' 1;">pill</span>
+<span class="font-caption text-caption font-semibold">Meds</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant p-2 hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-full active:scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined mb-1" data-icon="chat_bubble">chat_bubble</span>
+<span class="font-caption text-caption">Chat</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant p-2 hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-full active:scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined mb-1" data-icon="analytics">analytics</span>
+<span class="font-caption text-caption">Analytics</span>
+</button>
+</nav>
+</body></html>

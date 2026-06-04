@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Medpal - Cuidado que entende você</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container": "#efeeea",
+                      "tertiary": "#4f0e00",
+                      "surface-container-high": "#e9e8e4",
+                      "secondary-fixed-dim": "#afceb2",
+                      "error": "#ba1a1a",
+                      "error-container": "#ffdad6",
+                      "surface-container-lowest": "#ffffff",
+                      "secondary-fixed": "#cbebcd",
+                      "on-tertiary-fixed": "#3c0800",
+                      "on-primary-fixed": "#0e1d25",
+                      "primary": "#192830",
+                      "surface-bright": "#faf9f5",
+                      "inverse-surface": "#2f312e",
+                      "tertiary-container": "#6d230f",
+                      "surface-variant": "#e3e2df",
+                      "on-error-container": "#93000a",
+                      "on-tertiary": "#ffffff",
+                      "surface-dim": "#dbdad6",
+                      "on-secondary-fixed-variant": "#324d37",
+                      "on-secondary-container": "#4f6b53",
+                      "on-background": "#1b1c1a",
+                      "on-secondary": "#ffffff",
+                      "secondary": "#49654d",
+                      "on-tertiary-container": "#f3896d",
+                      "inverse-primary": "#b9c9d3",
+                      "primary-fixed-dim": "#b9c9d3",
+                      "on-surface-variant": "#43474a",
+                      "on-secondary-fixed": "#06200e",
+                      "surface-container-low": "#f4f4f0",
+                      "background": "#faf9f5",
+                      "outline-variant": "#c3c7ca",
+                      "on-error": "#ffffff",
+                      "outline": "#73787b",
+                      "on-primary": "#ffffff",
+                      "inverse-on-surface": "#f2f1ed",
+                      "primary-container": "#2f3e46",
+                      "tertiary-fixed-dim": "#ffb4a1",
+                      "on-surface": "#1b1c1a",
+                      "primary-fixed": "#d5e5ef",
+                      "surface-tint": "#516169",
+                      "tertiary-fixed": "#ffdbd2",
+                      "secondary-container": "#cbebcd",
+                      "on-primary-fixed-variant": "#3a4951",
+                      "on-primary-container": "#99a9b2",
+                      "on-tertiary-fixed-variant": "#7c2e19",
+                      "surface": "#faf9f5",
+                      "surface-container-highest": "#e3e2df"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "container-margin": "20px",
+                      "xs": "4px",
+                      "md": "24px",
+                      "gutter": "16px",
+                      "base": "8px",
+                      "xl": "48px",
+                      "sm": "12px",
+                      "lg": "32px"
+              },
+              "fontFamily": {
+                      "body-md": ["Inter"],
+                      "label-lg": ["Inter"],
+                      "caption": ["Inter"],
+                      "body-xl": ["Inter"],
+                      "headline-lg-mobile": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "display-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "body-md": ["18px", {"lineHeight": "26px", "fontWeight": "400"}],
+                      "label-lg": ["16px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "caption": ["14px", {"lineHeight": "18px", "fontWeight": "500"}],
+                      "body-xl": ["20px", {"lineHeight": "30px", "fontWeight": "400"}],
+                      "headline-lg-mobile": ["22px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined[data-weight="fill"] {
+            font-variation-settings: 'FILL' 1;
+        }
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        /* Custom tactile slider handle */
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 32px;
+            width: 32px;
+            border-radius: 50%;
+            background: #49654d; /* secondary color */
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(47, 62, 70, 0.15); /* primary shadow */
+            border: 2px solid white;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col antialiased">
+<!-- TopAppBar -->
+<header class="w-full sticky top-0 z-50 bg-background/80 backdrop-blur-md">
+<div class="max-w-7xl mx-auto flex items-center justify-between px-gutter py-md">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed text-headline-lg-mobile md:text-headline-lg" data-icon="medical_services">medical_services</span>
+<span class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg font-bold text-primary dark:text-primary-fixed">Medpal</span>
+</div>
+<button class="bg-primary-container text-on-primary rounded-lg px-gutter py-sm font-label-lg text-label-lg hover:bg-surface-tint transition-colors cursor-pointer transition-all duration-200 active:scale-95 shadow-[0_4px_20px_rgba(47,62,70,0.1)]">
+                Get Started
+            </button>
+</div>
+</header>
+<main class="flex-grow flex flex-col w-full max-w-[1200px] mx-auto px-[20px] md:px-0">
+<!-- Hero Section -->
+<section class="py-xl flex flex-col md:flex-row items-center gap-xl">
+<div class="flex-1 flex flex-col gap-md text-center md:text-left z-10">
+<h1 class="font-display-lg text-display-lg text-primary text-balance">
+                    Cuidado que entende você
+                </h1>
+<p class="font-body-xl text-body-xl text-on-surface-variant text-balance max-w-2xl mx-auto md:mx-0">
+                    Gerencie seus remédios com precisão técnica e acolhimento humano.
+                </p>
+<div class="mt-base flex flex-col sm:flex-row gap-sm justify-center md:justify-start">
+<button class="bg-secondary text-on-secondary h-[56px] px-lg rounded-lg font-label-lg text-label-lg hover:opacity-90 transition-opacity shadow-[0_8px_30px_rgba(47,62,70,0.1)] flex items-center justify-center gap-xs">
+                        Baixar Medpal
+                        <span class="material-symbols-outlined" data-icon="download">download</span>
+</button>
+</div>
+</div>
+<div class="flex-1 relative w-full aspect-square max-w-[500px] mx-auto">
+<div class="absolute inset-0 bg-surface-container-high rounded-[24px] rotate-3 scale-95 opacity-50"></div>
+<img alt="A warm, reassuring image of an elderly woman smiling while looking at her smartphone, illuminated by soft natural light. She is seated comfortably in a modern, cozy living room with subtle sage green and off-white decor elements that reflect the Medpal brand aesthetic. The scene conveys a sense of safety, clarity, and human-first healthcare support." class="w-full h-full object-cover rounded-[24px] shadow-[0_20px_40px_rgba(47,62,70,0.08)] relative z-10" data-alt="A warm, reassuring image of an elderly woman smiling while looking at her smartphone, illuminated by soft natural light. She is seated comfortably in a modern, cozy living room with subtle sage green and off-white decor elements that reflect the Medpal brand aesthetic. The scene conveys a sense of safety, clarity, and human-first healthcare support." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVsrUK_SGxJVEZiNUrXCFIOURDzzdb9rxyw-Hu9dIOa-oYRTL3Z6JhR__m-B8uMq_1-56-ArIdYp290J_O4jZj81794EuyrfJi97wuepgdtXSLQLNpYsepDtwydtDybQqmlM0YVi-Z5UPazYO3rQqZQ7G7f-l4w7mJDGNHXDcn-Y0E64ANwzDrSdeEyMMiasndutTzNrh60ywW45Tr3fWAELzIwKWLNyFa2LHYZ2nMvPsqJfg2_FEXmyIXEbSgiw9yMHcJRFYZv8wG"/>
+<!-- Floating Reminder Card -->
+<div class="absolute -bottom-md -left-md md:-left-xl bg-surface-container-lowest p-gutter rounded-xl shadow-[0_12px_30px_rgba(47,62,70,0.12)] z-20 flex items-center gap-sm border-l-4 border-secondary max-w-[240px]">
+<div class="bg-secondary-container p-xs rounded-full text-on-secondary-container">
+<span class="material-symbols-outlined" data-icon="medication">medication</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-primary">Losartana</span>
+<span class="font-caption text-caption text-on-surface-variant">Agora • 50mg</span>
+</div>
+<button class="ml-auto text-secondary">
+<span class="material-symbols-outlined" data-icon="check_circle" data-weight="fill">check_circle</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Value Props (Bento Grid Style) -->
+<section class="py-xl">
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary text-center mb-lg">
+                Tecnologia à serviço da sua saúde
+            </h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Card 1: Magic Scan -->
+<div class="bg-surface-container-lowest rounded-xl p-md border border-outline-variant/30 flex flex-col gap-sm shadow-[0_4px_20px_rgba(47,62,70,0.03)] hover:-translate-y-1 transition-transform">
+<div class="h-12 w-12 bg-primary-fixed rounded-lg flex items-center justify-center text-on-primary-fixed mb-base">
+<span class="material-symbols-outlined text-[28px]" data-icon="document_scanner">document_scanner</span>
+</div>
+<h3 class="font-label-lg text-label-lg text-primary">Magic Scan</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                        Adicione medicamentos instantaneamente tirando uma foto da receita. Nossa tecnologia lê e organiza tudo para você.
+                    </p>
+</div>
+<!-- Card 2: Assistente Proativo -->
+<div class="bg-surface-container-lowest rounded-xl p-md border border-outline-variant/30 flex flex-col gap-sm shadow-[0_4px_20px_rgba(47,62,70,0.03)] hover:-translate-y-1 transition-transform">
+<div class="h-12 w-12 bg-secondary-container rounded-lg flex items-center justify-center text-on-secondary-container mb-base">
+<span class="material-symbols-outlined text-[28px]" data-icon="record_voice_over">record_voice_over</span>
+</div>
+<h3 class="font-label-lg text-label-lg text-primary">Assistente Proativo</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                        Lembretes inteligentes e check-ins por voz que se adaptam à sua rotina, garantindo que você nunca perca uma dose.
+                    </p>
+</div>
+<!-- Card 3: Relatórios Médicos -->
+<div class="bg-surface-container-lowest rounded-xl p-md border border-outline-variant/30 flex flex-col gap-sm shadow-[0_4px_20px_rgba(47,62,70,0.03)] hover:-translate-y-1 transition-transform">
+<div class="h-12 w-12 bg-tertiary-fixed rounded-lg flex items-center justify-center text-on-tertiary-fixed mb-base">
+<span class="material-symbols-outlined text-[28px]" data-icon="monitoring">monitoring</span>
+</div>
+<h3 class="font-label-lg text-label-lg text-primary">Relatórios Médicos</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                        Compartilhe seu histórico de adesão de forma clara e profissional com seu médico em um clique.
+                    </p>
+</div>
+</div>
+</section>
+<!-- Social Proof -->
+<section class="py-xl flex flex-col items-center text-center">
+<div class="max-w-3xl bg-surface-container p-lg md:p-xl rounded-[24px] relative">
+<span class="material-symbols-outlined text-inverse-primary text-[48px] absolute -top-6 left-lg opacity-50" data-icon="format_quote">format_quote</span>
+<p class="font-body-xl text-body-xl text-primary mb-md italic relative z-10">
+                    "O Medpal mudou a forma como cuido dos meus pais. Não preciso mais ligar toda hora para saber se tomaram os remédios, e o app avisa quando a caixa está acabando. É um alívio enorme."
+                </p>
+<div class="flex items-center justify-center gap-sm mt-md">
+<div class="w-12 h-12 rounded-full bg-surface-dim overflow-hidden">
+<img alt="Portrait of a smiling middle-aged woman, casual professional attire, soft lighting, conveying trust and relief. The background is slightly blurred with soft warm tones." class="w-full h-full object-cover" data-alt="Portrait of a smiling middle-aged woman, casual professional attire, soft lighting, conveying trust and relief. The background is slightly blurred with soft warm tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBitA3qyvW_sHfpxk7ZvD7I3NfqIirvxyw6CZsUVpOHwvlVC0i8doSYm_xI3Ra9CuL8vJkVjb2bhudGmIQPysGYjHBDFcBCWoo2GdaWq2HPuNicQKdhQsBaUnnJafwfJHqneF1fBNhREriZEkHZj61Gl5R56eBpKl1weSyLB08SSCvbByrTsHiF04FcoIBZC6Wp8hcLo2v2INGahjaZG_AoQzWh2xWmw8e4ixsJDZl2L_-mkVxQ1BkLGyKm6Gt9OsZ5JlhxALubr8Vj"/>
+</div>
+<div class="text-left">
+<p class="font-label-lg text-label-lg text-primary">Mariana S.</p>
+<p class="font-caption text-caption text-on-surface-variant">Filha e cuidadora</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Final CTA -->
+<section class="py-xl mb-xl text-center flex flex-col items-center gap-md bg-primary-container text-on-primary-container rounded-[24px] p-lg md:p-xl shadow-[0_20px_40px_rgba(47,62,70,0.15)] relative overflow-hidden">
+<!-- Decorative blur -->
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary-fixed opacity-10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"></div>
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-primary font-bold z-10 relative">
+                Pronto para ter mais tranquilidade?
+            </h2>
+<p class="font-body-md text-body-md text-primary-fixed-dim max-w-lg z-10 relative">
+                Junte-se a milhares de pessoas que já simplificaram suas rotinas de saúde. Baixe o Medpal hoje mesmo.
+            </p>
+<div class="flex flex-col sm:flex-row gap-gutter mt-sm z-10 relative">
+<button class="bg-surface-container-lowest text-primary h-[56px] px-lg rounded-lg font-label-lg text-label-lg hover:bg-surface-container transition-colors shadow-sm flex items-center justify-center gap-xs">
+<span class="material-symbols-outlined" data-icon="apple">apps</span>
+                    App Store
+                </button>
+<button class="bg-surface-container-lowest text-primary h-[56px] px-lg rounded-lg font-label-lg text-label-lg hover:bg-surface-container transition-colors shadow-sm flex items-center justify-center gap-xs">
+<span class="material-symbols-outlined" data-icon="shop">shop</span>
+                    Google Play
+                </button>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full mt-xl border-t border-outline-variant dark:border-outline bg-surface-container dark:bg-surface-container-highest">
+<div class="max-w-7xl mx-auto px-gutter py-xl flex flex-col md:flex-row justify-between items-center gap-md">
+<span class="font-body-md text-body-md text-primary dark:text-on-surface">
+                © 2024 Medpal Health. Human-first medication management.
+            </span>
+<nav class="flex flex-wrap justify-center gap-md">
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-on-surface-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors cursor-pointer" href="#">
+                    Features
+                </a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-on-surface-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors cursor-pointer" href="#">
+                    Privacy Policy
+                </a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-on-surface-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors cursor-pointer" href="#">
+                    Support
+                </a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-on-surface-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors cursor-pointer" href="#">
+                    Download
+                </a>
+</nav>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Medpal - Analytics</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary": "#ffffff",
+                    "primary-container": "#2f3e46",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-primary": "#b9c9d3",
+                    "on-tertiary-fixed": "#3c0800",
+                    "error": "#ba1a1a",
+                    "surface-container-highest": "#e3e2df",
+                    "on-primary-container": "#99a9b2",
+                    "primary": "#192830",
+                    "on-secondary-fixed": "#06200e",
+                    "background": "#faf9f5",
+                    "surface-container": "#efeeea",
+                    "secondary": "#49654d",
+                    "surface-dim": "#dbdad6",
+                    "on-secondary-container": "#4f6b53",
+                    "on-error-container": "#93000a",
+                    "on-surface-variant": "#43474a",
+                    "surface-container-high": "#e9e8e4",
+                    "surface-container-low": "#f4f4f0",
+                    "primary-fixed": "#d5e5ef",
+                    "tertiary-container": "#6d230f",
+                    "surface-variant": "#e3e2df",
+                    "tertiary": "#4f0e00",
+                    "tertiary-fixed": "#ffdbd2",
+                    "secondary-fixed": "#cbebcd",
+                    "on-secondary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "on-primary-fixed-variant": "#3a4951",
+                    "on-primary-fixed": "#0e1d25",
+                    "tertiary-fixed-dim": "#ffb4a1",
+                    "on-primary": "#ffffff",
+                    "outline": "#73787b",
+                    "on-tertiary-fixed-variant": "#7c2e19",
+                    "surface": "#faf9f5",
+                    "on-background": "#1b1c1a",
+                    "secondary-container": "#cbebcd",
+                    "secondary-fixed-dim": "#afceb2",
+                    "on-tertiary-container": "#f3896d",
+                    "on-error": "#ffffff",
+                    "inverse-on-surface": "#f2f1ed",
+                    "outline-variant": "#c3c7ca",
+                    "surface-bright": "#faf9f5",
+                    "primary-fixed-dim": "#b9c9d3",
+                    "on-secondary-fixed-variant": "#324d37",
+                    "on-surface": "#1b1c1a",
+                    "surface-tint": "#516169",
+                    "inverse-surface": "#2f312e"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "lg": "32px",
+                    "base": "8px",
+                    "md": "24px",
+                    "xs": "4px",
+                    "sm": "12px",
+                    "container-margin": "20px",
+                    "xl": "48px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Inter"],
+                    "caption": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-xl": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "label-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["22px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "caption": ["14px", {"lineHeight": "18px", "fontWeight": "500"}],
+                    "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-xl": ["20px", {"lineHeight": "30px", "fontWeight": "400"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["18px", {"lineHeight": "26px", "fontWeight": "400"}],
+                    "label-lg": ["16px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom Toggle Switch Styles */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #49654d;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #cbebcd;
+        }
+        .toggle-checkbox:checked + .toggle-label:after {
+            transform: translateX(100%);
+            border-color: #fff;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md h-screen flex flex-col selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-container-margin py-sm bg-background text-primary flat no shadows">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high overflow-hidden shadow-sm flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">person</span>
+</div>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary">Medpal</h1>
+<button class="text-primary hover:bg-surface-container transition-colors p-2 rounded-full active:scale-95 transition-transform duration-200 flex items-center justify-center">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 overflow-y-auto px-container-margin pt-24 pb-28 space-y-md">
+<!-- Page Title -->
+<div>
+<h2 class="font-display-lg text-display-lg text-primary">Relatórios</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Sua visão geral de saúde.</p>
+</div>
+<!-- Modo Médico Toggle Card -->
+<div class="bg-surface-container-lowest rounded-xl p-4 border border-outline-variant/30 flex items-center justify-between shadow-sm">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">stethoscope</span>
+</div>
+<div>
+<h3 class="font-label-lg text-label-lg text-on-surface">Modo Médico</h3>
+<p class="font-caption text-caption text-on-surface-variant">Visualização otimizada para consulta.</p>
+</div>
+</div>
+<!-- Custom Toggle -->
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+<input class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-surface-container-lowest border-4 border-surface-variant appearance-none cursor-pointer z-10 transition-transform duration-300 ease-in-out" id="doctor-mode-toggle" name="toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-surface-variant cursor-pointer transition-colors duration-300 ease-in-out" for="doctor-mode-toggle"></label>
+</div>
+</div>
+<!-- Adherence Score & Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<!-- Adherence Chart Card -->
+<div class="bg-surface-container-lowest rounded-xl p-md border border-outline-variant/30 shadow-sm flex flex-col items-center justify-center relative overflow-hidden">
+<h3 class="font-label-lg text-label-lg text-on-surface absolute top-4 left-4">Adesão Geral</h3>
+<div class="mt-8 relative flex items-center justify-center">
+<!-- SVG Circular Progress -->
+<svg class="w-32 h-32 transform -rotate-90" viewbox="0 0 100 100">
+<circle class="text-surface-container-highest" cx="50" cy="50" fill="transparent" r="40" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-secondary transition-all duration-1000 ease-out" cx="50" cy="50" fill="transparent" r="40" stroke="currentColor" stroke-dasharray="251.2" stroke-dashoffset="15.07" stroke-width="8"></circle>
+</svg>
+<div class="absolute flex flex-col items-center">
+<span class="font-display-lg text-display-lg text-primary">94%</span>
+<span class="font-caption text-caption text-secondary font-medium">Excelente</span>
+</div>
+</div>
+<p class="font-caption text-caption text-on-surface-variant mt-4 text-center">Últimos 30 dias</p>
+</div>
+<!-- Side Effects Summary Card -->
+<div class="bg-surface-container-lowest rounded-xl p-md border border-outline-variant/30 shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-tertiary">sentiment_dissatisfied</span>
+<h3 class="font-label-lg text-label-lg text-on-surface">Efeitos Colaterais</h3>
+</div>
+<div class="bg-surface-container p-3 rounded-lg border-l-4 border-tertiary">
+<p class="font-body-md text-body-md text-on-surface">3x dor de cabeça leve</p>
+<p class="font-caption text-caption text-on-surface-variant mt-1">Registrado na última semana.</p>
+</div>
+</div>
+<button class="mt-4 text-secondary font-label-lg text-label-lg self-start flex items-center gap-1 hover:text-secondary-fixed transition-colors">
+                    Ver detalhes <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Timeline / Calendar View -->
+<div class="bg-surface-container-lowest rounded-xl p-md border border-outline-variant/30 shadow-sm">
+<h3 class="font-label-lg text-label-lg text-on-surface mb-4">Histórico de Doses (Esta Semana)</h3>
+<div class="flex justify-between items-end gap-1 overflow-x-auto pb-2">
+<!-- Days -->
+<div class="flex flex-col items-center gap-2 min-w-[40px]">
+<span class="font-caption text-caption text-on-surface-variant">Seg</span>
+<div class="w-8 h-12 bg-secondary-container rounded-full flex items-center justify-center border border-secondary/20">
+<div class="w-3 h-3 bg-secondary rounded-full"></div>
+</div>
+</div>
+<div class="flex flex-col items-center gap-2 min-w-[40px]">
+<span class="font-caption text-caption text-on-surface-variant">Ter</span>
+<div class="w-8 h-12 bg-secondary-container rounded-full flex items-center justify-center border border-secondary/20">
+<div class="w-3 h-3 bg-secondary rounded-full"></div>
+</div>
+</div>
+<div class="flex flex-col items-center gap-2 min-w-[40px]">
+<span class="font-caption text-caption text-on-surface-variant">Qua</span>
+<div class="w-8 h-12 bg-error-container rounded-full flex items-center justify-center border border-error/20">
+<div class="w-3 h-3 bg-error rounded-full"></div>
+</div>
+</div>
+<div class="flex flex-col items-center gap-2 min-w-[40px]">
+<span class="font-caption text-caption text-on-surface-variant">Qui</span>
+<div class="w-8 h-12 bg-secondary-container rounded-full flex items-center justify-center border border-secondary/20">
+<div class="w-3 h-3 bg-secondary rounded-full"></div>
+</div>
+</div>
+<div class="flex flex-col items-center gap-2 min-w-[40px]">
+<span class="font-caption text-caption text-on-surface-variant">Sex</span>
+<div class="w-8 h-12 bg-surface-container rounded-full flex items-center justify-center">
+<div class="w-3 h-3 bg-outline-variant rounded-full"></div>
+</div>
+</div>
+<div class="flex flex-col items-center gap-2 min-w-[40px]">
+<span class="font-caption text-caption text-on-surface-variant">Sáb</span>
+<div class="w-8 h-12 bg-surface-container rounded-full flex items-center justify-center">
+<div class="w-3 h-3 bg-outline-variant rounded-full"></div>
+</div>
+</div>
+<div class="flex flex-col items-center gap-2 min-w-[40px]">
+<span class="font-caption text-caption text-on-surface-variant">Dom</span>
+<div class="w-8 h-12 bg-surface-container rounded-full flex items-center justify-center">
+<div class="w-3 h-3 bg-outline-variant rounded-full"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-center gap-4 mt-4 font-caption text-caption text-on-surface-variant">
+<div class="flex items-center gap-1"><div class="w-2 h-2 bg-secondary rounded-full"></div> Tomado</div>
+<div class="flex items-center gap-1"><div class="w-2 h-2 bg-error rounded-full"></div> Esquecido</div>
+</div>
+</div>
+<!-- Export Action -->
+<div class="pt-4 pb-8">
+<button class="w-full h-14 bg-primary text-on-primary font-label-lg text-label-lg rounded-xl flex items-center justify-center gap-2 shadow-[0_4px_14px_0_rgba(25,40,48,0.1)] active:scale-[0.98] transition-transform duration-200 hover:bg-primary/90">
+<span class="material-symbols-outlined">picture_as_pdf</span>
+                Exportar Relatório em PDF
+            </button>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface text-primary font-label-lg text-label-lg border-t border-outline-variant shadow-md">
+<!-- Today -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-container-high rounded-full active:scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined">today</span>
+<span class="font-caption text-[10px] mt-1 font-medium">Today</span>
+</button>
+<!-- Meds -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-container-high rounded-full active:scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined">pill</span>
+<span class="font-caption text-[10px] mt-1 font-medium">Meds</span>
+</button>
+<!-- Chat -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-container-high rounded-full active:scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined">chat_bubble</span>
+<span class="font-caption text-[10px] mt-1 font-medium">Chat</span>
+</button>
+<!-- Analytics (Active) -->
+<button class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 active:scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<span class="font-caption text-[10px] mt-1 font-bold">Analytics</span>
+</button>
+</nav>
+<script>
+        // Simple JS to toggle doctor mode visual feedback
+        const toggle = document.getElementById('doctor-mode-toggle');
+        const bgBody = document.querySelector('body');
+        
+        toggle.addEventListener('change', (e) => {
+            if(e.target.checked) {
+                // Example of applying a subtle visual change for "Doctor Mode"
+                bgBody.classList.add('bg-surface-container');
+                bgBody.classList.remove('bg-background');
+            } else {
+                bgBody.classList.remove('bg-surface-container');
+                bgBody.classList.add('bg-background');
+            }
+        });
+    </script>
+</body></html>
