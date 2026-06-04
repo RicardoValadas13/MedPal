@@ -1,79 +1,140 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Plus, Pill } from 'lucide-react'
+import { ScanLine, Pill, History } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import { pt } from '../i18n/pt'
-import type { UserMedication } from '../types/database'
+import type { UserMedication, Schedule } from '../types/database'
+
+interface MedicationWithSchedule extends UserMedication {
+  schedules?: Schedule[]
+}
 
 export function MedicationsPage() {
   const { user } = useAuth()
-  const [medications, setMedications] = useState<UserMedication[]>([])
+  const [medications, setMedications] = useState<MedicationWithSchedule[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (!user) return
-    supabase
-      .from('user_medications')
-      .select('*')
-      .eq('user_id', user.id)
-      .eq('is_active', true)
-      .order('created_at', { ascending: false })
-      .then(({ data }) => {
-        setMedications(data ?? [])
-        setLoading(false)
-      })
+    loadMedications()
   }, [user])
 
+  async function loadMedications() {
+    const { data: meds } = await supabase
+      .from('user_medications')
+      .select('*')
+      .eq('user_id', user!.id)
+      .eq('is_active', true)
+      .order('created_at', { ascending: false })
+
+    if (meds) {
+      const enriched: MedicationWithSchedule[] = await Promise.all(
+        meds.map(async m => {
+          const { data: schedules } = await supabase
+            .from('schedules')
+            .select('*')
+            .eq('user_medication_id', m.id)
+          return { ...m, schedules: schedules ?? [] }
+        })
+      )
+      setMedications(enriched)
+    }
+    setLoading(false)
+  }
+
+  const active = medications.filter(m => m.is_active)
+
   return (
-    <div className="px-4 pt-6 pb-4">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-xl font-semibold text-gray-900">{pt.nav.medications}</h1>
-        <Link
-          to="/medications/add"
-          className="flex items-center gap-1.5 px-3 py-2 bg-green-600 text-white text-xs font-medium rounded-2xl min-h-[44px]"
-        >
-          <Plus size={14} />
-          Add
-        </Link>
+    <div className="px-5 py-md flex flex-col gap-md pb-[140px]">
+      {/* Title */}
+      <div>
+        <h2 className="text-display-lg font-bold tracking-[-0.02em] text-[#192830]">My Meds</h2>
+        <p className="text-body-md text-[#43474a] mt-1">Your digital health cabinet.</p>
       </div>
 
       {loading ? (
-        <p className="text-sm text-gray-400">{pt.common.loading}</p>
-      ) : medications.length === 0 ? (
+        <p className="text-body-md text-[#43474a]">{pt.common.loading}</p>
+      ) : active.length === 0 ? (
         <div className="text-center py-12">
-          <Pill size={40} className="text-gray-200 mx-auto mb-3" />
-          <p className="text-sm text-gray-400 mb-4">No active medications.</p>
-          <Link
-            to="/medications/add"
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-green-600 text-white text-sm font-medium rounded-2xl min-h-[44px]"
-          >
-            <Plus size={16} />
-            {pt.home.addManual}
-          </Link>
+          <Pill size={48} className="text-[#c3c7ca] mx-auto mb-4" />
+          <p className="text-body-md text-[#43474a]">No active medications.</p>
         </div>
       ) : (
-        <div className="space-y-2">
-          {medications.map(med => (
-            <div
-              key={med.id}
-              className="flex items-center gap-3 bg-white rounded-2xl border-[0.5px] border-gray-200 px-4 py-3"
-            >
-              <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center shrink-0">
-                <Pill size={18} className="text-green-600" />
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-semibold text-gray-900">{med.display_name}</p>
-                <p className="text-xs text-gray-400 mt-0.5">
-                  {[med.dosage, med.source === 'prescription' ? 'Prescription' : 'Manual']
-                    .filter(Boolean)
-                    .join(' · ')}
-                </p>
-              </div>
+        <>
+          {/* Active section */}
+          <section className="flex flex-col gap-md">
+            <h3 className="text-headline-mobile font-semibold text-[#1b1c1a] flex items-center gap-sm">
+              <Pill size={20} className="text-[#49654d]" />
+              Daily Use
+            </h3>
+            <div className="flex flex-col gap-md">
+              {active.map(med => {
+                const schedules = med.schedules ?? []
+                const times = schedules.map(s => s.time_of_day).join(', ')
+                const withFood = schedules.some(s => s.with_food)
+                const timesPerDay = schedules.length
+
+                return (
+                  <div
+                    key={med.id}
+                    className="bg-[#ffffff] rounded-xl p-md border-l-4 border-l-[#49654d] shadow-sm flex flex-col gap-sm hover:shadow-[0_8px_32px_rgba(25,40,48,0.08)] transition-shadow cursor-pointer"
+                  >
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h4 className="text-headline-mobile font-semibold text-[#192830]">{med.display_name}</h4>
+                        <p className="text-body-md text-[#43474a]">
+                          {[med.dosage, med.source === 'prescription' ? 'Prescription' : 'Manual'].filter(Boolean).join(' · ')}
+                        </p>
+                      </div>
+                      <div className="w-10 h-10 rounded-xl bg-[#cbebcd] flex items-center justify-center shrink-0">
+                        <Pill size={20} className="text-[#49654d]" />
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap gap-xs mt-xs">
+                      {timesPerDay > 0 && (
+                        <span className="bg-[#efeeea] text-[#43474a] px-sm py-xs rounded-full text-caption font-semibold flex items-center gap-xs">
+                          🕐 {timesPerDay}× daily{times ? ` · ${times}` : ''}
+                        </span>
+                      )}
+                      {withFood && (
+                        <span className="bg-[#efeeea] text-[#43474a] px-sm py-xs rounded-full text-caption font-semibold flex items-center gap-xs">
+                          🍽 With food
+                        </span>
+                      )}
+                      {med.source === 'prescription' && (
+                        <span className="bg-[#cbebcd] text-[#4f6b53] px-sm py-xs rounded-full text-caption font-semibold">
+                          Prescribed
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )
+              })}
             </div>
-          ))}
-        </div>
+          </section>
+
+          {/* History section placeholder */}
+          <section className="flex flex-col gap-md opacity-70">
+            <h3 className="text-headline-mobile font-semibold text-[#73787b] flex items-center gap-sm">
+              <History size={20} className="text-[#73787b]" />
+              History
+            </h3>
+            <p className="text-body-md text-[#73787b]">Past medications will appear here.</p>
+          </section>
+        </>
       )}
+
+      {/* FAB — Scan Prescription */}
+      <div className="fixed bottom-[84px] right-5 z-40">
+        <Link
+          to="/prescriptions/upload"
+          className="bg-[#192830] hover:bg-[#2f3e46] text-white rounded-full h-16 pl-md pr-lg flex items-center gap-sm shadow-[0_12px_24px_rgba(47,62,70,0.2)] hover:scale-105 active:scale-95 transition-transform duration-200"
+        >
+          <ScanLine size={26} />
+          <span className="text-label-lg font-semibold">Scan Prescription</span>
+        </Link>
+      </div>
     </div>
   )
 }

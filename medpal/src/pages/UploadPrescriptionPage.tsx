@@ -77,48 +77,48 @@ export function UploadPrescriptionPage() {
   const isLoading = state === 'uploading' || state === 'processing'
 
   return (
-    <div className="px-4 pt-6 pb-6">
-      <h1 className="text-xl font-semibold text-gray-900 mb-6">{pt.upload.title}</h1>
+    <div className="px-5 pt-8 pb-6">
+      <h1 className="text-2xl font-semibold tracking-[-0.02em] text-[#192830] mb-8">{pt.upload.title}</h1>
 
       {/* Dropzone */}
       <div
         {...getRootProps()}
-        className={`relative flex flex-col items-center justify-center gap-3 p-8 rounded-2xl border-[0.5px] transition cursor-pointer ${
+        className={`relative flex flex-col items-center justify-center gap-4 p-8 rounded-2xl border-2 border-dashed transition cursor-pointer ${
           isDragActive
-            ? 'border-green-500 bg-green-50'
+            ? 'border-[#49654d] bg-[#cbebcd]/30'
             : file
-            ? 'border-green-300 bg-green-50'
-            : 'border-gray-300 bg-gray-50 hover:bg-gray-100'
+            ? 'border-[#49654d] bg-[#cbebcd]/20'
+            : 'border-[#c3c7ca] bg-white hover:bg-[#f4f4f0]'
         }`}
       >
         <input {...getInputProps()} />
         {file ? (
           <>
-            <FileText size={36} className="text-green-600" />
-            <p className="text-sm font-medium text-green-800 text-center break-all max-w-[240px]">
+            <FileText size={40} className="text-[#49654d]" />
+            <p className="text-lg font-semibold text-[#49654d] text-center break-all max-w-[240px]">
               {file.name}
             </p>
-            <p className="text-xs text-green-600">Tap to change</p>
+            <p className="text-sm font-medium text-[#49654d]">Tap to change</p>
           </>
         ) : (
           <>
-            <Upload size={36} className="text-gray-400" />
-            <p className="text-sm text-gray-500 text-center">{pt.upload.dropzone}</p>
+            <Upload size={40} className="text-[#73787b]" />
+            <p className="text-lg text-[#43474a] text-center">{pt.upload.dropzone}</p>
           </>
         )}
       </div>
 
-      <div className="flex items-center gap-3 my-4">
-        <div className="flex-1 h-px bg-gray-200" />
-        <span className="text-xs text-gray-400">{pt.upload.orDivider}</span>
-        <div className="flex-1 h-px bg-gray-200" />
+      <div className="flex items-center gap-3 my-6">
+        <div className="flex-1 h-px bg-[#c3c7ca]" />
+        <span className="text-sm font-medium text-[#73787b]">{pt.upload.orDivider}</span>
+        <div className="flex-1 h-px bg-[#c3c7ca]" />
       </div>
 
       {/* Action buttons */}
-      <div className="grid grid-cols-2 gap-3 mb-4">
-        <label className="flex flex-col items-center justify-center gap-2 py-4 rounded-2xl border-[0.5px] border-gray-200 bg-white cursor-pointer active:bg-gray-50 min-h-[44px]">
-          <Camera size={24} className="text-gray-600" />
-          <span className="text-xs font-medium text-gray-700">{pt.upload.takePhoto}</span>
+      <div className="grid grid-cols-2 gap-3 mb-5">
+        <label className="flex flex-col items-center justify-center gap-2 py-5 rounded-2xl border border-[#c3c7ca] bg-white cursor-pointer hover:bg-[#f4f4f0] active:bg-[#e9e8e4] transition min-h-[48px]">
+          <Camera size={24} className="text-[#192830]" />
+          <span className="text-base font-semibold text-[#1b1c1a]">{pt.upload.takePhoto}</span>
           <input
             type="file"
             accept="image/*"
@@ -128,9 +128,9 @@ export function UploadPrescriptionPage() {
           />
         </label>
 
-        <label className="flex flex-col items-center justify-center gap-2 py-4 rounded-2xl border-[0.5px] border-gray-200 bg-white cursor-pointer active:bg-gray-50 min-h-[44px]">
-          <FileText size={24} className="text-gray-600" />
-          <span className="text-xs font-medium text-gray-700">{pt.upload.uploadPdf}</span>
+        <label className="flex flex-col items-center justify-center gap-2 py-5 rounded-2xl border border-[#c3c7ca] bg-white cursor-pointer hover:bg-[#f4f4f0] active:bg-[#e9e8e4] transition min-h-[48px]">
+          <FileText size={24} className="text-[#192830]" />
+          <span className="text-base font-semibold text-[#1b1c1a]">{pt.upload.uploadPdf}</span>
           <input
             type="file"
             accept="application/pdf"
@@ -141,33 +141,32 @@ export function UploadPrescriptionPage() {
       </div>
 
       {/* PDF info note */}
-      <div className="flex gap-2 items-start bg-blue-50 rounded-xl px-3 py-2.5 mb-6">
-        <FileText size={14} className="text-blue-500 mt-0.5 shrink-0" />
-        <p className="text-xs text-blue-700">{pt.upload.pdfNote}</p>
+      <div className="flex gap-3 items-start bg-[#d5e5ef] rounded-xl px-4 py-3 mb-6">
+        <FileText size={18} className="text-[#192830] mt-0.5 shrink-0" />
+        <p className="text-base text-[#192830]">{pt.upload.pdfNote}</p>
       </div>
 
       {errorMsg && (
-        <p className="text-red-600 text-xs mb-4">{errorMsg}</p>
+        <p className="text-[#ba1a1a] text-base mb-4">{errorMsg}</p>
       )}
 
-      {/* Status indicator */}
       {state === 'processing' && (
-        <div className="bg-green-50 rounded-xl px-3 py-2.5 mb-4">
-          <p className="text-xs text-green-700 font-medium">{pt.upload.processing}</p>
+        <div className="bg-[#cbebcd] rounded-xl px-4 py-3 mb-4">
+          <p className="text-base font-medium text-[#49654d]">{pt.upload.processing}</p>
         </div>
       )}
 
       <button
         onClick={handleContinue}
         disabled={!file || isLoading}
-        className="w-full flex items-center justify-center gap-2 py-4 bg-green-600 text-white text-sm font-semibold rounded-2xl hover:bg-green-700 active:scale-[0.98] transition disabled:opacity-40 min-h-[44px]"
+        className="w-full flex items-center justify-center gap-2 min-h-[48px] py-3 bg-[#192830] text-white text-base font-semibold rounded-lg hover:opacity-[0.88] hover:-translate-y-px active:scale-[0.98] transition disabled:opacity-40 shadow-[0_4px_16px_rgba(25,40,48,0.12)]"
       >
         {isLoading ? (
           state === 'uploading' ? pt.upload.uploading : pt.upload.processing
         ) : (
           <>
             {pt.upload.continue}
-            <ArrowRight size={16} />
+            <ArrowRight size={18} />
           </>
         )}
       </button>

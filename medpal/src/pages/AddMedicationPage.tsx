@@ -40,15 +40,11 @@ export function AddMedicationPage() {
   }, [query])
 
   function toggleDay(idx: number) {
-    setDays(prev =>
-      prev.includes(idx) ? prev.filter(d => d !== idx) : [...prev, idx]
-    )
+    setDays(prev => prev.includes(idx) ? prev.filter(d => d !== idx) : [...prev, idx])
   }
 
   function toggleTime(t: string) {
-    setTimes(prev =>
-      prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t]
-    )
+    setTimes(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t])
   }
 
   function addCustomTime() {
@@ -102,54 +98,54 @@ export function AddMedicationPage() {
   }
 
   return (
-    <div className="px-4 pt-6 pb-6">
-      <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-sm text-gray-500 mb-4">
-        <ChevronLeft size={16} />
+    <div className="px-5 pt-8 pb-6">
+      <button onClick={() => navigate(-1)} className="flex items-center gap-1.5 text-base font-medium text-[#43474a] mb-6 min-h-[48px]">
+        <ChevronLeft size={18} />
         {pt.common.back}
       </button>
-      <h1 className="text-xl font-semibold text-gray-900 mb-6">{pt.addMedication.title}</h1>
+      <h1 className="text-2xl font-semibold tracking-[-0.02em] text-[#192830] mb-8">{pt.addMedication.title}</h1>
 
       {/* Drug search */}
       <div className="relative mb-3">
-        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+        <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#73787b]" />
         <input
           type="text"
           value={selected ? selected.name : query}
           onChange={e => { setQuery(e.target.value); setSelected(null) }}
           placeholder={pt.addMedication.searchPlaceholder}
-          className="w-full pl-9 pr-4 py-3 text-sm rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-400"
+          className="w-full min-h-[48px] pl-11 pr-4 py-3 text-lg rounded-lg border-[1.5px] border-[#c3c7ca] bg-white text-[#1b1c1a] placeholder:text-[#73787b] focus:outline-none focus:border-[#49654d] focus:shadow-[0_0_0_3px_rgba(73,101,77,0.12)] transition"
         />
       </div>
 
       {/* Search results */}
       {results.length > 0 && !selected && (
-        <div className="bg-white border-[0.5px] border-gray-200 rounded-2xl mb-4 overflow-hidden">
+        <div className="bg-white border border-[#c3c7ca] rounded-2xl mb-5 overflow-hidden">
           {results.map(drug => (
             <button
               key={drug.id}
               onClick={() => { setSelected(drug); setQuery(''); setResults([]) }}
-              className="w-full text-left px-4 py-3 text-sm border-b border-gray-100 last:border-0 hover:bg-gray-50 active:bg-gray-100"
+              className="w-full text-left px-5 py-4 text-lg border-b border-[#e9e8e4] last:border-0 hover:bg-[#f4f4f0] active:bg-[#e9e8e4] transition"
             >
-              <span className="font-medium text-gray-900">{drug.name}</span>
-              {drug.strength && <span className="text-gray-400 ml-2">{drug.strength}</span>}
-              {drug.form && <span className="text-gray-400 ml-1">· {drug.form}</span>}
+              <span className="font-semibold text-[#1b1c1a]">{drug.name}</span>
+              {drug.strength && <span className="text-[#43474a] ml-2">{drug.strength}</span>}
+              {drug.form && <span className="text-[#73787b] ml-1">· {drug.form}</span>}
             </button>
           ))}
         </div>
       )}
 
       {selected && (
-        <div className="bg-green-50 border-[0.5px] border-green-200 rounded-2xl px-4 py-3 mb-6">
-          <p className="text-sm font-semibold text-green-800">{selected.name}</p>
+        <div className="bg-[#cbebcd] border border-[#49654d]/30 rounded-2xl px-5 py-4 mb-6">
+          <p className="text-lg font-semibold text-[#192830]">{selected.name}</p>
           {selected.active_substance && (
-            <p className="text-xs text-green-600 mt-0.5">{selected.active_substance}</p>
+            <p className="text-sm font-medium text-[#49654d] mt-0.5">{selected.active_substance}</p>
           )}
         </div>
       )}
 
       {/* Dose */}
-      <div className="mb-5">
-        <label className="block text-sm font-medium text-gray-700 mb-1.5">
+      <div className="mb-6">
+        <label className="block text-base font-semibold text-[#1b1c1a] mb-2">
           {pt.addMedication.doseLabel}
         </label>
         <input
@@ -157,13 +153,13 @@ export function AddMedicationPage() {
           value={dose}
           onChange={e => setDose(e.target.value)}
           placeholder={selected?.strength ?? ''}
-          className="w-full px-4 py-3 text-sm rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-400"
+          className="w-full min-h-[48px] px-4 py-3 text-lg rounded-lg border-[1.5px] border-[#c3c7ca] bg-white text-[#1b1c1a] placeholder:text-[#73787b] focus:outline-none focus:border-[#49654d] focus:shadow-[0_0_0_3px_rgba(73,101,77,0.12)] transition"
         />
       </div>
 
       {/* Times */}
-      <div className="mb-5">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+      <div className="mb-6">
+        <label className="block text-base font-semibold text-[#1b1c1a] mb-3">
           {pt.addMedication.hoursLabel}
         </label>
         <div className="flex flex-wrap gap-2">
@@ -171,10 +167,10 @@ export function AddMedicationPage() {
             <button
               key={t}
               onClick={() => toggleTime(t)}
-              className={`px-4 py-2 text-sm rounded-xl border transition min-h-[44px] ${
+              className={`px-5 py-2.5 text-base font-semibold rounded-lg border-[1.5px] transition min-h-[48px] ${
                 times.includes(t)
-                  ? 'bg-green-600 text-white border-green-600'
-                  : 'bg-white text-gray-700 border-gray-200'
+                  ? 'bg-[#192830] text-white border-[#192830]'
+                  : 'bg-white text-[#1b1c1a] border-[#c3c7ca] hover:bg-[#f4f4f0]'
               }`}
             >
               {t}
@@ -184,21 +180,21 @@ export function AddMedicationPage() {
             <button
               key={t}
               onClick={() => toggleTime(t)}
-              className="px-4 py-2 text-sm rounded-xl border bg-green-600 text-white border-green-600 min-h-[44px]"
+              className="px-5 py-2.5 text-base font-semibold rounded-lg border-[1.5px] bg-[#192830] text-white border-[#192830] min-h-[48px]"
             >
               {t}
             </button>
           ))}
-          <div className="flex gap-1">
+          <div className="flex gap-2">
             <input
               type="time"
               value={customTime}
               onChange={e => setCustomTime(e.target.value)}
-              className="px-3 py-2 text-sm rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-400 min-h-[44px]"
+              className="px-4 py-2.5 text-lg rounded-lg border-[1.5px] border-[#c3c7ca] bg-white text-[#1b1c1a] focus:outline-none focus:border-[#49654d] focus:shadow-[0_0_0_3px_rgba(73,101,77,0.12)] min-h-[48px] transition"
             />
             <button
               onClick={addCustomTime}
-              className="px-3 py-2 text-sm rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 min-h-[44px]"
+              className="px-4 py-2.5 text-lg font-semibold rounded-lg border-[1.5px] border-[#c3c7ca] bg-white text-[#1b1c1a] hover:bg-[#f4f4f0] min-h-[48px] transition"
             >
               +
             </button>
@@ -207,8 +203,8 @@ export function AddMedicationPage() {
       </div>
 
       {/* Days */}
-      <div className="mb-5">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+      <div className="mb-6">
+        <label className="block text-base font-semibold text-[#1b1c1a] mb-3">
           {pt.addMedication.daysLabel}
         </label>
         <div className="flex gap-1.5">
@@ -219,10 +215,10 @@ export function AddMedicationPage() {
               <button
                 key={d}
                 onClick={() => toggleDay(idx)}
-                className={`flex-1 py-2.5 text-xs font-medium rounded-xl border transition min-h-[44px] ${
+                className={`flex-1 py-3 text-sm font-semibold rounded-lg border-[1.5px] transition min-h-[48px] ${
                   active
-                    ? 'bg-green-600 text-white border-green-600'
-                    : 'bg-white text-gray-600 border-gray-200'
+                    ? 'bg-[#192830] text-white border-[#192830]'
+                    : 'bg-white text-[#43474a] border-[#c3c7ca] hover:bg-[#f4f4f0]'
                 }`}
               >
                 {pt.addMedication.days[d]}
@@ -233,26 +229,26 @@ export function AddMedicationPage() {
       </div>
 
       {/* With food */}
-      <div className="flex items-center justify-between mb-8 py-3 border-t border-b border-gray-100">
-        <span className="text-sm font-medium text-gray-700">{pt.addMedication.withFoodLabel}</span>
+      <div className="flex items-center justify-between mb-8 py-4 border-t border-b border-[#e9e8e4]">
+        <span className="text-base font-semibold text-[#1b1c1a]">{pt.addMedication.withFoodLabel}</span>
         <button
           onClick={() => setWithFood(p => !p)}
-          className={`relative w-12 h-6 rounded-full transition ${withFood ? 'bg-green-500' : 'bg-gray-200'}`}
+          className={`relative w-12 h-7 rounded-full transition ${withFood ? 'bg-[#49654d]' : 'bg-[#c3c7ca]'}`}
         >
           <span
-            className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${
-              withFood ? 'translate-x-6' : 'translate-x-0.5'
+            className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow transition-transform ${
+              withFood ? 'translate-x-6' : 'translate-x-1'
             }`}
           />
         </button>
       </div>
 
-      {error && <p className="text-red-600 text-xs mb-4">{error}</p>}
+      {error && <p className="text-[#ba1a1a] text-base mb-4">{error}</p>}
 
       <button
         onClick={handleSave}
         disabled={saving || !selected || times.length === 0 || days.length === 0}
-        className="w-full py-4 bg-green-600 text-white text-sm font-semibold rounded-2xl hover:bg-green-700 active:scale-[0.98] transition disabled:opacity-40 min-h-[44px]"
+        className="w-full min-h-[48px] py-3 bg-[#192830] text-white text-base font-semibold rounded-lg hover:opacity-[0.88] hover:-translate-y-px active:scale-[0.98] transition disabled:opacity-40 shadow-[0_4px_16px_rgba(25,40,48,0.12)]"
       >
         {saving ? pt.common.loading : pt.addMedication.saveButton}
       </button>

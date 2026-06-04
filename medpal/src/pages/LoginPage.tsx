@@ -27,24 +27,25 @@ export function LoginPage() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-svh px-6 py-12">
+    <div className="flex flex-col items-center justify-center min-h-svh px-5 py-12 bg-[#faf9f5]">
       <div className="w-full max-w-sm">
+        {/* Logo */}
         <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-2xl mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-[#cbebcd] rounded-2xl mb-5">
             <span className="text-3xl">💊</span>
           </div>
-          <h1 className="text-2xl font-semibold text-gray-900">{pt.auth.title}</h1>
-          <p className="text-gray-500 mt-1 text-sm">{pt.auth.subtitle}</p>
+          <h1 className="text-[32px] font-bold tracking-[-0.02em] text-[#192830]">{pt.auth.title}</h1>
+          <p className="text-[#43474a] mt-2 text-lg">{pt.auth.subtitle}</p>
         </div>
 
         {sent ? (
-          <div className="bg-green-50 border border-green-200 rounded-2xl p-5 text-center">
-            <p className="text-green-800 text-sm font-medium">{pt.auth.magicLinkSent}</p>
+          <div className="bg-[#cbebcd] border border-[#49654d]/30 rounded-2xl p-6 text-center">
+            <p className="text-[#49654d] text-lg font-medium">{pt.auth.magicLinkSent}</p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              <label className="block text-base font-semibold text-[#1b1c1a] mb-2">
                 {pt.auth.emailLabel}
               </label>
               <input
@@ -53,18 +54,18 @@ export function LoginPage() {
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 placeholder={pt.auth.emailPlaceholder}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-green-400"
+                className="w-full min-h-[48px] px-4 py-3 rounded-lg border-[1.5px] border-[#c3c7ca] bg-white text-lg text-[#1b1c1a] placeholder:text-[#73787b] focus:outline-none focus:border-[#49654d] focus:shadow-[0_0_0_3px_rgba(73,101,77,0.12)] transition"
               />
             </div>
 
             {error && (
-              <p className="text-red-600 text-xs">{error}</p>
+              <p className="text-[#ba1a1a] text-base">{error}</p>
             )}
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-4 bg-green-600 text-white text-sm font-semibold rounded-2xl hover:bg-green-700 active:scale-[0.98] transition disabled:opacity-40 min-h-[44px]"
+              className="w-full min-h-[48px] py-3 bg-[#192830] text-white text-base font-semibold rounded-lg hover:opacity-[0.88] hover:-translate-y-px active:scale-[0.98] transition disabled:opacity-40 shadow-[0_4px_16px_rgba(25,40,48,0.12)]"
             >
               {loading ? pt.common.loading : pt.auth.magicLinkButton}
             </button>
