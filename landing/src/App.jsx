@@ -3,10 +3,10 @@ import './App.css'
 import QRModal from './QRModal.jsx'
 
 const SCREENS = [
-  { id: 'today',     label: 'Today',     src: '/screens/today.png',     title: 'Daily Dose Tracker', desc: "See every medication scheduled for today. Mark doses taken, snooze a reminder, or check what's next — in seconds, one-handed." },
-  { id: 'meds',      label: 'My Meds',   src: '/screens/meds.png',      title: 'Your Digital Medicine Cabinet', desc: 'Every medication in one place — daily use, as-needed, and past treatments. Scan a new prescription or add one manually at any time.' },
+  { id: 'today',     label: 'Today',     src: '/screens/today.png',     title: 'Your Day at a Glance', desc: 'All your medications for the day — morning to night — with one tap to mark each dose taken. Plus upcoming appointments and notes, all in one place.' },
+  { id: 'meds',      label: 'My Meds',   src: '/screens/meds.png',      title: 'Your Digital Medicine Cabinet', desc: 'Daily use, as-needed, and completed treatments — organised with icons and status. Tap Scan Prescription to add a new one in seconds.' },
   { id: 'chat',      label: 'Assistant', src: '/screens/chat.png',       title: 'MedPal Assistant', desc: "Feeling off? Tell MedPal. It cross-checks your symptoms against your current medications and can alert your doctor or care team if needed." },
-  { id: 'analytics', label: 'Reports',   src: '/screens/analytics.png', title: 'Reports & Adherence', desc: 'Track your adherence over 30 days. Log mood and side effects daily. Flip on Doctor Mode to share a clean summary at your next appointment.' },
+  { id: 'analytics', label: 'Reports',   src: '/screens/analytics.png', title: 'Reports & Adherence', desc: 'Track your overall adherence — 94% Excellent over 30 days. Log side effects. Flip on Doctor Mode to share a clean summary at your next appointment.' },
 ]
 
 const FEATURE_GROUPS = [
