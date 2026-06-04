@@ -64,15 +64,27 @@ Deno.serve(async (req) => {
       })
     }
 
+    // Test mode (caregiver settings) bypasses the toggle so the
+    // announcement can be verified before activating it.
+    let isTest = false
+    try {
+      const body = await req.json()
+      isTest = body?.test === true
+    } catch {
+      // no body — regular emergency call
+    }
+
     // Respect the caregiver toggle
-    const { data: settings } = await supabase
-      .from('caregiver_settings')
-      .select('emergency_voice')
-      .maybeSingle()
-    if (settings && !settings.emergency_voice) {
-      return new Response(JSON.stringify({ enabled: false }), {
-        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
-      })
+    if (!isTest) {
+      const { data: settings } = await supabase
+        .from('caregiver_settings')
+        .select('emergency_voice')
+        .maybeSingle()
+      if (settings && !settings.emergency_voice) {
+        return new Response(JSON.stringify({ enabled: false }), {
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+        })
+      }
     }
 
     const [{ data: profile }, { data: account }] = await Promise.all([

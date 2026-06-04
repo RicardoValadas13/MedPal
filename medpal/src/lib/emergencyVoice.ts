@@ -13,9 +13,11 @@ const MAX_PLAYBACK_MS = 75_000
 
 let prefetched: Promise<Blob | null> | null = null
 
-async function fetchClip(): Promise<Blob | null> {
+async function fetchClip(test = false): Promise<Blob | null> {
   try {
-    const { data, error } = await supabase.functions.invoke('emergency-voice')
+    const { data, error } = await supabase.functions.invoke('emergency-voice', {
+      body: test ? { test: true } : {},
+    })
     // A JSON response means the announcement is disabled or unavailable
     if (error || !(data instanceof Blob) || !data.type.startsWith('audio/')) return null
     return data
@@ -35,11 +37,38 @@ export function prefetchEmergencyAnnouncement(): void {
   }
 }
 
+/** Drop the cached clip — call after the patient profile changes. */
+export function clearEmergencyAnnouncementCache(): void {
+  prefetched = null
+}
+
 export interface AnnouncementPlayback {
   /** Resolves when playback finishes, fails, or is stopped. */
   finished: Promise<void>
   /** Stops playback immediately (resolves `finished`). */
   stop: () => void
+}
+
+function playClip(clip: Blob): AnnouncementPlayback {
+  const url = URL.createObjectURL(clip)
+  const audio = new Audio(url)
+  let stopFn: () => void = () => {}
+
+  const finished = new Promise<void>(resolve => {
+    const done = () => {
+      clearTimeout(cap)
+      audio.pause()
+      URL.revokeObjectURL(url)
+      resolve()
+    }
+    const cap = setTimeout(done, MAX_PLAYBACK_MS)
+    stopFn = done
+    audio.onended = done
+    audio.onerror = done
+    audio.play().catch(done)
+  })
+
+  return { finished, stop: () => stopFn() }
 }
 
 /**
@@ -49,8 +78,8 @@ export interface AnnouncementPlayback {
  * emergency call is never held hostage by the audio.
  */
 export async function playEmergencyAnnouncement(): Promise<AnnouncementPlayback> {
-  let stop: () => void = () => {}
   let stopped = false
+  let inner: AnnouncementPlayback | null = null
 
   const finished = (async () => {
     prefetchEmergencyAnnouncement()
@@ -59,30 +88,27 @@ export async function playEmergencyAnnouncement(): Promise<AnnouncementPlayback>
       new Promise<null>(resolve => setTimeout(() => resolve(null), READY_GRACE_MS)),
     ])
     if (!clip || stopped) return
-
-    const url = URL.createObjectURL(clip)
-    const audio = new Audio(url)
-
-    await new Promise<void>(resolve => {
-      const done = () => {
-        clearTimeout(cap)
-        audio.pause()
-        URL.revokeObjectURL(url)
-        resolve()
-      }
-      const cap = setTimeout(done, MAX_PLAYBACK_MS)
-      stop = done
-      audio.onended = done
-      audio.onerror = done
-      audio.play().catch(done)
-    })
+    inner = playClip(clip)
+    await inner.finished
   })()
 
   return {
     finished,
     stop: () => {
       stopped = true
-      stop()
+      inner?.stop()
     },
   }
+}
+
+/**
+ * Test mode for caregiver settings: always fetches a fresh clip
+ * (ignoring the cache) and bypasses the emergency_voice toggle, so the
+ * caregiver can verify the spoken name and address before activating.
+ * Never dials. Returns null when no clip could be generated.
+ */
+export async function playTestAnnouncement(): Promise<AnnouncementPlayback | null> {
+  const clip = await fetchClip(true)
+  if (!clip) return null
+  return playClip(clip)
 }

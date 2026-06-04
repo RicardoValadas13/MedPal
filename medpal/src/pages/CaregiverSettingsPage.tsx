@@ -1,5 +1,20 @@
 import { useEffect, useRef, useState } from 'react'
-import { ChevronDown, ChevronUp, GripVertical, Lock, Plus, ShieldCheck, Trash2 } from 'lucide-react'
+import {
+  ChevronDown,
+  ChevronUp,
+  GripVertical,
+  Lock,
+  Plus,
+  ShieldCheck,
+  Square,
+  Trash2,
+  Volume2,
+} from 'lucide-react'
+import {
+  clearEmergencyAnnouncementCache,
+  playTestAnnouncement,
+  type AnnouncementPlayback,
+} from '../lib/emergencyVoice'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import { pt } from '../i18n/pt'
@@ -52,6 +67,14 @@ export function CaregiverSettingsPage() {
   const dragIndex = useRef<number | null>(null)
   const [saving, setSaving] = useState(false)
   const [saveMessage, setSaveMessage] = useState<string | null>(null)
+
+  // Voice test playback
+  const [voiceTest, setVoiceTest] = useState<'idle' | 'loading' | 'playing'>('idle')
+  const [voiceTestError, setVoiceTestError] = useState(false)
+  const testPlaybackRef = useRef<AnnouncementPlayback | null>(null)
+
+  // Stop a running test when leaving the page
+  useEffect(() => () => testPlaybackRef.current?.stop(), [])
 
   useEffect(() => {
     if (!user) return
@@ -167,6 +190,26 @@ export function CaregiverSettingsPage() {
     }
   }
 
+  async function handleVoiceTest() {
+    if (voiceTest === 'playing') {
+      testPlaybackRef.current?.stop()
+      return
+    }
+    if (voiceTest === 'loading') return
+    setVoiceTestError(false)
+    setVoiceTest('loading')
+    const playback = await playTestAnnouncement()
+    if (!playback) {
+      setVoiceTest('idle')
+      setVoiceTestError(true)
+      return
+    }
+    testPlaybackRef.current = playback
+    setVoiceTest('playing')
+    await playback.finished
+    setVoiceTest('idle')
+  }
+
   function addContact() {
     if (!user || contacts.length >= MAX_CONTACTS) return
     setContacts([
@@ -269,6 +312,8 @@ export function CaregiverSettingsPage() {
       deletedContactIds.current = []
       // Reflect the persisted priorities in local state
       setContacts(validContacts.map((c, i) => ({ ...c, priority: i + 1 })))
+      // The address/name may have changed — drop any cached voice clip
+      clearEmergencyAnnouncementCache()
     }
   }
 
@@ -359,6 +404,39 @@ export function CaregiverSettingsPage() {
           checked={settings?.emergency_voice ?? true}
           onChange={v => settings && setSettings({ ...settings, emergency_voice: v })}
         />
+
+        {/* Voice test — plays the announcement without calling 112 */}
+        <div className="bg-white rounded-2xl border border-[#c3c7ca]/40 px-4 py-4">
+          <button
+            onClick={handleVoiceTest}
+            disabled={voiceTest === 'loading'}
+            className={`w-full min-h-[52px] flex items-center justify-center gap-2 rounded-xl text-base font-semibold transition disabled:opacity-60 ${
+              voiceTest === 'playing'
+                ? 'bg-[#ba1a1a] text-white hover:opacity-[0.88]'
+                : 'bg-[#cbebcd] text-[#192830] hover:bg-[#afceb2]'
+            }`}
+          >
+            {voiceTest === 'playing' ? (
+              <>
+                <Square size={18} aria-hidden />
+                {pt.caregiver.voiceTestStop}
+              </>
+            ) : (
+              <>
+                <Volume2 size={18} aria-hidden />
+                {voiceTest === 'loading'
+                  ? pt.caregiver.voiceTestLoading
+                  : pt.caregiver.voiceTest}
+              </>
+            )}
+          </button>
+          <p className="text-sm text-[#43474a] mt-2">{pt.caregiver.voiceTestHint}</p>
+          {voiceTestError && (
+            <p className="text-sm font-medium text-[#ba1a1a] mt-2">
+              {pt.caregiver.voiceTestError}
+            </p>
+          )}
+        </div>
       </section>
 
       {/* Family contacts */}
