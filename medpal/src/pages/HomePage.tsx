@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Plus, Clock, Check } from 'lucide-react'
+import { Plus, Check, ChevronRight, CalendarDays, StickyNote, Pill, Sun, Moon, Clock3 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import { EmergencyButton } from '../components/EmergencyButton'
@@ -10,6 +10,22 @@ import type { UserMedication, IntakeEvent } from '../types/database'
 interface TodayMedication extends UserMedication {
   taken_today?: boolean
   next_time?: string
+  scheduled_time?: string  // time of the event (pending or taken)
+  notes?: string | null
+}
+
+function getMedIcon(name: string) {
+  const lower = name.toLowerCase()
+  if (lower.includes('vitamin') || lower.includes('vitamina')) return <Sun size={18} className="text-[#f59e0b]" />
+  if (lower.includes('night') || lower.includes('noite') || lower.includes('sleep')) return <Moon size={18} className="text-[#6366f1]" />
+  return <Pill size={18} className="text-[#49654d]" />
+}
+
+function getMedIconBg(name: string) {
+  const lower = name.toLowerCase()
+  if (lower.includes('vitamin') || lower.includes('vitamina')) return 'bg-[#fef3c7]'
+  if (lower.includes('night') || lower.includes('noite') || lower.includes('sleep')) return 'bg-[#ede9fe]'
+  return 'bg-[#d1fae5]'
 }
 
 export function HomePage() {
@@ -41,172 +57,218 @@ export function HomePage() {
 
     if (meds) {
       const allEvents = (events ?? []) as IntakeEvent[]
-      const takenIds = new Set(allEvents.filter(e => e.status === 'taken').map(e => e.user_medication_id))
+      const takenEvents = allEvents.filter(e => e.status === 'taken')
+      const takenIds = new Set(takenEvents.map(e => e.user_medication_id))
       const pending = allEvents.filter(e => e.status === 'pending')
 
       setTakenCount(takenIds.size)
       setTotalCount(meds.length)
 
       setMedications(
-        meds.map(m => ({
-          ...m,
-          taken_today: takenIds.has(m.id),
-          next_time: pending.find(e => e.user_medication_id === m.id)?.scheduled_at,
-        }))
+        meds.map(m => {
+          const pendingEvent = pending.find(e => e.user_medication_id === m.id)
+          const takenEvent = takenEvents.find(e => e.user_medication_id === m.id)
+          return {
+            ...m,
+            taken_today: takenIds.has(m.id),
+            next_time: pendingEvent?.scheduled_at,
+            scheduled_time: (pendingEvent ?? takenEvent)?.scheduled_at,
+          }
+        })
       )
     }
 
     setLoading(false)
   }
 
-  const progressPct = totalCount > 0 ? Math.round((takenCount / totalCount) * 100) : 0
-  const circumference = 2 * Math.PI * 40
-  const strokeOffset = circumference - (progressPct / 100) * circumference
+  async function handleToggleTaken(med: TodayMedication) {
+    if (med.taken_today) return
+    const now = new Date().toISOString()
+    const { data: schedules } = await supabase
+      .from('schedules')
+      .select('id')
+      .eq('user_medication_id', med.id)
+      .limit(1)
+    const scheduleId = schedules?.[0]?.id
+    if (!scheduleId) return
+    await supabase.from('intake_events').insert({
+      user_medication_id: med.id,
+      schedule_id: scheduleId,
+      scheduled_at: med.next_time ?? now,
+      status: 'taken',
+      responded_at: now,
+    })
+    loadTodayMedications()
+  }
 
-  const nextMed = medications.find(m => !m.taken_today)
+  const pending = medications.filter(m => !m.taken_today)
+  const taken = medications.filter(m => m.taken_today)
 
   return (
-    // Extra bottom padding so the floating emergency button never covers content
-    <div className="px-5 py-md pb-[112px] flex flex-col gap-md">
+    <div className="px-5 py-4 flex flex-col gap-5 pb-[112px]">
 
       <EmergencyButton />
 
-      {/* Tip card */}
-      <section className="bg-[#ffffff] rounded-2xl p-sm border border-[#c3c7ca]/30 flex items-start gap-sm">
-        <div className="w-10 h-10 rounded-full bg-[#cbebcd] flex items-center justify-center shrink-0">
-          <span className="text-lg">💧</span>
-        </div>
-        <div>
-          <p className="text-label-lg font-semibold text-[#192830] leading-tight">Stay Hydrated</p>
-          <p className="text-caption text-[#43474a] mt-0.5">Drink a glass of water with your morning medications.</p>
-        </div>
-      </section>
-
-      {/* Progress bento */}
-      <section className="grid grid-cols-2 gap-sm">
-        {/* Circular progress */}
-        <div className="bg-[#ffffff] rounded-2xl p-md border border-[#c3c7ca]/30 flex flex-col items-center justify-center text-center">
-          {loading ? (
-            <div className="w-24 h-24 bg-[#efeeea] rounded-full animate-pulse" />
-          ) : (
-            <div className="relative w-24 h-24 mb-sm">
-              <svg className="w-full h-full" viewBox="0 0 100 100">
-                <circle
-                  className="stroke-[#e9e8e4]"
-                  cx="50" cy="50" r="40"
-                  fill="transparent" strokeWidth="8"
-                />
-                <circle
-                  className="stroke-[#49654d] progress-ring__circle"
-                  cx="50" cy="50" r="40"
-                  fill="transparent" strokeWidth="8"
-                  strokeDasharray={circumference}
-                  strokeDashoffset={strokeOffset}
-                  strokeLinecap="round"
-                />
-              </svg>
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-headline-mobile font-bold text-[#192830]">
-                  {takenCount}/{totalCount}
-                </span>
-              </div>
-            </div>
-          )}
-          <span className="text-caption text-[#43474a]">Daily Doses</span>
-        </div>
-
-        {/* Completed + Upcoming */}
-        <div className="flex flex-col gap-sm">
-          <div className="bg-[#ffffff] rounded-2xl p-sm border border-[#c3c7ca]/30 flex-1 flex flex-col justify-center">
-            <div className="flex items-center gap-xs mb-1">
-              <Check size={18} className="text-[#49654d]" />
-              <span className="text-caption text-[#43474a]">Completed</span>
-            </div>
-            <span className="text-body-xl font-semibold text-[#192830]">{takenCount}</span>
+      {/* Medications to take */}
+      {!loading && medications.length === 0 ? (
+        <div className="text-center py-14 flex flex-col items-center gap-4">
+          <div className="w-16 h-16 rounded-full bg-[#efeeea] flex items-center justify-center">
+            <Pill size={28} className="text-[#43474a]" />
           </div>
-          <div className="bg-[#ffffff] rounded-2xl p-sm border border-[#c3c7ca]/30 flex-1 flex flex-col justify-center">
-            <div className="flex items-center gap-xs mb-1">
-              <Clock size={18} className="text-[#f3896d]" />
-              <span className="text-caption text-[#43474a]">Upcoming</span>
-            </div>
-            <span className="text-body-xl font-semibold text-[#192830]">{totalCount - takenCount}</span>
-          </div>
-        </div>
-      </section>
-
-      {/* Next dose featured card */}
-      {nextMed && (
-        <section className="flex flex-col gap-sm">
-          <h2 className="text-headline-mobile font-semibold text-[#192830]">Next Dose</h2>
-          <div className="bg-[#ffffff] rounded-3xl p-md shadow-[0_8px_30px_rgba(47,62,70,0.08)] border-l-4 border-l-[#192830] relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-[#d5e5ef]/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none" />
-            <div className="flex justify-between items-start mb-md relative z-10">
-              <div>
-                {nextMed.next_time && (
-                  <div className="flex items-center gap-xs mb-xs">
-                    <Clock size={16} className="text-[#192830]" />
-                    <span className="text-caption text-[#43474a]">
-                      {new Date(nextMed.next_time).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
-                    </span>
-                  </div>
-                )}
-                <h3 className="text-headline-mobile font-semibold text-[#192830] mb-xs">{nextMed.display_name}</h3>
-                {nextMed.dosage && (
-                  <div className="inline-flex items-center px-2 py-1 rounded-lg bg-[#efeeea] text-[#43474a] text-caption">
-                    {nextMed.dosage}
-                  </div>
-                )}
-              </div>
-              <div className="w-12 h-12 rounded-xl bg-[#efeeea] flex items-center justify-center shrink-0">
-                <span className="text-2xl">💊</span>
-              </div>
-            </div>
-            <div className="flex gap-sm relative z-10">
-              <button className="flex-1 min-h-[48px] bg-[#192830] text-white rounded-xl text-label-lg font-semibold flex items-center justify-center gap-xs hover:opacity-[0.88] transition">
-                <Check size={18} />
-                Take Now
-              </button>
-              <button className="flex-1 min-h-[48px] bg-[#efeeea] text-[#192830] rounded-xl text-label-lg font-semibold flex items-center justify-center gap-xs hover:bg-[#e9e8e4] transition">
-                Snooze
-              </button>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Completed today */}
-      {medications.some(m => m.taken_today) && (
-        <section className="flex flex-col gap-sm">
-          <h2 className="text-headline-mobile font-semibold text-[#192830]">Completed Today</h2>
-          <div className="bg-[#ffffff] rounded-2xl border border-[#c3c7ca]/30 overflow-hidden divide-y divide-[#efeeea]">
-            {medications.filter(m => m.taken_today).map(med => (
-              <div key={med.id} className="px-sm py-sm flex items-center gap-sm">
-                <div className="w-10 h-10 rounded-full bg-[#cbebcd] flex items-center justify-center shrink-0">
-                  <Check size={18} className="text-[#4f6b53]" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-label-lg font-semibold text-[#192830] line-through opacity-70">{med.display_name}</p>
-                  {med.dosage && <p className="text-caption text-[#43474a]">{med.dosage}</p>}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Empty state */}
-      {!loading && medications.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-body-md text-[#43474a] mb-6">{pt.home.noMedications}</p>
+          <p className="text-base text-[#43474a]">{pt.home.noMedications}</p>
           <Link
             to="/medications/add"
-            className="inline-flex items-center gap-2 px-5 py-3 bg-[#192830] text-white text-label-lg font-semibold rounded-lg min-h-[48px] hover:opacity-[0.88] transition"
+            className="inline-flex items-center gap-2 px-5 py-3 bg-[#192830] text-white text-sm font-semibold rounded-xl min-h-[48px] hover:opacity-[0.88] transition"
           >
             <Plus size={18} />
             {pt.home.addManual}
           </Link>
         </div>
+      ) : (
+        <>
+          {/* Pending medications */}
+          {(loading || pending.length > 0) && (
+            <section>
+              <h2 className="text-base font-semibold text-[#43474a] mb-3">Medications to take</h2>
+              <div className="bg-white rounded-2xl shadow-sm border border-[#e9e8e4] overflow-hidden divide-y divide-[#f4f3f0]">
+                {loading ? (
+                  [0, 1, 2].map(i => (
+                    <div key={i} className="px-4 py-3.5 flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-full bg-[#efeeea] animate-pulse shrink-0" />
+                      <div className="flex-1 space-y-1.5">
+                        <div className="h-3.5 bg-[#efeeea] rounded animate-pulse w-32" />
+                        <div className="h-3 bg-[#efeeea] rounded animate-pulse w-20" />
+                      </div>
+                      <div className="w-6 h-6 rounded-full bg-[#efeeea] animate-pulse" />
+                    </div>
+                  ))
+                ) : (
+                  pending.map(med => (
+                    <div key={med.id} className="px-4 py-4 flex items-center gap-3">
+                      <div className={`w-10 h-10 rounded-full ${getMedIconBg(med.display_name)} flex items-center justify-center shrink-0`}>
+                        {getMedIcon(med.display_name)}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-[#192830] truncate">{med.display_name}</p>
+                        <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-1">
+                          {med.scheduled_time && (
+                            <span className="flex items-center gap-1 text-xs text-[#192830] font-medium">
+                              <Clock3 size={11} className="text-[#49654d]" />
+                              {new Date(med.scheduled_time).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
+                            </span>
+                          )}
+                          {med.dosage && (
+                            <span className="text-xs text-[#43474a] bg-[#f4f3f0] px-1.5 py-0.5 rounded-md">
+                              {med.dosage}
+                            </span>
+                          )}
+                          {med.notes && (
+                            <span className="text-xs text-[#43474a] truncate max-w-[120px]">{med.notes}</span>
+                          )}
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => handleToggleTaken(med)}
+                        className="w-7 h-7 rounded-full border-2 border-[#c3c7ca] flex items-center justify-center shrink-0 hover:border-[#49654d] transition-colors active:scale-95"
+                        aria-label="Mark as taken"
+                      />
+                    </div>
+                  ))
+                )}
+              </div>
+            </section>
+          )}
+
+          {/* Taken medications */}
+          {taken.length > 0 && (
+            <section>
+              <h2 className="text-base font-semibold text-[#43474a] mb-3">Taken</h2>
+              <div className="bg-white rounded-2xl shadow-sm border border-[#e9e8e4] overflow-hidden divide-y divide-[#f4f3f0]">
+                {taken.map(med => (
+                  <div key={med.id} className="px-4 py-4 flex items-center gap-3 opacity-60">
+                    <div className={`w-10 h-10 rounded-full ${getMedIconBg(med.display_name)} flex items-center justify-center shrink-0`}>
+                      {getMedIcon(med.display_name)}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-[#192830] truncate line-through">{med.display_name}</p>
+                      <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-1">
+                        <span className="text-xs text-[#49654d] font-medium">Taken</span>
+                        {med.scheduled_time && (
+                          <span className="flex items-center gap-1 text-xs text-[#43474a]">
+                            <Clock3 size={11} />
+                            {new Date(med.scheduled_time).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
+                          </span>
+                        )}
+                        {med.dosage && (
+                          <span className="text-xs text-[#43474a] bg-[#f4f3f0] px-1.5 py-0.5 rounded-md line-through">
+                            {med.dosage}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="w-7 h-7 rounded-full bg-[#d1fae5] border-2 border-[#49654d] flex items-center justify-center shrink-0">
+                      <Check size={14} className="text-[#49654d]" strokeWidth={2.5} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+        </>
       )}
+
+      {/* Progress summary row */}
+      {!loading && medications.length > 0 && (
+        <div className="flex gap-3">
+          <div className="flex-1 bg-white rounded-2xl border border-[#e9e8e4] px-4 py-3 flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-[#d1fae5] flex items-center justify-center shrink-0">
+              <Check size={16} className="text-[#49654d]" strokeWidth={2.5} />
+            </div>
+            <div>
+              <p className="text-xs text-[#43474a]">Taken</p>
+              <p className="text-lg font-bold text-[#192830] leading-tight">{takenCount}</p>
+            </div>
+          </div>
+          <div className="flex-1 bg-white rounded-2xl border border-[#e9e8e4] px-4 py-3 flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-[#fef3c7] flex items-center justify-center shrink-0">
+              <Clock3 size={16} className="text-[#d97706]" strokeWidth={2} />
+            </div>
+            <div>
+              <p className="text-xs text-[#43474a]">Remaining</p>
+              <p className="text-lg font-bold text-[#192830] leading-tight">{totalCount - takenCount}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Appointments card */}
+      <section>
+        <div className="bg-white rounded-2xl border border-[#e9e8e4] shadow-sm px-4 py-4 flex items-center gap-3 cursor-pointer hover:bg-[#faf9f5] transition-colors active:scale-[0.99]">
+          <div className="w-10 h-10 rounded-xl bg-[#dbeafe] flex items-center justify-center shrink-0">
+            <CalendarDays size={20} className="text-[#2563eb]" strokeWidth={1.8} />
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-[#192830]">Appointments</p>
+            <p className="text-xs text-[#43474a] mt-0.5">No upcoming appointments</p>
+          </div>
+          <ChevronRight size={18} className="text-[#c3c7ca]" />
+        </div>
+      </section>
+
+      {/* Notes card */}
+      <section>
+        <div className="bg-white rounded-2xl border border-[#e9e8e4] shadow-sm px-4 py-4 flex items-center gap-3 cursor-pointer hover:bg-[#faf9f5] transition-colors active:scale-[0.99]">
+          <div className="w-10 h-10 rounded-xl bg-[#fef9c3] flex items-center justify-center shrink-0">
+            <StickyNote size={20} className="text-[#ca8a04]" strokeWidth={1.8} />
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-[#192830]">Notes</p>
+            <p className="text-xs text-[#43474a] mt-0.5">Add a note</p>
+          </div>
+          <ChevronRight size={18} className="text-[#c3c7ca]" />
+        </div>
+      </section>
+
     </div>
   )
 }

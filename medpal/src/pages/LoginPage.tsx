@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Pill } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { pt } from '../i18n/pt'
 
@@ -27,12 +28,12 @@ export function LoginPage() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-svh px-5 py-12 bg-[#faf9f5]">
-      <div className="w-full max-w-sm">
+    <div className="flex flex-col min-h-svh px-5 py-12 bg-[#faf9f5] justify-center">
+      <div className="w-full mx-auto" style={{maxWidth: '384px'}}>
         {/* Logo */}
         <div className="text-center mb-10">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-[#cbebcd] rounded-2xl mb-5">
-            <span className="text-3xl">💊</span>
+            <Pill size={32} className="text-[#49654d]" />
           </div>
           <h1 className="text-[32px] font-bold tracking-[-0.02em] text-[#192830]">{pt.auth.title}</h1>
           <p className="text-[#43474a] mt-2 text-lg">{pt.auth.subtitle}</p>
@@ -43,7 +44,7 @@ export function LoginPage() {
             <p className="text-[#49654d] text-lg font-medium">{pt.auth.magicLinkSent}</p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-5 w-full">
             <div>
               <label className="block text-base font-semibold text-[#1b1c1a] mb-2">
                 {pt.auth.emailLabel}

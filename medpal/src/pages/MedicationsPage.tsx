@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { ScanLine, Pill, History } from 'lucide-react'
+import { useEffect, useState, useRef } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { ScanLine, Pill, History, MoreVertical, Pencil, Trash2, Clock, Utensils } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import { pt } from '../i18n/pt'
@@ -12,8 +12,27 @@ interface MedicationWithSchedule extends UserMedication {
 
 export function MedicationsPage() {
   const { user } = useAuth()
+  const navigate = useNavigate()
   const [medications, setMedications] = useState<MedicationWithSchedule[]>([])
   const [loading, setLoading] = useState(true)
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null)
+  const menuRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setOpenMenuId(null)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  async function handleDelete(medId: string) {
+    setOpenMenuId(null)
+    await supabase.from('user_medications').update({ is_active: false }).eq('id', medId)
+    setMedications(prev => prev.filter(m => m.id !== medId))
+  }
 
   useEffect(() => {
     if (!user) return
@@ -78,28 +97,54 @@ export function MedicationsPage() {
                 return (
                   <div
                     key={med.id}
-                    className="bg-[#ffffff] rounded-xl p-md border-l-4 border-l-[#49654d] shadow-sm flex flex-col gap-sm hover:shadow-[0_8px_32px_rgba(25,40,48,0.08)] transition-shadow cursor-pointer"
+                    className="bg-[#ffffff] rounded-xl p-md border-l-4 border-l-[#49654d] shadow-sm flex flex-col gap-sm hover:shadow-[0_8px_32px_rgba(25,40,48,0.08)] transition-shadow"
                   >
                     <div className="flex justify-between items-start">
-                      <div>
+                      <div className="flex-1 min-w-0">
                         <h4 className="text-headline-mobile font-semibold text-[#192830]">{med.display_name}</h4>
                         <p className="text-body-md text-[#43474a]">
                           {[med.dosage, med.source === 'prescription' ? 'Prescription' : 'Manual'].filter(Boolean).join(' · ')}
                         </p>
                       </div>
-                      <div className="w-10 h-10 rounded-xl bg-[#cbebcd] flex items-center justify-center shrink-0">
-                        <Pill size={20} className="text-[#49654d]" />
+                      <div className="flex items-center gap-2 shrink-0 relative" ref={openMenuId === med.id ? menuRef : undefined}>
+                        <div className="w-10 h-10 rounded-xl bg-[#cbebcd] flex items-center justify-center">
+                          <Pill size={20} className="text-[#49654d]" />
+                        </div>
+                        <button
+                          onClick={() => setOpenMenuId(openMenuId === med.id ? null : med.id)}
+                          className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-[#efeeea] transition text-[#43474a]"
+                        >
+                          <MoreVertical size={18} />
+                        </button>
+                        {openMenuId === med.id && (
+                          <div className="absolute right-0 top-10 bg-white border border-[#e9e8e4] rounded-xl shadow-lg z-50 overflow-hidden min-w-[140px]">
+                            <button
+                              onClick={() => { setOpenMenuId(null); navigate(`/medications/${med.id}/edit`) }}
+                              className="w-full flex items-center gap-2 px-4 py-3 text-sm font-semibold text-[#192830] hover:bg-[#f4f4f0] transition"
+                            >
+                              <Pencil size={15} />
+                              Edit
+                            </button>
+                            <button
+                              onClick={() => handleDelete(med.id)}
+                              className="w-full flex items-center gap-2 px-4 py-3 text-sm font-semibold text-[#ba1a1a] hover:bg-[#fff0f0] transition"
+                            >
+                              <Trash2 size={15} />
+                              Delete
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
                     <div className="flex flex-wrap gap-xs mt-xs">
                       {timesPerDay > 0 && (
                         <span className="bg-[#efeeea] text-[#43474a] px-sm py-xs rounded-full text-caption font-semibold flex items-center gap-xs">
-                          🕐 {timesPerDay}× daily{times ? ` · ${times}` : ''}
+                          <Clock size={12} /> {timesPerDay}× daily{times ? ` · ${times}` : ''}
                         </span>
                       )}
                       {withFood && (
                         <span className="bg-[#efeeea] text-[#43474a] px-sm py-xs rounded-full text-caption font-semibold flex items-center gap-xs">
-                          🍽 With food
+                          <Utensils size={12} /> With food
                         </span>
                       )}
                       {med.source === 'prescription' && (

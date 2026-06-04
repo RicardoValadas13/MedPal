@@ -1,37 +1,45 @@
-import { Link } from 'react-router-dom'
 import { Bell, ShieldCheck } from 'lucide-react'
-import { useAuth } from '../contexts/AuthContext'
-import { pt } from '../i18n/pt'
+import { Link, useNavigate } from 'react-router-dom'
+
+function getGreeting() {
+  const h = new Date().getHours()
+  if (h < 12) return 'Good morning,'
+  if (h < 18) return 'Good afternoon,'
+  return 'Good evening,'
+}
 
 export function TopBar() {
-  const { user } = useAuth()
-  const initial = (user?.email ?? 'M')[0].toUpperCase()
+  const navigate = useNavigate()
+  const initial = 'U'
+  const displayName = 'User'
 
   return (
-    <header className="sticky top-0 z-40 bg-[#faf9f5] flex justify-between items-center w-full px-5 py-3">
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full bg-[#cbebcd] flex items-center justify-center text-[#49654d] font-semibold text-base shrink-0">
-          {initial}
+    <header className="sticky top-0 z-40 bg-[#faf9f5] px-5 pt-5 pb-4">
+      <div className="flex justify-between items-start">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => navigate('/settings')}
+            className="w-12 h-12 rounded-full bg-[#cbebcd] flex items-center justify-center text-[#49654d] font-bold text-lg shrink-0 shadow-sm active:scale-95 transition-transform"
+          >
+            {initial}
+          </button>
+          <div>
+            <p className="text-sm text-[#43474a] leading-tight">{getGreeting()}</p>
+            <p className="text-xl font-bold text-[#192830] leading-tight">{displayName}</p>
+          </div>
         </div>
-        <div>
-          <p className="text-sm font-medium text-[#43474a] leading-tight">Good day,</p>
-          <p className="text-base font-semibold text-[#192830] leading-tight capitalize">
-            {user?.email?.split('@')[0] ?? 'User'}
-          </p>
+        <div className="flex items-center gap-1">
+          <Link
+            to="/caregiver"
+            aria-label="Caregiver"
+            className="w-10 h-10 flex items-center justify-center rounded-full text-[#192830] hover:bg-[#efeeea] transition-colors active:scale-95 mt-1"
+          >
+            <ShieldCheck size={22} strokeWidth={1.8} />
+          </Link>
+          <button className="w-10 h-10 flex items-center justify-center rounded-full text-[#192830] hover:bg-[#efeeea] transition-colors active:scale-95 mt-1">
+            <Bell size={22} strokeWidth={1.8} />
+          </button>
         </div>
-      </div>
-
-      <div className="flex items-center gap-1">
-        <Link
-          to="/caregiver"
-          aria-label={pt.caregiver.title}
-          className="w-10 h-10 flex items-center justify-center rounded-full text-[#192830] hover:bg-[#efeeea] transition-colors active:scale-95"
-        >
-          <ShieldCheck size={20} strokeWidth={2} />
-        </Link>
-        <button className="w-10 h-10 flex items-center justify-center rounded-full text-[#192830] hover:bg-[#efeeea] transition-colors active:scale-95">
-          <Bell size={20} strokeWidth={2} />
-        </button>
       </div>
     </header>
   )

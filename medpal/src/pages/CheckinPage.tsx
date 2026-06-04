@@ -5,7 +5,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { pt } from '../i18n/pt'
 import type { IntakeEvent } from '../types/database'
 
-const MOOD_EMOJIS = ['😞', '😕', '😐', '🙂', '😄']
+const MOOD_COLORS = ['#e57373', '#ffb74d', '#ffd54f', '#aed581', '#66bb6a']
 
 interface TodayEvent extends IntakeEvent {
   medication_name?: string
@@ -103,18 +103,25 @@ export function CheckinPage() {
       <div>
         <h1 className="text-2xl font-semibold tracking-[-0.02em] text-[#192830] mb-5">{pt.checkin.title}</h1>
         <div className="flex justify-between gap-2">
-          {MOOD_EMOJIS.map((emoji, i) => (
+          {MOOD_COLORS.map((color, i) => (
             <button
               key={i}
               onClick={() => setMood(i + 1)}
-              className={`flex-1 flex flex-col items-center gap-1.5 py-4 rounded-2xl border-[1.5px] transition min-h-[48px] ${
+              className={`flex-1 flex flex-col items-center gap-2 py-4 rounded-2xl border-[1.5px] transition min-h-[48px] ${
                 mood === i + 1
-                  ? 'border-[#49654d] bg-[#cbebcd]/40'
+                  ? 'border-[#49654d] bg-[#cbebcd]/30'
                   : 'border-[#c3c7ca] bg-white hover:bg-[#f4f4f0]'
               }`}
             >
-              <span className="text-2xl">{emoji}</span>
-              <span className="text-sm font-medium text-[#43474a] text-center leading-tight">
+              <span
+                className="w-8 h-8 rounded-full block transition-transform"
+                style={{
+                  backgroundColor: color,
+                  transform: mood === i + 1 ? 'scale(1.15)' : 'scale(1)',
+                  boxShadow: mood === i + 1 ? `0 0 0 3px ${color}40` : 'none',
+                }}
+              />
+              <span className="text-xs font-medium text-[#43474a] text-center leading-tight">
                 {pt.checkin.moods[i]}
               </span>
             </button>
