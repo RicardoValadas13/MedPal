@@ -1,7 +1,7 @@
 import { QRCodeSVG } from 'qrcode.react'
 import './QRModal.css'
 
-const DEMO_URL = 'https://demo.medpal.pt'
+const DEMO_URL = 'https://project-wo2i5-oolzmjw4v-tomas-vicente-s-projects.vercel.app/'
 
 export default function QRModal({ onClose }) {
   return (
