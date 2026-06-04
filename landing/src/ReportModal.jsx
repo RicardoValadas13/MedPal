@@ -1,5 +1,6 @@
 import './ReportModal.css'
 import { DEMO_URL } from './QRModal.jsx'
+import { Icon } from './Icons.jsx'
 
 const REPORT_MEDS = [
   { name: 'Lisinopril 10mg', note: 'Blood pressure · Morning', adherence: 98 },
@@ -29,7 +30,7 @@ export default function ReportModal({ onClose }) {
         </div>
 
         <div className="report-callout">
-          <span className="report-callout-icon">🩺</span>
+          <Icon name="stethoscope" className="report-callout-icon" />
           <p>Heading to your next doctor's appointment? You'll <strong>never have to remember everything you've been taking</strong> — it's all recorded here, ready to share with your doctor in one tap.</p>
         </div>
 
@@ -51,7 +52,7 @@ export default function ReportModal({ onClose }) {
         <a className="btn btn-primary report-cta" href={DEMO_URL} target="_blank" rel="noopener noreferrer">
           Try MedPal — keep your own record
         </a>
-        <p className="report-foot">🔒 Shared securely with Doctor Mode — your data stays yours.</p>
+        <p className="report-foot"><Icon name="lock" className="report-foot-icon" /> Shared securely with Doctor Mode — your data stays yours.</p>
       </div>
     </div>
   )
