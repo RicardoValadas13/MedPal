@@ -11,12 +11,13 @@ export default defineConfig({
       // We maintain public/manifest.webmanifest by hand (linked in index.html)
       manifest: false,
       registerType: 'autoUpdate',
-      workbox: {
-        // Offline shell only: precache the built app shell and static
-        // assets. No runtimeCaching rules on purpose — Supabase data,
-        // auth and Edge Function calls are never cached.
+      // Custom SW: same offline shell as generateSW, plus the
+      // notificationclick handlers for medication reminders.
+      strategies: 'injectManifest',
+      srcDir: 'src',
+      filename: 'sw.ts',
+      injectManifest: {
         globPatterns: ['**/*.{js,css,html,png,svg,webmanifest}'],
-        navigateFallback: '/index.html',
       },
     }),
   ],
