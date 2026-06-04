@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Medpal for Doctors</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-container": "#cbebcd",
+                        "on-primary-fixed-variant": "#3a4951",
+                        "on-primary-container": "#99a9b2",
+                        "tertiary-fixed": "#ffdbd2",
+                        "surface-tint": "#516169",
+                        "primary-fixed": "#d5e5ef",
+                        "surface-container-highest": "#e3e2df",
+                        "surface": "#faf9f5",
+                        "on-tertiary-fixed-variant": "#7c2e19",
+                        "on-secondary-fixed": "#06200e",
+                        "primary-fixed-dim": "#b9c9d3",
+                        "on-surface-variant": "#43474a",
+                        "secondary": "#49654d",
+                        "on-tertiary-container": "#f3896d",
+                        "inverse-primary": "#b9c9d3",
+                        "primary-container": "#2f3e46",
+                        "tertiary-fixed-dim": "#ffb4a1",
+                        "on-surface": "#1b1c1a",
+                        "outline-variant": "#c3c7ca",
+                        "on-error": "#ffffff",
+                        "outline": "#73787b",
+                        "on-primary": "#ffffff",
+                        "inverse-on-surface": "#f2f1ed",
+                        "surface-container-low": "#f4f4f0",
+                        "background": "#faf9f5",
+                        "surface-dim": "#dbdad6",
+                        "on-tertiary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "surface-variant": "#e3e2df",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed-variant": "#324d37",
+                        "on-secondary-container": "#4f6b53",
+                        "on-background": "#1b1c1a",
+                        "error-container": "#ffdad6",
+                        "tertiary": "#4f0e00",
+                        "surface-container-high": "#e9e8e4",
+                        "secondary-fixed-dim": "#afceb2",
+                        "error": "#ba1a1a",
+                        "surface-container": "#efeeea",
+                        "tertiary-container": "#6d230f",
+                        "primary": "#192830",
+                        "surface-bright": "#faf9f5",
+                        "inverse-surface": "#2f312e",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed": "#cbebcd",
+                        "on-tertiary-fixed": "#3c0800",
+                        "on-primary-fixed": "#0e1d25"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "md": "24px",
+                        "gutter": "16px",
+                        "base": "8px",
+                        "xl": "48px",
+                        "sm": "12px",
+                        "lg": "32px",
+                        "container-margin": "20px"
+                    },
+                    "fontFamily": {
+                        "caption": ["Inter"],
+                        "body-xl": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "caption": ["14px", { "lineHeight": "18px", "fontWeight": "500" }],
+                        "body-xl": ["20px", { "lineHeight": "30px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["22px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["18px", { "lineHeight": "26px", "fontWeight": "400" }],
+                        "label-lg": ["16px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col relative overflow-x-hidden">
+<!-- Decorative Background Blob -->
+<div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-secondary-container opacity-30 rounded-full blur-[100px] pointer-events-none -z-10"></div>
+<div class="absolute top-[20%] right-[-5%] w-[40%] h-[40%] bg-primary-fixed opacity-30 rounded-full blur-[100px] pointer-events-none -z-10"></div>
+<!-- TopAppBar from JSON -->
+<header class="docked full-width top-0 sticky z-50 bg-surface dark:bg-surface-dim flat no shadows flex justify-between items-center w-full px-container-margin py-md transition-all duration-300 backdrop-blur-md bg-opacity-90" id="global-nav">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary text-[28px]">healing</span>
+<span class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg font-bold text-primary">Medpal</span>
+</div>
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant hover:bg-surface-container-low transition-colors cursor-pointer active:scale-95 duration-150 ease-in-out">
+<img alt="Doctor Avatar" class="w-full h-full object-cover" data-alt="A close-up, professional portrait of a compassionate female doctor wearing a white coat over a modern slate-blue scrub. The lighting is soft and high-key, creating a bright, optimistic light-mode aesthetic. The background is a gently blurred, pristine clinic interior with subtle sage green accents, reflecting a warm, human-first healthcare environment. The mood is trustworthy and empathetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEv1Bpr2DFnEvtqU4RSvVh7gd18jF9zioYROa7jOZKUQ_BMw_e9jGkhH4dcO4dQMafdZe7RUMXxrheZ74av6fPphAU-nVjcEXzBQPzkTQsTCkZfeiZIHmGUF7CuK3V_xF_NU5Kh1oMWpEJfD-s1UTSHJquR6kw-D14LUFM2-ZnaoV2lMlRPM5RBA-i-NviDk1NNf73yin-Cp6saUQ1_T6a89Wc6jKRkGXD15ehq9KmuCCC-yXiAqDsBDjRDJJO7pk3N3hkbLYvm6PF"/>
+</div>
+</header>
+<main class="flex-grow flex flex-col items-center w-full max-w-[1200px] mx-auto px-container-margin md:px-lg py-xl gap-xl">
+<!-- Hero Section -->
+<section class="w-full flex flex-col lg:flex-row items-center gap-xl">
+<div class="w-full lg:w-1/2 flex flex-col gap-md">
+<div class="inline-flex items-center gap-2 px-4 py-2 bg-secondary-container text-on-secondary-container rounded-full w-fit">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+<span class="font-label-lg text-label-lg">Para Profissionais de Saúde</span>
+</div>
+<h1 class="font-display-lg text-display-lg text-primary leading-tight">
+                    Dados precisos para<br/>
+<span class="text-secondary">decisões clínicas seguras.</span>
+</h1>
+<p class="font-body-xl text-body-xl text-on-surface-variant max-w-xl">
+                    Transforme o acompanhamento do paciente com insights em tempo real. O Medpal conecta você à jornada de tratamento, garantindo empatia amparada por dados reais.
+                </p>
+<div class="mt-4">
+<button class="bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg rounded-full px-lg py-sm min-h-[56px] transition-all shadow-[0_8px_20px_-4px_rgba(47,62,70,0.2)] active:scale-95">
+                        Solicitar Acesso Antecipado
+                    </button>
+</div>
+</div>
+<div class="w-full lg:w-1/2 relative">
+<div class="rounded-xl overflow-hidden shadow-[0px_12px_40px_-10px_rgba(47,62,70,0.15)] border border-outline-variant bg-surface-container-lowest">
+<img alt="Doctor analyzing data on tablet" class="w-full h-auto object-cover aspect-[4/3]" data-alt="A professional male doctor in a well-lit, modern clinic setting, carefully reviewing patient adherence data on a sleek digital tablet. The scene is illuminated by soft, natural daylight conveying a warm, human-first healthcare atmosphere. The color palette emphasizes clean whites, calming sage greens, and deep slate blues. The doctor's expression is focused yet compassionate, highlighting the intersection of advanced technology and empathetic patient care." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3D6bqA-jmUTfqfaxFVBDXVfFc_7XQAvL5ZUcRDdVN6ss2DEXBFTqIH7GWyr-rJAceEvxyS101CXd67_SdgYr-ZEQndLXqTzXmV3FX7YLl2UYXwABlnfjP_3Y_9YOZstZtXoiLMMI1Rvc59pySwSA5MuiVh8RRUxeyaouSrrn25OV-luXhmv11rnuTaOpFenON37mpeJtRjxZKPrFGo2Bx2miHiWe7Sp3r4pPjZund7d8O_behbB6A3-0IzDkMdHx99h80g2hI4hy0"/>
+</div>
+<!-- Floating Element simulating UI -->
+<div class="absolute -bottom-6 -left-6 bg-surface-container-lowest p-4 rounded-xl border border-outline-variant shadow-[0_8px_30px_rgba(47,62,70,0.1)] flex items-center gap-3 backdrop-blur-sm bg-opacity-95">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined">trending_up</span>
+</div>
+<div>
+<p class="font-label-lg text-label-lg text-primary">Adesão do Paciente</p>
+<p class="font-caption text-caption text-secondary">+15% este mês</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Bento Grid Benefits -->
+<section class="w-full mt-xl">
+<h2 class="font-headline-lg text-headline-lg text-primary mb-md text-center lg:text-left">Por que os médicos escolhem o Medpal</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-md auto-rows-[minmax(250px,_auto)]">
+<!-- Benefit 1: Relatórios (Large Card) -->
+<div class="bg-surface-container-lowest rounded-xl p-md border border-outline-variant shadow-[0px_4px_20px_0px_rgba(47,62,70,0.05)] flex flex-col gap-md lg:col-span-2 relative overflow-hidden group hover:shadow-[0px_8px_30px_0px_rgba(47,62,70,0.08)] transition-shadow">
+<div class="absolute top-0 right-0 w-32 h-32 bg-secondary-container opacity-20 rounded-bl-full pointer-events-none"></div>
+<div class="w-12 h-12 rounded-full bg-secondary text-on-secondary flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-[24px]">assessment</span>
+</div>
+<div>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-primary mb-2">Relatórios de Adesão Reais</h3>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-lg">
+                            Veja exatamente quando e como o paciente toma a medicação, eliminando o viés de memória. Obtenha um panorama claro da rotina do tratamento entre as consultas, garantindo intervenções baseadas em fatos, não suposições.
+                        </p>
+</div>
+</div>
+<!-- Benefit 2: Otimização (Square Card) -->
+<div class="bg-surface-container-lowest rounded-xl p-md border border-outline-variant shadow-[0px_4px_20px_0px_rgba(47,62,70,0.05)] flex flex-col gap-md relative overflow-hidden group hover:shadow-[0px_8px_30px_0px_rgba(47,62,70,0.08)] transition-shadow">
+<div class="w-12 h-12 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-[24px]">speed</span>
+</div>
+<div>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-primary mb-2">Otimização da Consulta</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                            Transforme o 'Modo Médico' em uma ferramenta de diagnóstico rápido com gráficos claros. Reduza o tempo gasto coletando histórico e foque no cuidado direto.
+                        </p>
+</div>
+</div>
+<!-- Benefit 3: Alertas (Wide Card) -->
+<div class="bg-surface-container-lowest rounded-xl p-md border-l-[6px] border-l-error-container border-y border-r border-outline-variant shadow-[0px_4px_20px_0px_rgba(47,62,70,0.05)] flex flex-col md:flex-row gap-md lg:col-span-3 items-start md:items-center justify-between hover:shadow-[0px_8px_30px_0px_rgba(47,62,70,0.08)] transition-shadow">
+<div class="flex items-start md:items-center gap-md">
+<div class="w-14 h-14 rounded-full bg-error-container text-on-error-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+<div>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-primary mb-1">Alertas de Interação</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                                O assistente monitora sintomas relatados pelo paciente em tempo real e alerta ativamente sobre possíveis efeitos colaterais graves ou interações medicamentosas.
+                            </p>
+</div>
+</div>
+<button class="shrink-0 text-secondary hover:bg-secondary-container hover:text-on-secondary-container font-label-lg text-label-lg px-4 py-2 rounded-full transition-colors flex items-center gap-2">
+                        Ver Exemplo <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Simple Footer to anchor the page -->
+<footer class="w-full border-t border-outline-variant mt-xl py-lg text-center bg-surface-container-low">
+<p class="font-caption text-caption text-on-surface-variant">© 2024 Medpal Wellness. Human-First Healthcare.</p>
+</footer>
+<script>
+        // Simple scroll effect for TopAppBar
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('global-nav');
+            if (window.scrollY > 20) {
+                nav.classList.add('shadow-[0_4px_20px_rgba(47,62,70,0.08)]');
+            } else {
+                nav.classList.remove('shadow-[0_4px_20px_rgba(47,62,70,0.08)]');
+            }
+        });
+    </script>
+</body></html>

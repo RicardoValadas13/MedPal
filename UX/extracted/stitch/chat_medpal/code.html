@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Medpal - Chat Assistente</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#ffffff",
+                        "primary-container": "#2f3e46",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-primary": "#b9c9d3",
+                        "on-tertiary-fixed": "#3c0800",
+                        "error": "#ba1a1a",
+                        "surface-container-highest": "#e3e2df",
+                        "on-primary-container": "#99a9b2",
+                        "primary": "#192830",
+                        "on-secondary-fixed": "#06200e",
+                        "background": "#faf9f5",
+                        "surface-container": "#efeeea",
+                        "secondary": "#49654d",
+                        "surface-dim": "#dbdad6",
+                        "on-secondary-container": "#4f6b53",
+                        "on-error-container": "#93000a",
+                        "on-surface-variant": "#43474a",
+                        "surface-container-high": "#e9e8e4",
+                        "surface-container-low": "#f4f4f0",
+                        "primary-fixed": "#d5e5ef",
+                        "tertiary-container": "#6d230f",
+                        "surface-variant": "#e3e2df",
+                        "tertiary": "#4f0e00",
+                        "tertiary-fixed": "#ffdbd2",
+                        "secondary-fixed": "#cbebcd",
+                        "on-secondary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed-variant": "#3a4951",
+                        "on-primary-fixed": "#0e1d25",
+                        "tertiary-fixed-dim": "#ffb4a1",
+                        "on-primary": "#ffffff",
+                        "outline": "#73787b",
+                        "on-tertiary-fixed-variant": "#7c2e19",
+                        "surface": "#faf9f5",
+                        "on-background": "#1b1c1a",
+                        "secondary-container": "#cbebcd",
+                        "secondary-fixed-dim": "#afceb2",
+                        "on-tertiary-container": "#f3896d",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#f2f1ed",
+                        "outline-variant": "#c3c7ca",
+                        "surface-bright": "#faf9f5",
+                        "primary-fixed-dim": "#b9c9d3",
+                        "on-secondary-fixed-variant": "#324d37",
+                        "on-surface": "#1b1c1a",
+                        "surface-tint": "#516169",
+                        "inverse-surface": "#2f312e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "32px",
+                        "base": "8px",
+                        "md": "24px",
+                        "xs": "4px",
+                        "sm": "12px",
+                        "container-margin": "20px",
+                        "xl": "48px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Inter"],
+                        "caption": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-xl": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["22px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "caption": ["14px", { "lineHeight": "18px", "fontWeight": "500" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-xl": ["20px", { "lineHeight": "30px", "fontWeight": "400" }],
+                        "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-md": ["18px", { "lineHeight": "26px", "fontWeight": "400" }],
+                        "label-lg": ["16px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col relative pb-24">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-container-margin py-sm bg-background dark:bg-background text-primary dark:text-primary-fixed docked full-width top-0 sticky z-50 flat no shadows">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container">
+<img alt="Avatar Assistente" class="w-full h-full object-cover" data-alt="A close-up portrait of a friendly, empathetic AI assistant or healthcare professional character with a warm smile, set against a soft, bright background fitting a human-first healthcare app in light mode." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTJtoxlL-KGgi091CN0CUoDG3TPqDAc7x5IL-7vAU8xwHJFqjkjy_Szyhz3exco2EynE_DHSBBRTyAnVsU64gZ4ejBt0bGjjMUB5twix5zRf0x0tUUIrukGoQ7R5VksaSGs4awwZhRmo6s_n9z3UCdNU9jerDbnAPQpsg5CudKdPhxdUeWbwZG8vNN6Cm0YSFs98tt_UsTxfA4H-Z0UzjxK2qKfrJ3kSCe7JCx1joxK4kLn-Okz_C9hs04Va3lT6KTjvxT_ZddfUjd"/>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary dark:text-primary-fixed">Assistente Medpal</h1>
+</div>
+<button aria-label="Notifications" class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container dark:hover:bg-surface-container-high transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</header>
+<!-- Chat Canvas -->
+<main class="flex-grow px-container-margin py-md flex flex-col gap-md overflow-y-auto">
+<!-- Date Divider -->
+<div class="text-center font-caption text-caption text-on-surface-variant my-sm">
+            Hoje
+        </div>
+<!-- User Message -->
+<div class="flex justify-end w-full">
+<div class="bg-primary text-on-primary rounded-xl rounded-tr-sm px-md py-sm max-w-[85%] font-body-md text-body-md shadow-sm">
+                Estou me sentindo um pouco tonto.
+            </div>
+</div>
+<!-- AI Message -->
+<div class="flex justify-start w-full gap-base">
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container flex-shrink-0 mt-1">
+<img alt="Avatar Assistente" class="w-full h-full object-cover" data-alt="A close-up portrait of a friendly, empathetic AI assistant or healthcare professional character with a warm smile, set against a soft, bright background fitting a human-first healthcare app in light mode." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnYN5VAhvBfr22xfaEJxsPg1Bhe8hip6AthNRhU35kJsC6mIeqPVF9PSsvABNpIunoU_3Hve8K8n2B54R9XXl_7pOrAFHr-pzorFk7hJINa9_jAlmU9thEe6mmi-RnMmVeI1acvxfNhr88TFWgDUerAJy26XmwM1EvS8yAUhu5EhoqBXI5aBMf9jQCrUmsnAl-PXB6HkxJ4LuwGCRs5aHa36ptu4urkY8idHxPZh0IN66LfO9uJxpMpPR45BjptqDEe4h0us9eS6f0"/>
+</div>
+<div class="bg-surface-container text-on-background rounded-xl rounded-tl-sm px-md py-sm max-w-[85%] font-body-md text-body-md border border-outline-variant/30">
+                Sinto muito por isso, João. Notei que você tomou seu remédio de pressão há 30 minutos. Vamos monitorar isso? Gostaria que eu avisasse seu médico?
+            </div>
+</div>
+</main>
+<!-- Input Area (Sticky Bottom above Nav) -->
+<div class="fixed bottom-[80px] w-full px-container-margin py-sm bg-background border-t border-surface-container flex flex-col gap-base z-40">
+<!-- Quick Replies -->
+<div class="flex gap-base overflow-x-auto pb-xs scrollbar-hide">
+<button class="whitespace-nowrap px-sm py-xs bg-secondary-container text-on-secondary-container rounded-full font-caption text-caption font-semibold hover:bg-secondary hover:text-on-secondary transition-colors active:scale-95 border border-secondary/20">
+                Tudo bem
+            </button>
+<button class="whitespace-nowrap px-sm py-xs bg-surface-container text-on-surface-variant rounded-full font-caption text-caption hover:bg-surface-container-high transition-colors active:scale-95 border border-outline-variant/50">
+                Piorando
+            </button>
+<button class="whitespace-nowrap px-sm py-xs bg-error-container text-on-error-container rounded-full font-caption text-caption hover:bg-error hover:text-on-error transition-colors active:scale-95 border border-error/20">
+                Preciso de ajuda
+            </button>
+</div>
+<!-- Text Input -->
+<div class="relative flex items-center w-full">
+<input class="w-full bg-surface text-on-surface rounded-full pl-md pr-[3rem] py-[12px] font-body-md text-body-md border border-outline-variant focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all placeholder:text-on-surface-variant/60 shadow-sm" placeholder="Digite sua mensagem..." type="text"/>
+<button aria-label="Enviar mensagem" class="absolute right-[4px] w-10 h-10 flex items-center justify-center text-primary bg-primary-fixed rounded-full hover:bg-primary-fixed-dim transition-colors active:scale-95">
+<span class="material-symbols-outlined" data-icon="send">send</span>
+</button>
+</div>
+</div>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface dark:bg-surface-container-lowest docked full-width bottom-0 rounded-t-xl md:hidden">
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant p-2 hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-full active:scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined mb-1" data-icon="today">today</span>
+<span class="font-label-lg text-label-lg text-[10px] leading-tight">Today</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant p-2 hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-full active:scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined mb-1" data-icon="pill">pill</span>
+<span class="font-label-lg text-label-lg text-[10px] leading-tight">Meds</span>
+</button>
+<!-- Active Tab -->
+<button class="flex flex-col items-center justify-center bg-secondary-container dark:bg-secondary text-on-secondary-container dark:text-on-secondary rounded-full px-4 py-1 hover:bg-surface-container-high dark:hover:bg-surface-variant active:scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined mb-1" data-icon="chat_bubble" style="font-variation-settings: 'FILL' 1;">chat_bubble</span>
+<span class="font-label-lg text-label-lg text-[10px] leading-tight font-bold">Chat</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant p-2 hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-full active:scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined mb-1" data-icon="analytics">analytics</span>
+<span class="font-label-lg text-label-lg text-[10px] leading-tight">Analytics</span>
+</button>
+</nav>
+</body></html>

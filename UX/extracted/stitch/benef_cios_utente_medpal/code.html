@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Medpal - Sua saúde de volta às suas mãos</title>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-container": "#cbebcd",
+                      "on-primary-fixed-variant": "#3a4951",
+                      "on-primary-container": "#99a9b2",
+                      "tertiary-fixed": "#ffdbd2",
+                      "surface-tint": "#516169",
+                      "primary-fixed": "#d5e5ef",
+                      "surface-container-highest": "#e3e2df",
+                      "surface": "#faf9f5",
+                      "on-tertiary-fixed-variant": "#7c2e19",
+                      "on-secondary-fixed": "#06200e",
+                      "primary-fixed-dim": "#b9c9d3",
+                      "on-surface-variant": "#43474a",
+                      "secondary": "#49654d",
+                      "on-tertiary-container": "#f3896d",
+                      "inverse-primary": "#b9c9d3",
+                      "primary-container": "#2f3e46",
+                      "tertiary-fixed-dim": "#ffb4a1",
+                      "on-surface": "#1b1c1a",
+                      "outline-variant": "#c3c7ca",
+                      "on-error": "#ffffff",
+                      "outline": "#73787b",
+                      "on-primary": "#ffffff",
+                      "inverse-on-surface": "#f2f1ed",
+                      "surface-container-low": "#f4f4f0",
+                      "background": "#faf9f5",
+                      "surface-dim": "#dbdad6",
+                      "on-tertiary": "#ffffff",
+                      "on-error-container": "#93000a",
+                      "surface-variant": "#e3e2df",
+                      "on-secondary": "#ffffff",
+                      "on-secondary-fixed-variant": "#324d37",
+                      "on-secondary-container": "#4f6b53",
+                      "on-background": "#1b1c1a",
+                      "error-container": "#ffdad6",
+                      "tertiary": "#4f0e00",
+                      "surface-container-high": "#e9e8e4",
+                      "secondary-fixed-dim": "#afceb2",
+                      "error": "#ba1a1a",
+                      "surface-container": "#efeeea",
+                      "tertiary-container": "#6d230f",
+                      "primary": "#192830",
+                      "surface-bright": "#faf9f5",
+                      "inverse-surface": "#2f312e",
+                      "surface-container-lowest": "#ffffff",
+                      "secondary-fixed": "#cbebcd",
+                      "on-tertiary-fixed": "#3c0800",
+                      "on-primary-fixed": "#0e1d25"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "xs": "4px",
+                      "md": "24px",
+                      "gutter": "16px",
+                      "base": "8px",
+                      "xl": "48px",
+                      "sm": "12px",
+                      "lg": "32px",
+                      "container-margin": "20px"
+              },
+              "fontFamily": {
+                      "caption": ["Inter"],
+                      "body-xl": ["Inter"],
+                      "headline-lg-mobile": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "display-lg": ["Inter"],
+                      "body-md": ["Inter"],
+                      "label-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "caption": ["14px", { "lineHeight": "18px", "fontWeight": "500" }],
+                      "body-xl": ["20px", { "lineHeight": "30px", "fontWeight": "400" }],
+                      "headline-lg-mobile": ["22px", { "lineHeight": "28px", "fontWeight": "600" }],
+                      "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                      "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                      "body-md": ["18px", { "lineHeight": "26px", "fontWeight": "400" }],
+                      "label-lg": ["16px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600" }]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-md antialiased overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="w-full sticky top-0 z-50 bg-surface flex justify-between items-center px-container-margin py-md transition-all duration-150 ease-in-out border-b border-surface-container-high">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary text-[28px]">healing</span>
+<span class="font-headline-lg text-headline-lg font-bold text-primary tracking-tight">Medpal</span>
+</div>
+<div>
+<!-- Trailing Avatar placeholder from JSON -->
+<div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden border-2 border-surface-container-lowest">
+<span class="material-symbols-outlined text-outline-variant w-full h-full flex items-center justify-center">person</span>
+</div>
+</div>
+</header>
+<main class="max-w-[1200px] mx-auto pb-xl">
+<!-- Hero Section -->
+<section class="flex flex-col md:flex-row items-center gap-xl px-container-margin py-xl mt-md">
+<div class="flex-1 flex flex-col gap-lg items-start">
+<h1 class="font-display-lg text-display-lg text-primary max-w-lg leading-tight">
+                    Sua saúde de volta às suas mãos.
+                </h1>
+<p class="font-body-xl text-body-xl text-on-surface-variant max-w-md">
+                    Simplifique sua rotina de cuidados com um assistente inteligente que entende você e protege cada passo do seu tratamento.
+                </p>
+<button class="bg-primary text-on-primary font-label-lg text-label-lg px-lg py-sm rounded-full min-h-[56px] hover:bg-surface-tint transition-colors shadow-sm flex items-center gap-sm">
+                    Começar Agora
+                    <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+<div class="flex-1 w-full rounded-2xl overflow-hidden shadow-[0_20px_40px_-15px_rgba(47,62,70,0.1)] relative">
+<div class="absolute inset-0 bg-secondary-container opacity-20 mix-blend-multiply rounded-2xl"></div>
+<img class="w-full h-[400px] object-cover rounded-2xl" data-alt="A warm, bright photograph of an older woman smiling confidently while looking at a modern smartphone in a sunlit, cozy living room. The lighting is soft and natural, emphasizing a mood of empowerment, clarity, and safety. The color palette features subtle earthy tones, sage greens, and bright whites, aligning perfectly with a human-first healthcare aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCeJku2TNZYAfJwcIy2hTnMPGYBChm7ThJa34I2wD4SXbBpOs8ts_RTbFwRbO2S8WQivunBO6c08ZChJ2xeaUgnZ7j1O_TgfJCrQC6-BZ8Tv50bG9ffrcuxa7X55H_r7Pbqtsu0EVWmZ7EsWFhILvlY4COcF9zo7ZLpTMyz3Mu2inwLgGrj-opRTMh3DKiHrRyZuzGssftE-7szAQ094SwlBJkOl-F_1MZTe4AzkfWnfJaEGmOUQ3RMTHf6INMwKlRnmGFV0r8_uS5F"/>
+</div>
+</section>
+<!-- Benefits Grid -->
+<section class="px-container-margin py-xl">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+<!-- Benefit 1 -->
+<div class="bg-surface-container-lowest rounded-2xl p-lg border border-surface-container-high hover:border-outline-variant transition-colors flex flex-col gap-md">
+<div class="w-14 h-14 rounded-full bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container text-2xl">barcode_scanner</span>
+</div>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">Independência sem esforço</h3>
+<p class="font-body-md text-body-md text-on-surface-variant flex-1">
+                        Use o Magic Scan para configurar tudo em segundos, sem digitação manual. Aponte a câmera e deixe o Medpal organizar suas caixas e bulas automaticamente.
+                    </p>
+</div>
+<!-- Benefit 2 -->
+<div class="bg-surface-container-lowest rounded-2xl p-lg border border-surface-container-high hover:border-outline-variant transition-colors flex flex-col gap-md">
+<div class="w-14 h-14 rounded-full bg-primary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-fixed-variant text-2xl">verified_user</span>
+</div>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">Segurança em cada dose</h3>
+<p class="font-body-md text-body-md text-on-surface-variant flex-1">
+                        Lembretes inteligentes que se adaptam à sua rotina e confirmam se você tomou a dose certa. Reduza erros e sinta-se tranquilo todos os dias.
+                    </p>
+</div>
+<!-- Benefit 3 -->
+<div class="bg-surface-container-lowest rounded-2xl p-lg border border-surface-container-high hover:border-outline-variant transition-colors flex flex-col gap-md">
+<div class="w-14 h-14 rounded-full bg-tertiary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-on-tertiary-fixed-variant text-2xl">favorite</span>
+</div>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">Um amigo que cuida</h3>
+<p class="font-body-md text-body-md text-on-surface-variant flex-1">
+                        Um assistente de voz e chat que te ouve e entende como você se sente. Mais do que um alarme, um companheiro para sua jornada de bem-estar.
+                    </p>
+</div>
+</div>
+</section>
+</main>
+</body></html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Medpal - Modo Demo</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed": "#06200e",
+                        "on-primary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#3c0800",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "secondary-container": "#cbebcd",
+                        "surface-container": "#efeeea",
+                        "inverse-surface": "#2f312e",
+                        "secondary": "#49654d",
+                        "primary": "#192830",
+                        "primary-container": "#2f3e46",
+                        "on-surface-variant": "#43474a",
+                        "inverse-on-surface": "#f2f1ed",
+                        "on-secondary-fixed-variant": "#324d37",
+                        "surface-container-low": "#f4f4f0",
+                        "tertiary-fixed-dim": "#ffb4a1",
+                        "on-primary-fixed": "#0e1d25",
+                        "on-primary-fixed-variant": "#3a4951",
+                        "surface": "#faf9f5",
+                        "error": "#ba1a1a",
+                        "on-surface": "#1b1c1a",
+                        "surface-variant": "#e3e2df",
+                        "primary-fixed": "#d5e5ef",
+                        "tertiary-container": "#6d230f",
+                        "on-primary-container": "#99a9b2",
+                        "tertiary": "#4f0e00",
+                        "background": "#faf9f5",
+                        "on-secondary-container": "#4f6b53",
+                        "tertiary-fixed": "#ffdbd2",
+                        "on-background": "#1b1c1a",
+                        "surface-bright": "#faf9f5",
+                        "outline": "#73787b",
+                        "surface-dim": "#dbdad6",
+                        "on-tertiary-container": "#f3896d",
+                        "surface-container-highest": "#e3e2df",
+                        "primary-fixed-dim": "#b9c9d3",
+                        "on-tertiary-fixed-variant": "#7c2e19",
+                        "secondary-fixed": "#cbebcd",
+                        "outline-variant": "#c3c7ca",
+                        "inverse-primary": "#b9c9d3",
+                        "error-container": "#ffdad6",
+                        "surface-container-high": "#e9e8e4",
+                        "surface-tint": "#516169",
+                        "secondary-fixed-dim": "#afceb2",
+                        "on-error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "container-margin": "20px",
+                        "lg": "32px",
+                        "xs": "4px",
+                        "sm": "12px",
+                        "xl": "48px",
+                        "md": "24px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "caption": ["Inter"],
+                        "body-xl": ["Inter"],
+                        "label-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["18px", { "lineHeight": "26px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["22px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "caption": ["14px", { "lineHeight": "18px", "fontWeight": "500" }],
+                        "body-xl": ["20px", { "lineHeight": "30px", "fontWeight": "400" }],
+                        "label-lg": ["16px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .soft-shadow {
+            box-shadow: 0 4px 20px -2px rgba(47, 62, 70, 0.08);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md antialiased md:max-w-[1200px] md:mx-auto">
+<!-- Top Navigation for Desktop (Hidden on Mobile) -->
+<header class="hidden md:flex justify-between items-center w-full px-container-margin py-sm bg-background flat no shadows w-full top-0">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="person">person</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-primary">Medpal</h1>
+</div>
+<div class="flex items-center">
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</div>
+</header>
+<!-- Top Navigation for Mobile (Hidden on Desktop) -->
+<header class="md:hidden flex justify-between items-center w-full px-container-margin py-sm bg-background flat no shadows w-full top-0">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="person">person</span>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary">Medpal</h1>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</header>
+<!-- Demo Banner -->
+<div class="bg-tertiary-fixed text-on-tertiary-fixed-variant px-container-margin py-xs flex items-center justify-center gap-base">
+<span class="material-symbols-outlined text-[18px] icon-fill" data-icon="info">info</span>
+<span class="font-caption text-caption">Você está no Modo Demo</span>
+</div>
+<!-- Main Canvas -->
+<main class="flex-grow px-container-margin py-lg flex flex-col gap-lg pb-32 md:pb-lg">
+<!-- Header Section -->
+<section class="text-center md:text-left">
+<h2 class="font-display-lg text-display-lg text-primary mb-xs">Explore o Medpal</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Descubra como podemos simplificar sua rotina de saúde com nossos recursos inteligentes.</p>
+</section>
+<!-- Central Illustration area -->
+<section class="w-full aspect-[16/9] md:aspect-[21/9] rounded-xl overflow-hidden relative soft-shadow group">
+<div class="absolute inset-0 bg-gradient-to-tr from-surface-container-high to-surface-container-lowest opacity-80 mix-blend-multiply z-10"></div>
+<img alt="Illustration representing smart healthcare" class="w-full h-full object-cover" data-alt="A clean, modern flat-lay composition showing a sleek, minimalist pill organizer box next to a modern smartphone displaying a clean healthcare app interface. The setting is on a smooth eggshell-white surface, bathed in soft, diffused natural lighting. Subtle, organic shadows suggest a calm morning atmosphere. The color palette emphasizes warm off-whites, calming sage greens, and deep slate blues, evoking a sense of compassionate utility and technological support." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzBIVC73VZLp7emM3HDWGzG3AycdtXCmH9sJ0G3F7q4U9LbXzrQwA97f3cCjEkTVZ8dE7pBWs4pSBkIXShxTshwnmcov1BzKslqYQzWvWMdxJrdSFTrEeQpHwPPt3AF-mwuO7GpEcau4EJzpOVdMjuoejjc3BioBkZehCelqzgc-KIJv3a2WV8oMbOrMqGzvz8-Njvb26M7fJ6dUvf2UgQYV93RrboXFFuwcadfPFMOKTV0xyhF45xwZteInaD_QzdZ8gdMlzsFleJ"/>
+<div class="absolute bottom-md left-md right-md z-20 flex flex-col md:flex-row md:items-end justify-between gap-sm">
+<div>
+<h3 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary">A Smart Box Integrada</h3>
+<p class="font-caption text-caption text-on-surface-variant max-w-sm">Conecte sua caixa de medicamentos ao app para lembretes automáticos.</p>
+</div>
+<button class="bg-white/80 backdrop-blur-md text-primary font-label-lg text-label-lg px-sm py-xs rounded-full flex items-center justify-center gap-xs hover:bg-white transition-colors self-start md:self-auto">
+<span class="material-symbols-outlined" data-icon="play_circle">play_circle</span>
+                    Ver Vídeo
+                </button>
+</div>
+</section>
+<!-- Feature Tour Cards (Bento Grid Style) -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-sm">
+<!-- Magic Scan -->
+<button class="bg-surface-container-lowest border border-outline-variant rounded-xl p-md flex flex-col gap-sm text-left hover:bg-surface-container-low transition-colors active:scale-[0.98] soft-shadow group">
+<div class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed mb-xs">
+<span class="material-symbols-outlined text-[24px]" data-icon="document_scanner">document_scanner</span>
+</div>
+<div>
+<h4 class="font-headline-lg-mobile text-headline-lg-mobile text-primary mb-xs">Experimentar Magic Scan</h4>
+<p class="font-caption text-caption text-on-surface-variant">Adicione receitas instantaneamente usando a câmera.</p>
+</div>
+<div class="mt-auto pt-sm flex justify-end w-full">
+<span class="material-symbols-outlined text-primary group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</button>
+<!-- Assistente -->
+<button class="bg-surface-container-lowest border border-outline-variant rounded-xl p-md flex flex-col gap-sm text-left hover:bg-surface-container-low transition-colors active:scale-[0.98] soft-shadow group">
+<div class="w-12 h-12 rounded-full bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed mb-xs">
+<span class="material-symbols-outlined text-[24px]" data-icon="forum">forum</span>
+</div>
+<div>
+<h4 class="font-headline-lg-mobile text-headline-lg-mobile text-primary mb-xs">Falar com a Assistente</h4>
+<p class="font-caption text-caption text-on-surface-variant">Tire dúvidas sobre seus horários por voz ou texto.</p>
+</div>
+<div class="mt-auto pt-sm flex justify-end w-full">
+<span class="material-symbols-outlined text-primary group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</button>
+<!-- Relatório -->
+<button class="bg-surface-container-lowest border border-outline-variant rounded-xl p-md flex flex-col gap-sm text-left hover:bg-surface-container-low transition-colors active:scale-[0.98] soft-shadow group">
+<div class="w-12 h-12 rounded-full bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed-variant mb-xs">
+<span class="material-symbols-outlined text-[24px]" data-icon="monitoring">monitoring</span>
+</div>
+<div>
+<h4 class="font-headline-lg-mobile text-headline-lg-mobile text-primary mb-xs">Ver Relatório Exemplo</h4>
+<p class="font-caption text-caption text-on-surface-variant">Acompanhe sua adesão com gráficos claros.</p>
+</div>
+<div class="mt-auto pt-sm flex justify-end w-full">
+<span class="material-symbols-outlined text-primary group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</button>
+</section>
+<!-- Prominent CTA -->
+<section class="mt-md flex flex-col md:flex-row gap-sm justify-center items-center">
+<button class="w-full md:w-auto h-[56px] px-lg bg-primary text-on-primary rounded-full font-label-lg text-label-lg flex items-center justify-center hover:bg-primary-container transition-colors soft-shadow active:scale-[0.98]">
+                Criar Minha Conta
+            </button>
+<button class="w-full md:w-auto h-[56px] px-lg border border-outline text-primary rounded-full font-label-lg text-label-lg flex items-center justify-center hover:bg-surface-container-low transition-colors active:scale-[0.98]">
+                Sair do Modo Demo
+            </button>
+</section>
+</main>
+<!-- Bottom Navigation (Mobile Only) - Hidden as this is a linear/transactional demo screen -->
+<!-- According to rule: Automatic Suppression: You MUST exclude the navigation shell if the page intent is: Linear/Transactional: Login, Sign-up, Onboarding, Checkout, or "Success/Confirmation" splash screens. A demo sandbox fits this intent. -->
+</body></html>
