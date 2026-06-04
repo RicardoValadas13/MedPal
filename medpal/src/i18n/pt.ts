@@ -98,7 +98,15 @@ export const pt = {
     thinking: 'Thinking...',
     newConversation: 'New conversation',
     errorSend: 'Could not send the message. Please try again.',
-    emergencyBanner: 'This sounds like it could be an emergency. Call 112 now.',
+  },
+  // Emergency button
+  emergency: {
+    button: 'EMERGENCY', // PT locale: 'EMERGÊNCIA'
+    confirmTitle: 'Call 112?',
+    confirmHint: 'This will call the national emergency number.',
+    callButton: 'Call 112',
+    cancel: 'Cancel',
+    chatBanner: 'This sounds like it could be an emergency.',
   },
   // Common
   common: {

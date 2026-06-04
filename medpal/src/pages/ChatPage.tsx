@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Send, MessageCirclePlus } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
+import { EmergencyButton } from '../components/EmergencyButton'
 import { pt } from '../i18n/pt'
 import type { Message } from '../types/database'
 
@@ -107,9 +108,12 @@ export function ChatPage() {
       </p>
 
       {emergency && (
-        <p className="text-sm font-semibold text-white bg-red-600 rounded-lg px-4 py-3 mb-4">
-          {pt.chat.emergencyBanner}
-        </p>
+        <div className="mb-4">
+          <p className="text-base font-semibold text-[#93000a] mb-2">
+            {pt.emergency.chatBanner}
+          </p>
+          <EmergencyButton variant="banner" />
+        </div>
       )}
 
       <div className="flex-1 overflow-y-auto space-y-3">

@@ -102,3 +102,25 @@
   transform: rotate(-90deg);
   transform-origin: 50% 50%;
 }
+
+/* Emergency button pulse — a soft expanding ring so it draws the eye
+   without being alarming. Disabled for reduced-motion users. */
+@theme {
+  --animate-emergency-pulse: emergency-pulse 2s ease-in-out infinite;
+
+  @keyframes emergency-pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.45);
+    }
+    60% {
+      box-shadow: 0 0 0 14px rgba(220, 38, 38, 0);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-emergency-pulse {
+    animation: none;
+  }
+}
