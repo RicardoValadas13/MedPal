@@ -333,3 +333,5 @@ export type UserMedication = Database['public']['Tables']['user_medications']['R
 export type Schedule = Database['public']['Tables']['schedules']['Row']
 export type IntakeEvent = Database['public']['Tables']['intake_events']['Row']
 export type Checkin = Database['public']['Tables']['checkins']['Row']
+export type Conversation = Database['public']['Tables']['conversations']['Row']
+export type Message = Database['public']['Tables']['messages']['Row']

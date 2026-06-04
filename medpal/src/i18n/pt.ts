@@ -15,6 +15,7 @@ export const pt = {
     prescriptions: 'Prescriptions',
     medications: 'Medications',
     checkin: 'Check-in',
+    assistant: 'Assistant',
   },
   // Upload prescription
   upload: {
@@ -85,6 +86,18 @@ export const pt = {
     noMedications: 'No medications for today.',
     addPrescription: 'Add prescription',
     addManual: 'Add manually',
+  },
+  // Chat assistant
+  chat: {
+    title: 'MedPal Assistant',
+    emptyTitle: 'Ask me about your medication',
+    emptyHint: 'For example: "What do I still need to take today?" or "Should I take this with food?"',
+    disclaimer: 'General guidance only — your doctor or pharmacist has the final word. In an emergency, call 112.',
+    inputPlaceholder: 'Write your question...',
+    send: 'Send',
+    thinking: 'Thinking...',
+    newConversation: 'New conversation',
+    errorSend: 'Could not send the message. Please try again.',
   },
   // Common
   common: {

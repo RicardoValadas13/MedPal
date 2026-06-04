@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import { Home, FileText, Pill, Heart } from 'lucide-react'
+import { Home, FileText, Pill, Heart, MessageCircle } from 'lucide-react'
 import { pt } from '../i18n/pt'
 
 const links = [
@@ -7,6 +7,7 @@ const links = [
   { to: '/prescriptions', label: pt.nav.prescriptions, Icon: FileText, end: false },
   { to: '/medications', label: pt.nav.medications, Icon: Pill, end: false },
   { to: '/checkin', label: pt.nav.checkin, Icon: Heart, end: false },
+  { to: '/assistant', label: pt.nav.assistant, Icon: MessageCircle, end: false },
 ]
 
 export function BottomNav() {
