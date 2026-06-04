@@ -147,6 +147,27 @@ export default function App() {
         </div>
       </section>
 
+      {/* VIDEO */}
+      <section className="video-section section" id="video">
+        <div className="container">
+          <div className="section-header">
+            <span className="badge">See It in Action</span>
+            <h2>Watch how MedPal works.</h2>
+            <p>From prescription scan to doctor report — everything in one box.</p>
+          </div>
+          <div className="video-wrapper">
+            <video
+              controls
+              playsInline
+              poster="/screens/hero.png"
+              className="promo-video"
+            >
+              <source src="/medpal-promo.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+      </section>
+
       {/* FEATURES */}
       <section className="features section" id="features">
         <div className="container">

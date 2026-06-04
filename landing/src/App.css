@@ -65,6 +65,11 @@
 .feature-list li { display: flex; gap: 8px; font-size: 14px; color: var(--on-surface-variant); line-height: 1.5; }
 .feat-check { color: var(--secondary); font-weight: 700; flex-shrink: 0; font-size: 13px; margin-top: 1px; }
 
+/* ── Video ───────────────────────────────────── */
+.video-section { background: var(--surface-low); }
+.video-wrapper { max-width: 860px; margin: 0 auto; border-radius: 20px; overflow: hidden; box-shadow: 0 24px 64px rgba(25,40,48,0.14); }
+.promo-video { width: 100%; display: block; background: var(--primary); }
+
 /* ── Trust Strip ─────────────────────────────── */
 .trust-strip { background: var(--primary); padding: 28px 0; }
 .trust-items { display: flex; align-items: center; justify-content: center; gap: 0; flex-wrap: wrap; }
