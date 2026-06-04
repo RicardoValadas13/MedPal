@@ -107,6 +107,9 @@ export const pt = {
     callButton: 'Call 112',
     cancel: 'Cancel',
     chatBanner: 'This sounds like it could be an emergency.',
+    announcing: 'Playing announcement with your name and address…',
+    announcingHint: 'The call opens automatically when it finishes.',
+    callNow: 'CALL 112 NOW',
   },
   // Caregiver mode
   caregiver: {

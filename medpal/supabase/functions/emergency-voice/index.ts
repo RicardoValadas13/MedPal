@@ -8,8 +8,13 @@ const CORS_HEADERS = {
 // Premade multilingual ElevenLabs voice; override with ELEVENLABS_VOICE_ID.
 const DEFAULT_VOICE_ID = '21m00Tcm4TlvDq8ikWAM'
 
-// The client plays this clip 5 times with a 2s pause between repetitions
-// so a 112 operator has time to write the details down.
+// The clip contains the message 5 times with 2s pauses baked in
+// (so a 112 operator has time to write the details down) — generated
+// server-side because mobile browsers pause/throttle web audio and JS
+// timers once the dialer takes the foreground.
+const REPEAT_COUNT = 5
+const PAUSE_TAG = '<break time="2.0s" />'
+
 function buildMessage(
   locale: string,
   profile: { full_name: string | null; address: string | null; floor: string | null }
@@ -86,7 +91,8 @@ Deno.serve(async (req) => {
       })
     }
 
-    const text = buildMessage(account?.locale ?? 'en', profile)
+    const message = buildMessage(account?.locale ?? 'en', profile)
+    const text = Array(REPEAT_COUNT).fill(message).join(` ${PAUSE_TAG} `)
 
     const ttsResponse = await fetch(
       `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,
