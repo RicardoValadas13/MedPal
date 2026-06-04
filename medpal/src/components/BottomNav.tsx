@@ -11,20 +11,26 @@ const links = [
 
 export function BottomNav() {
   return (
-    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-gray-100 flex z-40">
+    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-[#faf9f5] rounded-t-2xl border-t border-[#c3c7ca]/40 flex z-40 px-2 py-2">
       {links.map(({ to, label, Icon, end }) => (
         <NavLink
           key={to}
           to={to}
           end={end}
           className={({ isActive }) =>
-            `flex-1 flex flex-col items-center justify-center py-3 gap-1 text-[11px] font-medium transition-colors min-h-[56px] ${
-              isActive ? 'text-green-600' : 'text-gray-400'
+            `flex-1 flex flex-col items-center justify-center gap-0.5 transition-all active:scale-90 ${
+              isActive
+                ? 'bg-[#cbebcd] text-[#4f6b53] rounded-full py-1.5 px-2'
+                : 'text-[#43474a] py-1.5 px-2'
             }`
           }
         >
-          <Icon size={22} strokeWidth={1.8} />
-          {label}
+          {({ isActive }) => (
+            <>
+              <Icon size={22} strokeWidth={isActive ? 2.2 : 1.8} />
+              <span className="text-[12px] font-semibold leading-tight">{label}</span>
+            </>
+          )}
         </NavLink>
       ))}
     </nav>

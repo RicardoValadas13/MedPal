@@ -40,7 +40,6 @@ export function ConfirmPrescriptionPage() {
       return
     }
 
-    // For ambiguous items, fetch top candidates
     const enriched: ItemWithCandidates[] = await Promise.all(
       data.map(async (item) => {
         if (item.match_status === 'ambiguous' && item.extracted_name) {
@@ -72,7 +71,6 @@ export function ConfirmPrescriptionPage() {
       for (const item of items) {
         const drugId = item.selectedDrugId ?? item.drug_id
 
-        // Create user_medication
         const { data: med, error: medError } = await supabase
           .from('user_medications')
           .insert({
@@ -90,16 +88,11 @@ export function ConfirmPrescriptionPage() {
 
         if (medError) throw medError
 
-        // Create schedule from posology if available
         const posology = item.posology_structured as {
           times_per_day?: number | null
-          duration_days?: number | null
         } | null
 
-        const timesPerDay = posology?.times_per_day ?? 1
-        const defaultTimes = getDefaultTimes(timesPerDay)
-
-        for (const time of defaultTimes) {
+        for (const time of getDefaultTimes(posology?.times_per_day ?? 1)) {
           await supabase.from('schedules').insert({
             user_medication_id: med.id,
             time_of_day: time,
@@ -110,7 +103,6 @@ export function ConfirmPrescriptionPage() {
           })
         }
 
-        // Update item with selected drug if changed
         if (drugId !== item.drug_id) {
           await supabase
             .from('prescription_items')
@@ -119,12 +111,7 @@ export function ConfirmPrescriptionPage() {
         }
       }
 
-      // Mark prescription confirmed
-      await supabase
-        .from('prescriptions')
-        .update({ status: 'confirmed' })
-        .eq('id', id)
-
+      await supabase.from('prescriptions').update({ status: 'confirmed' }).eq('id', id)
       navigate('/')
     } catch (err) {
       console.error(err)
@@ -136,59 +123,62 @@ export function ConfirmPrescriptionPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <p className="text-sm text-gray-400">{pt.common.loading}</p>
+        <p className="text-lg text-[#43474a]">{pt.common.loading}</p>
       </div>
     )
   }
 
   return (
-    <div className="px-4 pt-6 pb-6">
+    <div className="px-5 pt-8 pb-6">
       <button
         onClick={() => navigate(-1)}
-        className="flex items-center gap-1 text-sm text-gray-500 mb-4"
+        className="flex items-center gap-1.5 text-base font-medium text-[#43474a] mb-6 min-h-[48px]"
       >
-        <ChevronLeft size={16} />
+        <ChevronLeft size={18} />
         {pt.common.back}
       </button>
 
-      <h1 className="text-xl font-semibold text-gray-900">{pt.confirm.title}</h1>
-      <p className="text-sm text-gray-500 mt-1 mb-6">{pt.confirm.subtitle}</p>
+      <h1 className="text-2xl font-semibold tracking-[-0.02em] text-[#192830]">{pt.confirm.title}</h1>
+      <p className="text-lg text-[#43474a] mt-2 mb-8">{pt.confirm.subtitle}</p>
 
-      <div className="space-y-3">
+      <div className="space-y-4">
         {items.map((item, index) => {
           const isMatched = item.match_status === 'matched'
           const isAmbiguous = item.match_status === 'ambiguous'
           const isUnmatched = item.match_status === 'unmatched' || item.match_status === 'manual'
-
           const confidenceFlags = item.field_confidences as Record<string, number> | null
 
           return (
             <div
               key={item.id}
-              className="bg-white rounded-2xl border-[0.5px] border-gray-200 p-4 space-y-3"
+              className={`bg-white rounded-2xl border border-[#c3c7ca] p-6 space-y-4 transition hover:shadow-[0_8px_32px_rgba(25,40,48,0.08)] ${
+                isMatched ? 'border-l-4 border-l-[#49654d]' :
+                isAmbiguous ? 'border-l-4 border-l-[#f3896d]' :
+                'border-l-4 border-l-[#c3c7ca]'
+              }`}
             >
               {/* Header */}
-              <div className="flex items-start justify-between gap-2">
+              <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="font-semibold text-gray-900 text-sm">{item.extracted_name}</p>
+                  <p className="text-lg font-semibold text-[#1b1c1a]">{item.extracted_name}</p>
                   {item.extracted_form && (
-                    <p className="text-xs text-gray-400 mt-0.5">{item.extracted_form}</p>
+                    <p className="text-sm font-medium text-[#43474a] mt-0.5">{item.extracted_form}</p>
                   )}
                 </div>
                 {isMatched && (
-                  <span className="shrink-0 flex items-center gap-1 bg-green-100 text-green-700 text-[11px] font-medium px-2 py-0.5 rounded-full">
-                    <CheckCircle size={11} />
+                  <span className="shrink-0 inline-flex items-center gap-1.5 bg-[#cbebcd] text-[#49654d] text-sm font-semibold px-3 py-1 rounded-full">
+                    <CheckCircle size={14} />
                     {pt.confirm.matchedChip}
                   </span>
                 )}
                 {isAmbiguous && (
-                  <span className="shrink-0 flex items-center gap-1 bg-amber-100 text-amber-700 text-[11px] font-medium px-2 py-0.5 rounded-full">
-                    <AlertTriangle size={11} />
+                  <span className="shrink-0 inline-flex items-center gap-1.5 bg-[#ffdad6] text-[#93000a] text-sm font-semibold px-3 py-1 rounded-full">
+                    <AlertTriangle size={14} />
                     {pt.confirm.reviewChip}
                   </span>
                 )}
                 {isUnmatched && (
-                  <span className="shrink-0 flex items-center gap-1 bg-gray-100 text-gray-600 text-[11px] font-medium px-2 py-0.5 rounded-full">
+                  <span className="shrink-0 inline-flex items-center gap-1.5 bg-[#e9e8e4] text-[#43474a] text-sm font-semibold px-3 py-1 rounded-full">
                     {pt.confirm.unmatchedChip}
                   </span>
                 )}
@@ -199,7 +189,7 @@ export function ConfirmPrescriptionPage() {
                 <select
                   value={item.selectedDrugId ?? ''}
                   onChange={e => updateItem(index, { selectedDrugId: e.target.value || null })}
-                  className="w-full text-sm px-3 py-2 rounded-xl border border-amber-200 bg-amber-50 text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                  className="w-full min-h-[48px] text-lg px-4 py-2.5 rounded-lg border-[1.5px] border-[#f3896d] bg-[#ffdad6]/30 text-[#1b1c1a] focus:outline-none focus:border-[#49654d] focus:shadow-[0_0_0_3px_rgba(73,101,77,0.12)] transition"
                 >
                   <option value="">{pt.confirm.drugSelectPlaceholder}</option>
                   {item.candidates.map(c => (
@@ -211,40 +201,40 @@ export function ConfirmPrescriptionPage() {
               )}
 
               {/* Editable fields */}
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] text-gray-400 mb-1">
+                  <label className="block text-sm font-semibold text-[#43474a] mb-1.5 uppercase tracking-[0.05em]">
                     {pt.confirm.dosageLabel}
                     {confidenceFlags?.extracted_dosage != null && confidenceFlags.extracted_dosage < 0.8 && (
-                      <span className="ml-1 text-amber-500">⚠</span>
+                      <span className="ml-1 text-[#f3896d]">⚠</span>
                     )}
                   </label>
                   <input
                     type="text"
                     value={item.extracted_dosage ?? ''}
                     onChange={e => updateItem(index, { extracted_dosage: e.target.value || null })}
-                    className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-400"
+                    className="w-full min-h-[48px] px-4 py-2.5 text-lg rounded-lg border-[1.5px] border-[#c3c7ca] bg-white text-[#1b1c1a] focus:outline-none focus:border-[#49654d] focus:shadow-[0_0_0_3px_rgba(73,101,77,0.12)] transition"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] text-gray-400 mb-1">
+                  <label className="block text-sm font-semibold text-[#43474a] mb-1.5 uppercase tracking-[0.05em]">
                     {pt.confirm.quantityLabel}
                     {confidenceFlags?.quantity != null && confidenceFlags.quantity < 0.8 && (
-                      <span className="ml-1 text-amber-500">⚠</span>
+                      <span className="ml-1 text-[#f3896d]">⚠</span>
                     )}
                   </label>
                   <input
                     type="number"
                     value={item.quantity ?? ''}
                     onChange={e => updateItem(index, { quantity: e.target.value ? Number(e.target.value) : null })}
-                    className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-400"
+                    className="w-full min-h-[48px] px-4 py-2.5 text-lg rounded-lg border-[1.5px] border-[#c3c7ca] bg-white text-[#1b1c1a] focus:outline-none focus:border-[#49654d] focus:shadow-[0_0_0_3px_rgba(73,101,77,0.12)] transition"
                   />
                 </div>
               </div>
 
               {/* Posology */}
               {item.posology_text && (
-                <p className="text-xs text-gray-500 bg-gray-50 rounded-lg px-3 py-2">
+                <p className="text-base text-[#43474a] bg-[#f4f4f0] rounded-lg px-4 py-3">
                   {item.posology_text}
                 </p>
               )}
@@ -256,12 +246,12 @@ export function ConfirmPrescriptionPage() {
         })}
       </div>
 
-      {error && <p className="text-red-600 text-xs mt-4">{error}</p>}
+      {error && <p className="text-[#ba1a1a] text-base mt-4">{error}</p>}
 
       <button
         onClick={handleConfirm}
         disabled={saving || items.length === 0}
-        className="mt-6 w-full py-4 bg-green-600 text-white text-sm font-semibold rounded-2xl hover:bg-green-700 active:scale-[0.98] transition disabled:opacity-40 min-h-[44px]"
+        className="mt-8 w-full min-h-[48px] py-3 bg-[#49654d] text-white text-base font-semibold rounded-lg hover:opacity-[0.88] hover:-translate-y-px active:scale-[0.98] transition disabled:opacity-40 shadow-[0_4px_16px_rgba(25,40,48,0.12)]"
       >
         {saving ? pt.confirm.confirmingButton : pt.confirm.confirmButton}
       </button>
@@ -289,9 +279,9 @@ function LeafletLink({ drugId }: { prescriptionItemId: string; drugId: string | 
       href={leafletUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex items-center gap-1 text-xs text-green-600 font-medium"
+      className="inline-flex items-center gap-1.5 text-base font-semibold text-[#49654d] hover:opacity-75 transition"
     >
-      <ExternalLink size={12} />
+      <ExternalLink size={16} />
       {pt.confirm.leafletLink}
     </a>
   )
