@@ -179,7 +179,7 @@ blockquote { font-size: 17px; line-height: 1.7; color: var(--on-surface); font-w
 .download-inner { display: flex; flex-direction: column; align-items: center; gap: 20px; }
 .download h2 { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
 .download p { color: rgba(255,255,255,0.7); font-size: 16px; }
-.store-buttons { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 280px; margin-top: 4px; }
+.store-buttons { display: flex; flex-direction: column; justify-content: center; gap: 12px; width: 100%; max-width: 280px; margin-top: 4px; }
 .store-btn { display: flex; align-items: center; justify-content: center; gap: 14px; padding: 14px 24px; background: rgba(255,255,255,0.1); border: 1.5px solid rgba(255,255,255,0.25); border-radius: 12px; color: #fff; transition: background 0.2s; }
 .store-btn:hover { background: rgba(255,255,255,0.18); }
 .store-icon { font-size: 26px; }
