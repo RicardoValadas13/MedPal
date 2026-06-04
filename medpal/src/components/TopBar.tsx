@@ -1,5 +1,5 @@
-import { Bell } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { Bell, ShieldCheck } from 'lucide-react'
+import { Link, useNavigate } from 'react-router-dom'
 
 function getGreeting() {
   const h = new Date().getHours()
@@ -28,9 +28,18 @@ export function TopBar() {
             <p className="text-xl font-bold text-[#192830] leading-tight">{displayName}</p>
           </div>
         </div>
-        <button className="w-10 h-10 flex items-center justify-center rounded-full text-[#192830] hover:bg-[#efeeea] transition-colors active:scale-95 mt-1">
-          <Bell size={22} strokeWidth={1.8} />
-        </button>
+        <div className="flex items-center gap-1">
+          <Link
+            to="/caregiver"
+            aria-label="Caregiver"
+            className="w-10 h-10 flex items-center justify-center rounded-full text-[#192830] hover:bg-[#efeeea] transition-colors active:scale-95 mt-1"
+          >
+            <ShieldCheck size={22} strokeWidth={1.8} />
+          </Link>
+          <button className="w-10 h-10 flex items-center justify-center rounded-full text-[#192830] hover:bg-[#efeeea] transition-colors active:scale-95 mt-1">
+            <Bell size={22} strokeWidth={1.8} />
+          </button>
+        </div>
       </div>
     </header>
   )

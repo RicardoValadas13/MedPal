@@ -10,6 +10,8 @@ import { AddMedicationPage } from './pages/AddMedicationPage'
 import { EditMedicationPage } from './pages/EditMedicationPage'
 import { CheckinPage } from './pages/CheckinPage'
 import { SettingsPage } from './pages/SettingsPage'
+import { ChatPage } from './pages/ChatPage'
+import { CaregiverSettingsPage } from './pages/CaregiverSettingsPage'
 
 function AppRoutes() {
   return (
@@ -24,6 +26,8 @@ function AppRoutes() {
         <Route path="/medications/:id/edit" element={<EditMedicationPage />} />
         <Route path="/checkin" element={<CheckinPage />} />
         <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/assistant" element={<ChatPage />} />
+        <Route path="/caregiver" element={<CaregiverSettingsPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

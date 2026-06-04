@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Plus, Check, ChevronRight, CalendarDays, StickyNote, Pill, Sun, Moon, Clock3 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
+import { EmergencyButton } from '../components/EmergencyButton'
 import { pt } from '../i18n/pt'
 import type { UserMedication, IntakeEvent } from '../types/database'
 
@@ -104,7 +105,9 @@ export function HomePage() {
   const taken = medications.filter(m => m.taken_today)
 
   return (
-    <div className="px-5 py-4 flex flex-col gap-5 pb-8">
+    <div className="px-5 py-4 flex flex-col gap-5 pb-[112px]">
+
+      <EmergencyButton />
 
       {/* Medications to take */}
       {!loading && medications.length === 0 ? (
