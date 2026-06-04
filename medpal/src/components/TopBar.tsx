@@ -1,5 +1,7 @@
-import { Bell } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { Bell, ShieldCheck } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
+import { pt } from '../i18n/pt'
 
 export function TopBar() {
   const { user } = useAuth()
@@ -19,9 +21,18 @@ export function TopBar() {
         </div>
       </div>
 
-      <button className="w-10 h-10 flex items-center justify-center rounded-full text-[#192830] hover:bg-[#efeeea] transition-colors active:scale-95">
-        <Bell size={20} strokeWidth={2} />
-      </button>
+      <div className="flex items-center gap-1">
+        <Link
+          to="/caregiver"
+          aria-label={pt.caregiver.title}
+          className="w-10 h-10 flex items-center justify-center rounded-full text-[#192830] hover:bg-[#efeeea] transition-colors active:scale-95"
+        >
+          <ShieldCheck size={20} strokeWidth={2} />
+        </Link>
+        <button className="w-10 h-10 flex items-center justify-center rounded-full text-[#192830] hover:bg-[#efeeea] transition-colors active:scale-95">
+          <Bell size={20} strokeWidth={2} />
+        </button>
+      </div>
     </header>
   )
 }
