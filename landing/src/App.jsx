@@ -128,9 +128,10 @@ export default function App() {
             <h1>Care that<br /><span className="accent">understands you.</span></h1>
             <p className="hero-sub">Manage your medications with technical precision and human warmth. MedPal keeps you on track, your doctor informed, and the people you love at peace — every single day.</p>
             <div className="hero-actions">
-              <a href="#product" className="btn btn-primary">Order the Box — €19.99</a>
+              <a href="#download" className="btn btn-primary">Start for €3.99/month</a>
               <a href="#screens" className="btn btn-ghost">See how it works →</a>
             </div>
+            <p className="hero-gift">🎁 Subscribe and get the <strong>MedPal Smart Box free</strong> — shipped to your door.</p>
             <div className="hero-stats">
               <div className="stat"><strong>94%</strong><span>average adherence rate</span></div>
               <div className="stat-divider" />
@@ -172,8 +173,8 @@ export default function App() {
         <div className="container">
           <div className="section-header">
             <span className="badge">Everything Included</span>
-            <h2>Six systems.<br />One box.</h2>
-            <p>MedPal combines hardware, AI, and a real medical team into a single product that works for patients, carers, and doctors alike.</p>
+            <h2>Six systems.<br />One subscription.</h2>
+            <p>Your MedPal plan combines AI, a real medical team, and a free Smart Box into one service that works for patients, carers, and doctors alike.</p>
           </div>
           <div className="features-grid">
             {FEATURE_GROUPS.map(g => (
@@ -214,22 +215,23 @@ export default function App() {
               <img className="product-img-main" src="/screens/box1.png" alt="MedPal Smart Box" />
             </div>
             <div className="product-info">
-              <span className="badge badge-green">The Product</span>
-              <h2>The box that keeps everything on track.</h2>
-              <p className="product-lead">The <strong>MedPal Smart Box</strong> is a 28-slot monthly pill organiser with numbered compartments — one per day. Compact, clean, and built to pair seamlessly with the MedPal app.</p>
+              <span className="badge badge-green">Free With Your Plan</span>
+              <h2>Subscribe and the box is on us.</h2>
+              <p className="product-lead">Every MedPal subscription ships with the <strong>MedPal Smart Box</strong> — a 28-slot monthly pill organiser with numbered compartments, one per day. No extra cost. It pairs seamlessly with the app you're already paying for.</p>
               <ul className="product-features">
                 <li><span>✓</span> 28 numbered compartments — one per day of the month</li>
                 <li><span>✓</span> Scan the box to verify each slot is filled correctly</li>
                 <li><span>✓</span> Compact, travel-friendly, translucent lid</li>
-                <li><span>✓</span> App included — no subscription, ever</li>
+                <li><span>✓</span> Yours free — included with any MedPal plan</li>
                 <li><span>✓</span> Medical support team included</li>
               </ul>
               <div className="product-price-block">
                 <div className="product-price">
-                  <span className="price-value">€19.99</span>
-                  <span className="price-note">Box + App + Medical Support. One-time payment.</span>
+                  <span className="price-strike">€19.99</span>
+                  <span className="price-value">Free</span>
+                  <span className="price-note">Included free with your MedPal subscription.</span>
                 </div>
-                <a href="#download" className="btn btn-primary">Order Now</a>
+                <a href="#download" className="btn btn-primary">See Plans</a>
               </div>
             </div>
           </div>
@@ -407,22 +409,48 @@ export default function App() {
         </div>
       </section>
 
-      {/* DOWNLOAD CTA */}
+      {/* PRICING */}
       <section className="download section" id="download">
         <div className="container">
-          <div className="download-inner">
-            <h2>Ready for more peace of mind?</h2>
-            <p>Join thousands of people who have simplified their medication routine with MedPal.</p>
-            <div className="store-buttons">
-              <a href="#" className="store-btn">
-                <span className="store-icon">🍎</span>
-                <div><span>Download on the</span><strong>App Store</strong></div>
-              </a>
-              <a href="#" className="store-btn">
-                <span className="store-icon">▶</span>
-                <div><span>Get it on</span><strong>Google Play</strong></div>
-              </a>
+          <div className="section-header">
+            <span className="badge">Simple Pricing</span>
+            <h2>One plan. Everything included.</h2>
+            <p>The app, the medical support team, and a free Smart Box — all in one subscription. Cancel anytime.</p>
+          </div>
+          <div className="pricing-grid">
+            <div className="price-card">
+              <span className="price-card-name">Monthly</span>
+              <div className="price-card-amount"><strong>€3.99</strong><span>/month</span></div>
+              <p className="price-card-billing">Billed monthly · cancel anytime</p>
+              <ul className="price-card-list">
+                <li><span>✓</span> Full app — all six systems</li>
+                <li><span>✓</span> 24/7 medical support team</li>
+                <li><span>🎁</span> Free MedPal Smart Box</li>
+              </ul>
+              <button className="btn btn-primary" onClick={() => setShowQR(true)}>Start Monthly</button>
             </div>
+            <div className="price-card price-card-featured">
+              <span className="price-badge">Save 30%</span>
+              <span className="price-card-name">Annual</span>
+              <div className="price-card-amount"><strong>€33.52</strong><span>/year</span></div>
+              <p className="price-card-billing">Just €2.79/month · billed yearly</p>
+              <ul className="price-card-list">
+                <li><span>✓</span> Everything in Monthly</li>
+                <li><span>✓</span> 30% off vs paying monthly</li>
+                <li><span>🎁</span> Free MedPal Smart Box</li>
+              </ul>
+              <button className="btn btn-primary" onClick={() => setShowQR(true)}>Start Annual — Best Value</button>
+            </div>
+          </div>
+          <div className="store-buttons">
+            <a href="#" className="store-btn">
+              <span className="store-icon">🍎</span>
+              <div><span>Download on the</span><strong>App Store</strong></div>
+            </a>
+            <a href="#" className="store-btn">
+              <span className="store-icon">▶</span>
+              <div><span>Get it on</span><strong>Google Play</strong></div>
+            </a>
           </div>
         </div>
       </section>
