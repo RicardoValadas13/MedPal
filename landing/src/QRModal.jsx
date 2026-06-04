@@ -16,8 +16,9 @@ export default function QRModal({ onClose }) {
             size={200}
             bgColor="#ffffff"
             fgColor="#192830"
-            level="M"
+            level="H"
             includeMargin={false}
+            imageSettings={{ src: '/logo.png', height: 44, width: 22, excavate: true }}
           />
         </div>
         <a className="qr-url" href={DEMO_URL} target="_blank" rel="noopener noreferrer">{DEMO_URL}</a>
