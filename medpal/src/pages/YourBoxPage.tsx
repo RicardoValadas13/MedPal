@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { Camera, LayoutGrid, PlusCircle } from 'lucide-react'
+import { Camera, Pill, PlusCircle } from 'lucide-react'
 
 export function YourBoxPage() {
   const navigate = useNavigate()
@@ -19,11 +19,11 @@ export function YourBoxPage() {
           className="flex items-center gap-4 w-full bg-[#192830] text-white rounded-2xl px-5 py-5 hover:opacity-90 active:scale-[0.98] transition"
         >
           <div className="w-11 h-11 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
-            <LayoutGrid size={22} className="text-white" />
+            <Pill size={22} className="text-white" />
           </div>
           <div className="text-left">
-            <p className="text-base font-semibold">Organise the box</p>
-            <p className="text-sm text-white/60 mt-0.5">Review and arrange your medication schedule</p>
+            <p className="text-base font-semibold">My medications</p>
+            <p className="text-sm text-white/60 mt-0.5">View and manage your medication schedule</p>
           </div>
         </button>
 
