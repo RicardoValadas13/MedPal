@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ChevronLeft, LogOut, Lock, Mail, Eye, EyeOff, Phone, AlertCircle } from 'lucide-react'
+import { ChevronLeft, LogOut, Lock, Mail, Eye, EyeOff, Phone, AlertCircle, UserPlus } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import { useEmergencySettings } from '../lib/emergencySettings'
 
 export function SettingsPage() {
-  const { user, signOut } = useAuth()
+  const { user, signOut, isDemo } = useAuth()
   const navigate = useNavigate()
 
   const [section, setSection] = useState<'main' | 'password' | 'email' | 'caregiver'>('main')
@@ -21,6 +21,7 @@ export function SettingsPage() {
 
   async function handleSignOut() {
     await signOut()
+    navigate('/')
   }
 
   async function handleChangePassword(e: React.FormEvent) {
@@ -102,23 +103,38 @@ export function SettingsPage() {
               <p className="px-4 pt-4 pb-2 text-xs font-semibold text-[#8a8f93] uppercase tracking-widest">
                 Account
               </p>
-              <button
-                onClick={() => { setSection('email'); setStatus(null) }}
-                className="w-full flex items-center gap-3 px-4 min-h-[52px] hover:bg-[#f5f4f0] transition-colors active:bg-[#efeeea]"
-              >
-                <Mail size={20} className="text-[#49654d]" strokeWidth={1.8} />
-                <span className="flex-1 text-left text-[#192830] font-medium">Change Email</span>
-                <ChevronLeft size={18} className="text-[#43474a] rotate-180" />
-              </button>
-              <div className="h-px bg-[#efeeea] mx-4" />
-              <button
-                onClick={() => { setSection('password'); setStatus(null) }}
-                className="w-full flex items-center gap-3 px-4 min-h-[52px] hover:bg-[#f5f4f0] transition-colors active:bg-[#efeeea]"
-              >
-                <Lock size={20} className="text-[#49654d]" strokeWidth={1.8} />
-                <span className="flex-1 text-left text-[#192830] font-medium">Change Password</span>
-                <ChevronLeft size={18} className="text-[#43474a] rotate-180" />
-              </button>
+              {isDemo ? (
+                <button
+                  onClick={() => navigate('/auth')}
+                  className="w-full flex items-center gap-3 px-4 min-h-[52px] hover:bg-[#f5f4f0] transition-colors active:bg-[#efeeea]"
+                >
+                  <UserPlus size={20} className="text-[#49654d]" strokeWidth={1.8} />
+                  <span className="flex-1 text-left text-[#192830] font-medium">
+                    Create Account / Sign In
+                  </span>
+                  <ChevronLeft size={18} className="text-[#43474a] rotate-180" />
+                </button>
+              ) : (
+                <>
+                  <button
+                    onClick={() => { setSection('email'); setStatus(null) }}
+                    className="w-full flex items-center gap-3 px-4 min-h-[52px] hover:bg-[#f5f4f0] transition-colors active:bg-[#efeeea]"
+                  >
+                    <Mail size={20} className="text-[#49654d]" strokeWidth={1.8} />
+                    <span className="flex-1 text-left text-[#192830] font-medium">Change Email</span>
+                    <ChevronLeft size={18} className="text-[#43474a] rotate-180" />
+                  </button>
+                  <div className="h-px bg-[#efeeea] mx-4" />
+                  <button
+                    onClick={() => { setSection('password'); setStatus(null) }}
+                    className="w-full flex items-center gap-3 px-4 min-h-[52px] hover:bg-[#f5f4f0] transition-colors active:bg-[#efeeea]"
+                  >
+                    <Lock size={20} className="text-[#49654d]" strokeWidth={1.8} />
+                    <span className="flex-1 text-left text-[#192830] font-medium">Change Password</span>
+                    <ChevronLeft size={18} className="text-[#43474a] rotate-180" />
+                  </button>
+                </>
+              )}
             </div>
 
             {/* Emergency */}
@@ -150,16 +166,18 @@ export function SettingsPage() {
               </div>
             </div>
 
-            {/* Sign out */}
-            <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-              <button
-                onClick={handleSignOut}
-                className="w-full flex items-center gap-3 px-4 min-h-[52px] hover:bg-[#fff5f5] transition-colors active:bg-[#ffe8e8]"
-              >
-                <LogOut size={20} className="text-[#ba1a1a]" strokeWidth={1.8} />
-                <span className="flex-1 text-left text-[#ba1a1a] font-medium">Sign Out</span>
-              </button>
-            </div>
+            {/* Sign out (real accounts only — demo has no session) */}
+            {!isDemo && (
+              <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+                <button
+                  onClick={handleSignOut}
+                  className="w-full flex items-center gap-3 px-4 min-h-[52px] hover:bg-[#fff5f5] transition-colors active:bg-[#ffe8e8]"
+                >
+                  <LogOut size={20} className="text-[#ba1a1a]" strokeWidth={1.8} />
+                  <span className="flex-1 text-left text-[#ba1a1a] font-medium">Sign Out</span>
+                </button>
+              </div>
+            )}
           </>
         )}
 

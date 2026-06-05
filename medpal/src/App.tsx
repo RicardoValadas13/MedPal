@@ -16,6 +16,7 @@ import { ChatPage } from './pages/ChatPage'
 import { CaregiverSettingsPage } from './pages/CaregiverSettingsPage'
 import { MessagesPage } from './pages/MessagesPage'
 import { AdminPage } from './pages/AdminPage'
+import { AuthPage } from './pages/AuthPage'
 import { AnalyticsPage } from './pages/AnalyticsPage'
 import { YourBoxPage } from './pages/YourBoxPage'
 import { LogAdHocDosePage } from './pages/LogAdHocDosePage'
@@ -23,6 +24,7 @@ import { LogAdHocDosePage } from './pages/LogAdHocDosePage'
 function AppRoutes() {
   return (
     <Routes>
+      <Route path="/auth" element={<AuthPage />} />
       <Route element={<AppShell />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/analytics" element={<AnalyticsPage />} />
