@@ -18,7 +18,7 @@ export function TopBar() {
       <div className="flex justify-between items-start">
         <div className="flex items-center gap-3">
           <button
-            onClick={() => navigate('/settings')}
+            onClick={() => navigate('/analytics')}
             className="w-12 h-12 rounded-full bg-[#cbebcd] flex items-center justify-center text-[#49654d] font-bold text-lg shrink-0 shadow-sm active:scale-95 transition-transform"
           >
             {initial}
