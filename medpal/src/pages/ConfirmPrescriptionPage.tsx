@@ -357,6 +357,7 @@ export function ConfirmPrescriptionPage() {
             prescription_item_id: prescriptionItemId,
             display_name: item.extracted_name,
             dosage: item.extracted_dosage,
+            description: item.description ?? null,
             start_date: item._startDate,
             end_date: item._hasEndDate ? item._endDate : null,
             source: 'prescription',

@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import {
   ScanLine, MoreVertical, Pencil, Trash2, Utensils,
   Download, ChevronDown, ChevronUp, Sunrise, Sun, Sunset,
-  Moon, Plus, History, Pill, type LucideIcon,
+  Moon, Plus, History, Pill, PlayCircle, type LucideIcon,
 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
@@ -148,6 +148,17 @@ export function MedicationsPage() {
                     <Pencil size={15} /> Edit
                   </button>
                   <div className="h-px bg-[#f4f3f0]" />
+                  {med.description && (
+                    <>
+                      <button
+                        onClick={() => { setOpenMenuId(null); navigate(`/medications/${med.id}/guide`) }}
+                        className="w-full flex items-center gap-2 px-4 min-h-[48px] text-sm font-semibold text-[#192830] hover:bg-[#f4f3f0] transition"
+                      >
+                        <PlayCircle size={15} /> Visual guide
+                      </button>
+                      <div className="h-px bg-[#f4f3f0]" />
+                    </>
+                  )}
                   <button
                     onClick={() => handleDelete(med.id)}
                     className="w-full flex items-center gap-2 px-4 min-h-[48px] text-sm font-semibold text-[#ba1a1a] hover:bg-[#fff5f5] transition"
