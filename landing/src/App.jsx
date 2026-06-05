@@ -77,7 +77,7 @@ const FEATURE_GROUPS = [
     features: [
       'A smart assistant for your medication questions',
       'Help with the app and everyday health questions',
-      'Speaks English and Portuguese',
+      'Speaks over 100 languages',
       'Never diagnoses or changes doses — always points you to your doctor',
       'Spots emergency words and raises the alarm automatically',
     ],
