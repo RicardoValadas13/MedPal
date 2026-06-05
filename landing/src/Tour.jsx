@@ -3,18 +3,20 @@ import { QRCodeSVG } from 'qrcode.react'
 import { DEMO_URL } from './QRModal.jsx'
 import './Tour.css'
 
-// 5 stops on the site (stop 1 is the opener) + a big final QR screen.
+// The opener + a guided run through the best features + a big final QR screen.
 const STOPS = [
   { type: 'title', title: 'Now we have MedPal', sub: 'Care that understands you.' },
-  { type: 'media', title: 'Scan any prescription', sub: 'Snap a photo and MedPal builds your whole medication schedule in seconds.', img: '/screens/meds.png' },
+  { type: 'media', title: 'Manage every prescription', sub: 'Scan a paper or PDF prescription and MedPal builds your whole medicine cabinet — no typing.', img: '/screens/meds.png' },
+  { type: 'media', title: 'Reminders & alarms that work', sub: 'A reminder for every dose, refill alerts before you run out, and even a voice call if you miss one.', img: '/screens/today.png' },
   { type: 'media', title: 'A medical team on call', sub: 'Real doctors and pharmacists, plus an AI assistant that speaks over 100 languages.', img: '/screens/chat.png' },
   { type: 'media', title: 'Reports for your doctor', sub: 'See adherence at a glance and share your full history in a single tap.', img: '/screens/analytics.png' },
+  { type: 'media', title: 'Peace of mind for family', sub: 'Caregivers get notified when a dose is taken or missed — and before the box runs out.', img: '/screens/caregiver.png' },
   { type: 'media', title: 'The free Smart Box', sub: 'A 28-day pill organiser, included free. Scan it and MedPal checks every slot.', img: '/screens/box1.png' },
   { type: 'qr', title: 'Scan to try MedPal', sub: 'Point your phone camera at the code.' },
 ]
 
 const LAST = STOPS.length - 1
-const STOP_COUNT = 5 // stops 0..4 are the five site stops; index 5 is the QR finale
+const MEDIA_COUNT = STOPS.filter(s => s.type === 'media').length
 
 export default function Tour({ onClose }) {
   const [i, setI] = useState(0)
@@ -52,7 +54,7 @@ export default function Tour({ onClose }) {
         {stop.type === 'media' && (
           <div className="tour-media-slide">
             <div className="tour-media-text">
-              <span className="tour-kicker">Stop {i} of {STOP_COUNT - 1}</span>
+              <span className="tour-kicker">Stop {i} of {MEDIA_COUNT}</span>
               <h2 className="tour-h2">{stop.title}</h2>
               <p className="tour-sub">{stop.sub}</p>
             </div>
