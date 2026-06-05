@@ -3,6 +3,7 @@ import './App.css'
 import QRModal, { DEMO_URL } from './QRModal.jsx'
 import ReportModal from './ReportModal.jsx'
 import Tour from './Tour.jsx'
+import TeamPool from './TeamPool.jsx'
 import { Icon } from './Icons.jsx'
 
 const SCREENS = [
@@ -216,6 +217,7 @@ export default function App() {
             <a href="#patients">Patients</a>
             <a href="#doctors">Doctors</a>
             <a href="#caregivers">Caregivers</a>
+            <a href="#team">Team</a>
             <a href="#partnerships">Partners</a>
             <a href="#download">Pricing</a>
           </div>
@@ -478,6 +480,20 @@ export default function App() {
                 <span>Daughter and primary carer</span>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* WHO WE ARE */}
+      <section className="team section" id="team">
+        <div className="container">
+          <div className="section-header reveal">
+            <span className="eyebrow">Who we are</span>
+            <h2>The people behind MedPal.</h2>
+            <p>A small team building MedPal — caught here in our natural habitat.</p>
+          </div>
+          <div className="reveal">
+            <TeamPool />
           </div>
         </div>
       </section>
