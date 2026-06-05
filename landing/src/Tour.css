@@ -1,0 +1,165 @@
+.tour {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  animation: tourFade 0.2s ease;
+}
+@keyframes tourFade { from { opacity: 0 } to { opacity: 1 } }
+
+.tour-qr { background: var(--primary); }
+.tour-qr .tour-h2 { color: #fff; }
+.tour-qr .tour-sub { color: rgba(255,255,255,0.72); }
+
+.tour-close {
+  position: absolute;
+  top: 24px;
+  right: 28px;
+  z-index: 3;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--surface-low);
+  color: var(--on-surface-variant);
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.tour-close:hover { background: var(--surface-high); }
+.tour-qr .tour-close { background: rgba(255,255,255,0.14); color: #fff; }
+
+.tour-stage {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(24px, 5vw, 80px);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+/* ── Title slide ── */
+.tour-title-slide { text-align: center; max-width: 1100px; }
+.tour-logo { height: clamp(70px, 12vh, 140px); width: auto; margin: 0 auto 28px; }
+.tour-h1 {
+  font-family: var(--font-display);
+  font-size: clamp(48px, 9vw, 120px);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  color: var(--primary);
+}
+.tour-sub {
+  font-size: clamp(20px, 2.6vw, 34px);
+  color: var(--on-surface-variant);
+  line-height: 1.4;
+  margin-top: 20px;
+}
+
+/* ── Media (site) slides ── */
+.tour-media-slide {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: clamp(32px, 6vw, 96px);
+  max-width: 1400px;
+  width: 100%;
+}
+.tour-kicker {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: clamp(14px, 1.5vw, 20px);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--secondary);
+  margin-bottom: 18px;
+}
+.tour-h2 {
+  font-family: var(--font-display);
+  font-size: clamp(34px, 5.5vw, 76px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--primary);
+}
+.tour-media-text .tour-sub { font-size: clamp(18px, 2.2vw, 30px); margin-top: 22px; }
+.tour-media-img { display: flex; justify-content: center; }
+.tour-media-img img {
+  max-height: 72vh;
+  width: auto;
+  border-radius: 28px;
+  box-shadow: 0 40px 90px rgba(25,40,48,0.22);
+}
+
+/* ── QR finale ── */
+.tour-qr-slide { text-align: center; display: flex; flex-direction: column; align-items: center; }
+.tour-qr-title { margin-bottom: clamp(12px, 2vh, 26px); }
+.tour-qr-box {
+  background: #fff;
+  padding: clamp(18px, 2.5vw, 32px);
+  border-radius: 28px;
+  box-shadow: 0 30px 80px rgba(25,40,48,0.22);
+  line-height: 0;
+}
+.tour-qr-box svg { width: min(52vh, 78vw); height: auto; display: block; }
+.tour-qr-url {
+  display: inline-block;
+  margin-top: 22px;
+  font-size: clamp(16px, 1.8vw, 24px);
+  font-weight: 600;
+  color: #cbebcd;
+}
+.tour-qr-slide .tour-sub { font-size: clamp(16px, 1.8vw, 24px); margin-top: 8px; }
+
+/* ── Controls ── */
+.tour-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 24px;
+}
+.tour-nav-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 1.5px solid var(--outline-variant);
+  background: var(--surface);
+  color: var(--primary);
+  font-size: 22px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s, opacity 0.15s;
+}
+.tour-nav-btn:hover:not(:disabled) { background: var(--surface-low); transform: translateY(-1px); }
+.tour-nav-btn:disabled { opacity: 0.3; cursor: default; }
+.tour-dots { display: flex; gap: 12px; }
+.tour-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: none;
+  background: var(--outline-variant);
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+}
+.tour-dot.is-active { background: var(--secondary); transform: scale(1.25); }
+
+.tour-qr .tour-nav-btn { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); color: #fff; }
+.tour-qr .tour-dot { background: rgba(255,255,255,0.3); }
+.tour-qr .tour-dot.is-active { background: #fff; }
+
+/* Mobile: stack media slides */
+@media (max-width: 760px) {
+  .tour-media-slide { grid-template-columns: 1fr; gap: 24px; text-align: center; }
+  .tour-media-img { order: -1; }
+  .tour-media-img img { max-height: 44vh; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tour { animation: none; }
+}

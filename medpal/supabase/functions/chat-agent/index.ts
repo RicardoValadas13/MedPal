@@ -165,30 +165,29 @@ Deno.serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!
     const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     const openaiKey = Deno.env.get('OPENAI_API_KEY')!
 
-    // User-scoped client: every query below runs under the caller's JWT,
-    // so RLS guarantees we only ever touch this user's rows.
+    const DEMO_USER_ID = '00000000-0000-0000-0000-000000000001'
+
+    // Hybrid auth: a real session gets a user-scoped client (RLS
+    // applies); the public demo (anon key, no session) falls back to
+    // the demo user via the service role. All queries below are also
+    // explicitly scoped to userId so neither mode can leak rows.
+    let supabase = createClient(supabaseUrl, supabaseServiceKey)
+    let userId = DEMO_USER_ID
     const authHeader = req.headers.get('Authorization')
-    if (!authHeader) {
-      return new Response(JSON.stringify({ error: 'Missing authorization header' }), {
-        status: 401,
-        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+    if (authHeader) {
+      const userClient = createClient(supabaseUrl, supabaseAnonKey, {
+        global: { headers: { Authorization: authHeader } },
       })
-    }
-
-    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-      global: { headers: { Authorization: authHeader } },
-    })
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-    if (!user) {
-      return new Response(JSON.stringify({ error: 'Not authenticated' }), {
-        status: 401,
-        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
-      })
+      const {
+        data: { user },
+      } = await userClient.auth.getUser()
+      if (user) {
+        supabase = userClient
+        userId = user.id
+      }
     }
 
     const { conversation_id, message } = await req.json()
@@ -206,6 +205,7 @@ Deno.serve(async (req) => {
         .from('conversations')
         .select('id')
         .eq('id', conversationId)
+        .eq('user_id', userId)
         .single()
       if (!conv) {
         return new Response(JSON.stringify({ error: 'Conversation not found' }), {
@@ -216,7 +216,7 @@ Deno.serve(async (req) => {
     } else {
       const { data: conv, error: convError } = await supabase
         .from('conversations')
-        .insert({ user_id: user.id, type: 'agent' })
+        .insert({ user_id: userId, type: 'agent' })
         .select('id')
         .single()
       if (convError || !conv) throw new Error('Failed to create conversation')
@@ -227,6 +227,7 @@ Deno.serve(async (req) => {
     const { data: medications } = await supabase
       .from('user_medications')
       .select('id, display_name, dosage, schedules ( time_of_day, days_of_week, with_food )')
+      .eq('user_id', userId)
       .eq('is_active', true)
 
     const contextMeds: ContextMedication[] = (medications ?? []).map((m) => ({
@@ -240,7 +241,8 @@ Deno.serve(async (req) => {
     const today = new Date().toISOString().slice(0, 10)
     const { data: events } = await supabase
       .from('intake_events')
-      .select('scheduled_at, status, user_medications ( display_name )')
+      .select('scheduled_at, status, user_medications!inner ( display_name, user_id )')
+      .eq('user_medications.user_id', userId)
       .gte('scheduled_at', `${today}T00:00:00`)
       .lte('scheduled_at', `${today}T23:59:59`)
 
@@ -256,6 +258,7 @@ Deno.serve(async (req) => {
     const { data: checkins } = await supabase
       .from('checkins')
       .select('recorded_at, mood, side_effects')
+      .eq('user_id', userId)
       .order('recorded_at', { ascending: false })
       .limit(1)
 

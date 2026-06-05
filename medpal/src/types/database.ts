@@ -244,6 +244,30 @@ export interface Database {
           notes?: string | null
         }
       }
+      ad_hoc_intakes: {
+        Row: {
+          id: string
+          user_id: string
+          drug_name: string
+          dosage: string | null
+          reason: string | null
+          taken_at: string
+          created_at: string
+        }
+        Insert: {
+          user_id: string
+          drug_name: string
+          dosage?: string | null
+          reason?: string | null
+          taken_at?: string
+        }
+        Update: {
+          drug_name?: string
+          dosage?: string | null
+          reason?: string | null
+          taken_at?: string
+        }
+      }
       checkins: {
         Row: {
           id: string
@@ -435,6 +459,7 @@ export type Drug = Database['public']['Tables']['drugs']['Row']
 export type UserMedication = Database['public']['Tables']['user_medications']['Row']
 export type Schedule = Database['public']['Tables']['schedules']['Row']
 export type IntakeEvent = Database['public']['Tables']['intake_events']['Row']
+export type AdHocIntake = Database['public']['Tables']['ad_hoc_intakes']['Row']
 export type Checkin = Database['public']['Tables']['checkins']['Row']
 export type Conversation = Database['public']['Tables']['conversations']['Row']
 export type Message = Database['public']['Tables']['messages']['Row']

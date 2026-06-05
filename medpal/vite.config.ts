@@ -11,13 +11,17 @@ export default defineConfig({
       // We maintain public/manifest.webmanifest by hand (linked in index.html)
       manifest: false,
       registerType: 'autoUpdate',
-      // Custom SW: same offline shell as generateSW, plus the
-      // notificationclick handlers for medication reminders.
+      // Custom SW: offline shell precache plus push and medication
+      // reminder notification handlers.
       strategies: 'injectManifest',
       srcDir: 'src',
       filename: 'sw.ts',
       injectManifest: {
         globPatterns: ['**/*.{js,css,html,png,svg,webmanifest}'],
+      },
+      devOptions: {
+        enabled: true,
+        type: 'module',
       },
     }),
   ],

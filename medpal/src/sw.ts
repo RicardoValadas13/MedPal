@@ -1,6 +1,10 @@
 /// <reference lib="webworker" />
 import { clientsClaim } from 'workbox-core'
-import { createHandlerBoundToURL, precacheAndRoute } from 'workbox-precaching'
+import {
+  cleanupOutdatedCaches,
+  createHandlerBoundToURL,
+  precacheAndRoute,
+} from 'workbox-precaching'
 import { NavigationRoute, registerRoute } from 'workbox-routing'
 
 declare let self: ServiceWorkerGlobalScope & {
@@ -13,19 +17,45 @@ declare let self: ServiceWorkerGlobalScope & {
 self.skipWaiting()
 clientsClaim()
 precacheAndRoute(self.__WB_MANIFEST)
+cleanupOutdatedCaches()
 registerRoute(new NavigationRoute(createHandlerBoundToURL('/index.html')))
 
 // ============================================================
-// Medication reminder actions
+// Web push (server-sent reminders)
 // ============================================================
-// Notifications are scheduled by the page (src/lib/reminders.ts) via
-// registration.showNotification. Action clicks land here; the actual
-// Supabase write happens in the app (it owns the auth session), so we
-// forward the action to an open window, or open one with the action
-// encoded in the URL.
+self.addEventListener('push', (event: PushEvent) => {
+  if (!event.data) return
+
+  let payload: { title: string; body: string; url?: string }
+  try {
+    payload = event.data.json()
+  } catch {
+    payload = { title: 'MedPal', body: event.data.text() }
+  }
+
+  event.waitUntil(
+    self.registration.showNotification(payload.title, {
+      body: payload.body,
+      icon: '/icons/icon-192.png',
+      badge: '/icons/icon-192.png',
+      tag: 'medication-reminder',
+      data: { url: payload.url ?? '/' },
+    } as NotificationOptions)
+  )
+})
+
+// ============================================================
+// Notification clicks
+// ============================================================
+// Two notification families share this handler:
+// - Medication reminders scheduled by the page (src/lib/reminders.ts)
+//   carry data.eventId and taken/snooze actions — forwarded to an open
+//   window via postMessage, or encoded in the URL of a fresh one (the
+//   app owns the Supabase session, so DB writes happen there).
+// - Push notifications carry data.url to navigate to.
 self.addEventListener('notificationclick', event => {
   const action = event.action // '' | 'taken' | 'snooze'
-  const eventId = (event.notification.data as { eventId?: string } | undefined)?.eventId
+  const data = (event.notification.data ?? {}) as { eventId?: string; url?: string }
   event.notification.close()
 
   event.waitUntil(
@@ -35,15 +65,26 @@ self.addEventListener('notificationclick', event => {
         includeUncontrolled: true,
       })
 
-      if (windows.length > 0) {
-        windows[0].postMessage({ type: 'reminder-action', action, eventId })
-        // Snoozing shouldn't yank the app to the foreground
-        if (action !== 'snooze') await windows[0].focus()
+      if (data.eventId) {
+        if (windows.length > 0) {
+          windows[0].postMessage({ type: 'reminder-action', action, eventId: data.eventId })
+          // Snoozing shouldn't yank the app to the foreground
+          if (action !== 'snooze') await windows[0].focus()
+          return
+        }
+        const params = action ? `/?reminderAction=${action}&event=${data.eventId}` : '/'
+        await self.clients.openWindow(params)
         return
       }
 
-      const params = action && eventId ? `/?reminderAction=${action}&event=${eventId}` : '/'
-      await self.clients.openWindow(params)
+      const url = data.url ?? '/'
+      const existing = windows.find(c => c.url.startsWith(self.location.origin))
+      if (existing) {
+        await existing.focus()
+        await existing.navigate(url)
+      } else {
+        await self.clients.openWindow(url)
+      }
     })()
   )
 })

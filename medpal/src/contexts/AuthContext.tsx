@@ -1,7 +1,6 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext } from 'react'
 import type { ReactNode } from 'react'
 import type { Session, User } from '@supabase/supabase-js'
-import { supabase } from '../lib/supabase'
 
 interface AuthContextValue {
   session: Session | null
@@ -10,31 +9,20 @@ interface AuthContextValue {
   signOut: () => Promise<void>
 }
 
+const DEMO_USER = {
+  id: '00000000-0000-0000-0000-000000000001',
+  email: 'demo@medpal.app',
+  app_metadata: {},
+  user_metadata: {},
+  aud: 'authenticated',
+  created_at: '',
+} as User
+
 const AuthContext = createContext<AuthContextValue | null>(null)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [session, setSession] = useState<Session | null>(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session)
-      setLoading(false)
-    })
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-    })
-
-    return () => subscription.unsubscribe()
-  }, [])
-
-  async function signOut() {
-    await supabase.auth.signOut()
-  }
-
   return (
-    <AuthContext.Provider value={{ session, user: session?.user ?? null, loading, signOut }}>
+    <AuthContext.Provider value={{ session: null, user: DEMO_USER, loading: false, signOut: async () => {} }}>
       {children}
     </AuthContext.Provider>
   )

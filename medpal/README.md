@@ -1,73 +1,65 @@
-# React + TypeScript + Vite
+# MedPal
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Medication management PWA for elderly and chronic-illness patients in Portugal.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## What it does
 
-## React Compiler
+MedPal helps patients who take multiple medications daily keep track of what to take, when, and whether they've taken it. The core loop is:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. **Upload a prescription** — photograph or upload a PDF; GPT-4o vision extracts drug names, doses, and schedules automatically via OCR.
+2. **Review and confirm** — the patient (or carer) reviews the extracted data, adjusts times and days if needed, and saves.
+3. **Home page** — shows today's doses grouped by time of day (morning / afternoon / evening), with a live countdown ("in 7 min", "now", "12 min ago") and a progress ring.
+4. **Mark as taken** — one tap per dose; the app records an intake event and updates the progress.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Who uses it
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+| Role | What they do |
+|---|---|
+| **Patient** | Checks daily schedule, marks doses taken, uploads prescriptions |
+| **Caregiver** | PIN-protected section — monitors missed doses, manages emergency contacts, reviews critical medications |
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+The target user is an older adult in Portugal managing several chronic conditions, likely with a family member or nurse acting as caregiver.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## Why it matters
+
+Medication errors (wrong dose, missed dose, wrong time) are one of the leading causes of preventable harm in elderly patients. MedPal reduces this by:
+
+- Removing manual data entry — OCR reads the prescription directly
+- Making the daily schedule visible at a glance
+- Alerting caregivers when doses are missed
+- Providing an emergency contact flow for critical situations
+
+---
+
+## Stack
+
+| Layer | Tech |
+|---|---|
+| Frontend | React 19, React Router v7, Tailwind CSS v4, Vite |
+| Backend | Supabase (PostgreSQL + Auth + Storage + Edge Functions) |
+| OCR | FastAPI + GPT-4o vision (`medpal-prescription-ocr.onrender.com`) |
+| PWA | `vite-plugin-pwa` |
+
+---
+
+## Running locally
+
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Requires a `.env` file with:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+VITE_SUPABASE_URL=...
+VITE_SUPABASE_ANON_KEY=...
+```
+
+The app runs in **demo mode** by default — a hardcoded user (`demo@medpal.app`) with no real authentication, and RLS disabled so the anon key can read and write freely.

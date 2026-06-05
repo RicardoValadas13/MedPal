@@ -4,7 +4,9 @@
   "description": "Your medication, organised.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#000000",
+  "display_override": ["standalone"],
+  "orientation": "portrait",
+  "background_color": "#faf9f5",
   "theme_color": "#192830",
   "icons": [
     {
@@ -23,5 +25,7 @@
       "type": "image/png",
       "purpose": "maskable"
     }
-  ]
+  ],
+  "categories": ["health", "medical"],
+  "lang": "pt-PT"
 }

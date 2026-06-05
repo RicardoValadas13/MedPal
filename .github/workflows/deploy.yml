@@ -21,11 +21,14 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
+          cache-dependency-path: medpal/package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        working-directory: medpal
+        run: npm install
 
       - name: Build
+        working-directory: medpal
         run: npm run build
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
@@ -35,7 +38,7 @@ jobs:
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         uses: netlify/actions/cli@master
         with:
-          args: deploy --prod --dir=dist
+          args: deploy --prod --dir=medpal/dist
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
@@ -44,7 +47,7 @@ jobs:
         if: github.event_name == 'pull_request'
         uses: netlify/actions/cli@master
         with:
-          args: deploy --dir=dist
+          args: deploy --dir=medpal/dist
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}

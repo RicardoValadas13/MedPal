@@ -40,4 +40,7 @@ lerna-debug.log*
 # OS
 .DS_Store
 Thumbs.db
+
+.vercel
+.env*
 supabase/.cron-secret.local

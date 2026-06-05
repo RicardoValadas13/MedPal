@@ -1,6 +1,7 @@
 [build]
+  base = "medpal"
   command = "npm run build"
-  publish = "dist"
+  publish = "medpal/dist"
 
 [[redirects]]
   from = "/*"

@@ -110,7 +110,6 @@ export function ChatPage() {
     setConversationId(null)
     setMessages([])
     setError(null)
-    setEmergency(false)
   }
 
   async function handleSend(e: React.FormEvent) {
@@ -163,7 +162,7 @@ export function ChatPage() {
         )}
       </div>
 
-      <p className="text-[13px] font-medium text-[#73787b] bg-[#f4f4f0] rounded-lg px-3 py-2 mb-4">
+      <p className="text-xs font-medium text-[#8a8f93] bg-[#f4f3f0] rounded-xl px-3 py-2.5 mb-4">
         {pt.chat.disclaimer}
       </p>
 
@@ -176,7 +175,7 @@ export function ChatPage() {
         </div>
       )}
 
-      <div className="flex-1 overflow-y-auto space-y-3">
+      <div className="flex-1 overflow-y-auto space-y-3 scrollbar-none [&::-webkit-scrollbar]:hidden">
         {messages.length === 0 && !sending && (
           <div className="flex flex-col items-center justify-center h-full text-center px-6">
             <p className="text-lg font-semibold text-[#192830] mb-2">{pt.chat.emptyTitle}</p>
@@ -186,10 +185,10 @@ export function ChatPage() {
         {messages.map((m, i) => (
           <div key={i} className={`flex flex-col ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
             <div
-              className={`max-w-[85%] rounded-2xl px-4 py-3 text-[15px] leading-relaxed whitespace-pre-wrap ${
+              className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap ${
                 m.role === 'user'
                   ? 'bg-[#192830] text-white'
-                  : 'bg-white border border-[#c3c7ca] text-[#1b1c1a]'
+                  : 'bg-white border border-[#e9e8e4] text-[#192830]'
               }`}
             >
               {m.content}
@@ -209,7 +208,7 @@ export function ChatPage() {
         <div ref={bottomRef} />
       </div>
 
-      {error && <p className="text-sm font-medium text-red-600 mt-2">{error}</p>}
+      {error && <p className="text-sm font-medium text-[#ba1a1a] mt-2">{error}</p>}
 
       <form onSubmit={handleSend} className="flex gap-2 mt-3">
         <input

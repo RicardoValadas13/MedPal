@@ -17,6 +17,7 @@ export const pt = {
     checkin: 'Check-in',
     assistant: 'Assistant',
     messages: 'Messages',
+    yourBox: 'Your Box',
   },
   // Support messages (patient)
   messages: {
@@ -64,6 +65,8 @@ export const pt = {
     reviewChip: 'Review',
     unmatchedChip: 'Not found',
     dosageLabel: 'Dosage',
+    frequencyLabel: 'Frequency',
+    durationLabel: 'Duration',
     quantityLabel: 'Quantity',
     leafletLink: 'View patient leaflet',
     drugSelectPlaceholder: 'Select the correct medication',
