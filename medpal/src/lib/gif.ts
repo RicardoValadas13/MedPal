@@ -1,23 +1,25 @@
 import { supabase } from './supabase'
 
+const GENERATE_GIF_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-gif`
+
 export type GifResult =
   | { status: 'processing' }
   | { status: 'done'; url: string }
   | { status: 'error'; error: string }
 
-/**
- * Asks the `generate-gif` edge function to advance the GIF job for `action`
- * (the OCR `description`). The function queues the job on first call and polls
- * the GIF service once per call; the caller re-invokes until it resolves.
- * One GIF per unique action — the backend dedupes by a hash of the string.
- */
 export async function pollGif(action: string): Promise<GifResult> {
-  const { data, error } = await supabase.functions.invoke('generate-gif', {
-    body: { action },
+  const res = await fetch(GENERATE_GIF_URL, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ action }),
   })
 
-  if (error) return { status: 'error', error: error.message }
-  if (!data || data.error) return { status: 'error', error: data?.error ?? 'Unknown error' }
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({ error: res.statusText }))
+    return { status: 'error', error: body?.error ?? `generate-gif error ${res.status}` }
+  }
+
+  const data = await res.json()
 
   if (data.status === 'done' && data.path) {
     const { data: pub } = supabase.storage.from('gifs').getPublicUrl(data.path)
