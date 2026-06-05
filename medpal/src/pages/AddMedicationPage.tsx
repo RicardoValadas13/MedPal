@@ -305,7 +305,7 @@ export function AddMedicationPage() {
           narrowed so the emergency FAB on the right stays tappable */}
       <div
         className="fixed left-1/2 -translate-x-1/2 w-full max-w-[430px] z-30 px-5 pt-4 pb-3 bg-gradient-to-t from-[#f5f5f0] via-[#f5f5f0] to-transparent"
-        style={{ bottom: 'calc(72px + env(safe-area-inset-bottom))' }}
+        style={{ bottom: 'calc(92px + env(safe-area-inset-bottom))' }}
       >
         <button
           onClick={handleSave}
