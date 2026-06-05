@@ -93,12 +93,20 @@ function DoseRow({ dose, now, marking, onMark, dimmed }: DoseRowProps) {
     ? 'text-[#d97706]'
     : 'text-[#8a8f93]'
 
+  const fmtDuration = (mins: number) => {
+    const h = Math.floor(mins / 60)
+    const m = mins % 60
+    if (h === 0) return `${m}min`
+    if (m === 0) return `${h}h`
+    return `${h}h ${m}min`
+  }
+
   const timeSuffix = isOverdue
-    ? ` · ${Math.abs(diffMin)} min ago`
+    ? ` · ${fmtDuration(Math.abs(diffMin))} ago`
     : diffMin === 0
     ? ' · now'
     : isSoon
-    ? ` · in ${diffMin} min`
+    ? ` · in ${fmtDuration(diffMin)}`
     : ''
 
   return (
@@ -216,6 +224,14 @@ export function HomePage() {
       if (sch.days_of_week.length > 0 && !sch.days_of_week.includes(todayDow)) continue
 
       const scheduledAt = buildScheduledAt(sch.time_of_day)
+
+      // If the medication was added today and this dose time has already passed,
+      // the user never had a chance to take it — don't count it as overdue.
+      const startedToday =
+        med.start_date &&
+        new Date(med.start_date + 'T00:00:00').toDateString() === now.toDateString()
+      if (startedToday && scheduledAt < now) continue
+
       const takenEvent = allEvents.find(e => e.schedule_id === sch.id && e.status === 'taken')
       todayDoses.push({ med, schedule: sch, scheduledAt, taken: !!takenEvent, intakeEventId: takenEvent?.id })
     }
