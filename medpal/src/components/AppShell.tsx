@@ -2,6 +2,7 @@ import { Outlet } from 'react-router-dom'
 import { BottomNav } from './BottomNav'
 import { TopBar } from './TopBar'
 import { WalkthroughOverlay } from './WalkthroughOverlay'
+import { EmergencyButton } from './EmergencyButton'
 
 export function AppShell() {
   return (
@@ -11,6 +12,7 @@ export function AppShell() {
         <Outlet />
       </main>
       <BottomNav />
+      {/* <EmergencyButton variant="floating" /> */}
       <WalkthroughOverlay />
     </div>
   )

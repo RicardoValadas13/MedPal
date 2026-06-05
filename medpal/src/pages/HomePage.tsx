@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Plus, Check, Pill, Sun, Sunrise, Sunset, Pencil, Bell, X, Download, Share } from 'lucide-react'
+import { Plus, Check, Pill, Sun, Sunrise, Sunset, Pencil, Bell, X, Download } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import { usePushNotifications } from '../hooks/usePushNotifications'
@@ -331,30 +331,7 @@ export function HomePage() {
         </div>
       )}
 
-      {/* PWA install banner — iOS manual instructions */}
-      {!loading && installState === 'ios-manual' && !dismissedInstallBanner && (
-        <div className="bg-[#192830] rounded-2xl px-4 py-4">
-          <div className="flex items-start justify-between gap-2 mb-3">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0">
-                <Share size={16} className="text-white" />
-              </div>
-              <p className="text-sm font-semibold text-white leading-snug">Add to home screen</p>
-            </div>
-            <button
-              onClick={dismissInstallBanner}
-              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 transition shrink-0 -mt-0.5 -mr-1"
-            >
-              <X size={15} className="text-white/50" />
-            </button>
-          </div>
-          <p className="text-xs text-white/60 pl-[42px]">
-            Tap <span className="font-semibold text-white/80">Share</span> then <span className="font-semibold text-white/80">Add to Home Screen</span> to install MedPal.
-          </p>
-        </div>
-      )}
-
-      {/* Progress bar card */}
+{/* Progress bar card */}
       {!loading && totalCount > 0 && (
         <div data-walkthrough="home-progress" className={`rounded-2xl px-4 py-4 ${allDone ? 'bg-[#192830]' : 'bg-white border border-[#e9e8e4] shadow-sm'}`}>
           <div className="flex items-center justify-between mb-3">

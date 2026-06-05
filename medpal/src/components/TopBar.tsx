@@ -1,4 +1,5 @@
 import { Bell, ShieldCheck, HelpCircle } from 'lucide-react'
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useWalkthrough } from '../contexts/WalkthroughContext'
 
@@ -9,11 +10,14 @@ function getGreeting() {
   return 'Good evening,'
 }
 
+const AVATAR_URL = '/avatar-user.jpg'
+
 export function TopBar() {
   const navigate = useNavigate()
   const { start } = useWalkthrough()
-  const initial = 'U'
-  const displayName = 'User'
+  const displayName = 'Mary Johnson'
+  const initial = displayName.split(' ').map(w => w[0]).join('')
+  const [imgFailed, setImgFailed] = useState(false)
 
   return (
     <header className="sticky top-0 z-40 bg-[#faf9f5] px-5 pb-4" style={{ paddingTop: 'max(20px, env(safe-area-inset-top))' }}>
@@ -21,9 +25,16 @@ export function TopBar() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate('/analytics')}
-            className="w-12 h-12 rounded-full bg-[#cbebcd] flex items-center justify-center text-[#49654d] font-bold text-lg shrink-0 shadow-sm active:scale-95 transition-transform"
+            className="w-12 h-12 rounded-full bg-[#cbebcd] flex items-center justify-center text-[#49654d] font-bold text-lg shrink-0 shadow-sm active:scale-95 transition-transform overflow-hidden"
           >
-            {initial}
+            {imgFailed ? initial : (
+              <img
+                src={AVATAR_URL}
+                alt={displayName}
+                className="w-full h-full object-cover"
+                onError={() => setImgFailed(true)}
+              />
+            )}
           </button>
           <div>
             <p className="text-sm text-[#43474a] leading-tight">{getGreeting()}</p>
