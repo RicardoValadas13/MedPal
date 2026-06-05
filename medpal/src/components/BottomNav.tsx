@@ -1,10 +1,11 @@
 import { NavLink } from 'react-router-dom'
-import { Home, FileText, Pill, MessageCircle } from 'lucide-react'
+import { Home, FileText, Pill, MessageCircle, Package } from 'lucide-react'
 import { pt } from '../i18n/pt'
 
 const links = [
   { to: '/', label: pt.nav.home, Icon: Home, end: true, walkId: 'nav-home' },
   { to: '/prescriptions', label: pt.nav.prescriptions, Icon: FileText, end: false, walkId: 'nav-prescriptions' },
+  { to: '/box', label: pt.nav.yourBox, Icon: Package, end: false, walkId: 'nav-box' },
   { to: '/medications', label: pt.nav.medications, Icon: Pill, end: false, walkId: 'nav-medications' },
   { to: '/assistant', label: pt.nav.assistant, Icon: MessageCircle, end: false, walkId: 'nav-assistant' },
 ]

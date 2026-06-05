@@ -16,6 +16,7 @@ export const pt = {
     medications: 'Medications',
     checkin: 'Check-in',
     assistant: 'Assistant',
+    yourBox: 'Your Box',
   },
   // Upload prescription
   upload: {
