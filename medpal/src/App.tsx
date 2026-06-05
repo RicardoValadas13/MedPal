@@ -11,6 +11,8 @@ import { AddMedicationPage } from './pages/AddMedicationPage'
 import { CheckinPage } from './pages/CheckinPage'
 import { ChatPage } from './pages/ChatPage'
 import { CaregiverSettingsPage } from './pages/CaregiverSettingsPage'
+import { MessagesPage } from './pages/MessagesPage'
+import { AdminPage } from './pages/AdminPage'
 
 function AppRoutes() {
   const { session, loading } = useAuth()
@@ -43,6 +45,8 @@ function AppRoutes() {
         <Route path="/checkin" element={<CheckinPage />} />
         <Route path="/assistant" element={<ChatPage />} />
         <Route path="/caregiver" element={<CaregiverSettingsPage />} />
+        <Route path="/messages" element={<MessagesPage />} />
+        <Route path="/admin" element={<AdminPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

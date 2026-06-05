@@ -1,11 +1,24 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Bell, ShieldCheck } from 'lucide-react'
+import { Bell, Inbox, ShieldCheck } from 'lucide-react'
+import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import { pt } from '../i18n/pt'
 
 export function TopBar() {
   const { user } = useAuth()
   const initial = (user?.email ?? 'M')[0].toUpperCase()
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  useEffect(() => {
+    if (!user) return
+    supabase
+      .from('profiles')
+      .select('is_admin')
+      .eq('id', user.id)
+      .maybeSingle()
+      .then(({ data }) => setIsAdmin(data?.is_admin ?? false))
+  }, [user])
 
   return (
     <header className="sticky top-0 z-40 bg-[#faf9f5] flex justify-between items-center w-full px-5 py-3">
@@ -22,6 +35,15 @@ export function TopBar() {
       </div>
 
       <div className="flex items-center gap-1">
+        {isAdmin && (
+          <Link
+            to="/admin"
+            aria-label={pt.admin.title}
+            className="w-10 h-10 flex items-center justify-center rounded-full text-[#192830] hover:bg-[#efeeea] transition-colors active:scale-95"
+          >
+            <Inbox size={20} strokeWidth={2} />
+          </Link>
+        )}
         <Link
           to="/caregiver"
           aria-label={pt.caregiver.title}

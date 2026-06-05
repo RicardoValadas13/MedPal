@@ -26,6 +26,7 @@ export function ChatPage() {
       const { data: conversations } = await supabase
         .from('conversations')
         .select('id')
+        .eq('type', 'agent')
         .order('created_at', { ascending: false })
         .limit(1)
 

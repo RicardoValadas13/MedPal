@@ -213,7 +213,7 @@ Deno.serve(async (req) => {
     } else {
       const { data: conv, error: convError } = await supabase
         .from('conversations')
-        .insert({ user_id: user.id })
+        .insert({ user_id: user.id, type: 'agent' })
         .select('id')
         .single()
       if (convError || !conv) throw new Error('Failed to create conversation')
@@ -268,6 +268,7 @@ Deno.serve(async (req) => {
     const { error: userMsgError } = await supabase.from('messages').insert({
       conversation_id: conversationId,
       role: 'user',
+      sender_type: 'patient',
       content: message.trim(),
     })
     if (userMsgError) throw new Error('Failed to save message')
@@ -298,6 +299,7 @@ Deno.serve(async (req) => {
     const { error: assistantMsgError } = await supabase.from('messages').insert({
       conversation_id: conversationId,
       role: 'assistant',
+      sender_type: 'agent',
       content: reply,
       context_refs: { medication_ids: contextMeds.map((m) => m.id), emergency },
     })
