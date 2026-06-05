@@ -70,6 +70,7 @@ export interface Database {
           prescription_id: string
           drug_id: string | null
           extracted_name: string
+          description: string | null
           extracted_dosage: string | null
           extracted_form: string | null
           quantity: number | null
@@ -84,6 +85,7 @@ export interface Database {
           prescription_id: string
           drug_id?: string | null
           extracted_name: string
+          description?: string | null
           extracted_dosage?: string | null
           extracted_form?: string | null
           quantity?: number | null
@@ -96,6 +98,7 @@ export interface Database {
         Update: {
           drug_id?: string | null
           extracted_name?: string
+          description?: string | null
           extracted_dosage?: string | null
           extracted_form?: string | null
           quantity?: number | null
@@ -104,6 +107,34 @@ export interface Database {
           match_confidence?: number | null
           match_status?: 'matched' | 'ambiguous' | 'unmatched' | 'manual'
           field_confidences?: Json | null
+        }
+      }
+      action_gifs: {
+        Row: {
+          id: string
+          action_hash: string
+          action: string
+          job_id: string | null
+          status: 'pending' | 'processing' | 'done' | 'error'
+          gif_path: string | null
+          error: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          action_hash: string
+          action: string
+          job_id?: string | null
+          status?: 'pending' | 'processing' | 'done' | 'error'
+          gif_path?: string | null
+          error?: string | null
+        }
+        Update: {
+          job_id?: string | null
+          status?: 'pending' | 'processing' | 'done' | 'error'
+          gif_path?: string | null
+          error?: string | null
+          updated_at?: string
         }
       }
       drugs: {
@@ -159,6 +190,7 @@ export interface Database {
           prescription_item_id: string | null
           display_name: string
           dosage: string | null
+          description: string | null
           start_date: string | null
           end_date: string | null
           source: 'prescription' | 'manual'
@@ -173,6 +205,7 @@ export interface Database {
           prescription_item_id?: string | null
           display_name: string
           dosage?: string | null
+          description?: string | null
           start_date?: string | null
           end_date?: string | null
           source: 'prescription' | 'manual'
@@ -184,6 +217,7 @@ export interface Database {
           drug_id?: string | null
           display_name?: string
           dosage?: string | null
+          description?: string | null
           start_date?: string | null
           end_date?: string | null
           source?: 'prescription' | 'manual'
@@ -455,6 +489,7 @@ export interface Database {
 export type Profile = Database['public']['Tables']['profiles']['Row']
 export type Prescription = Database['public']['Tables']['prescriptions']['Row']
 export type PrescriptionItem = Database['public']['Tables']['prescription_items']['Row']
+export type ActionGif = Database['public']['Tables']['action_gifs']['Row']
 export type Drug = Database['public']['Tables']['drugs']['Row']
 export type UserMedication = Database['public']['Tables']['user_medications']['Row']
 export type Schedule = Database['public']['Tables']['schedules']['Row']
