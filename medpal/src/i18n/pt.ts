@@ -130,14 +130,17 @@ export const pt = {
   // Emergency button
   emergency: {
     button: 'EMERGENCY', // PT locale: 'EMERGÊNCIA'
-    confirmTitle: 'Call 112?',
-    confirmHint: 'This will call the national emergency number.',
+    confirmTitle: 'Get Help',
+    confirmHint: 'Choose who to call',
     callButton: 'Call 112',
+    call112Hint: 'voice announcement · alerts family',
     cancel: 'Cancel',
+    orDivider: 'or',
     chatBanner: 'This sounds like it could be an emergency.',
     announcing: 'Playing announcement with your name and address…',
     announcingHint: 'The call opens automatically when it finishes.',
     callNow: 'CALL 112 NOW',
+    callCaregiver: 'Call Caregiver',
   },
   // Caregiver mode
   caregiver: {
