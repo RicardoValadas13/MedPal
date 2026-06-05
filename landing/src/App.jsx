@@ -156,9 +156,21 @@ export default function App() {
   const [showReport, setShowReport] = useState(false)
   const [showTour, setShowTour] = useState(false)
 
-  // Auto-open the guided tour when the page is opened with #tour (handy for presenting).
+  // Handle the URL hash on load: open the tour for #tour, otherwise scroll to the
+  // shared section — re-running after the window fully loads so large images/video
+  // above the target don't throw off the landing position.
   useEffect(() => {
-    if (window.location.hash === '#tour') setShowTour(true)
+    const hash = window.location.hash
+    if (hash === '#tour') { setShowTour(true); return }
+    if (hash.length > 1) {
+      const scrollToTarget = () => {
+        const el = document.getElementById(decodeURIComponent(hash.slice(1)))
+        if (el) el.scrollIntoView({ behavior: 'auto', block: 'start' })
+      }
+      requestAnimationFrame(() => setTimeout(scrollToTarget, 0))
+      window.addEventListener('load', scrollToTarget, { once: true })
+      return () => window.removeEventListener('load', scrollToTarget)
+    }
   }, [])
 
   // Reveal elements as they scroll into view (skipped when reduced motion is preferred).
