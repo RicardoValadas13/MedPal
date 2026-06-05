@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { Camera, LayoutGrid } from 'lucide-react'
+import { Camera, LayoutGrid, PlusCircle } from 'lucide-react'
 
 export function YourBoxPage() {
   const navigate = useNavigate()
@@ -37,6 +37,19 @@ export function YourBoxPage() {
           <div className="text-left">
             <p className="text-base font-semibold text-[#1b1c1a]">Check your box</p>
             <p className="text-sm text-[#73787b] mt-0.5">Scan a prescription to add new medications</p>
+          </div>
+        </button>
+
+        <button
+          onClick={() => navigate('/box/log')}
+          className="flex items-center gap-4 w-full bg-white border border-[#e9e8e4] rounded-2xl px-5 py-5 hover:bg-[#f4f4f0] active:bg-[#e9e8e4] transition"
+        >
+          <div className="w-11 h-11 rounded-xl bg-[#d5e5ef] flex items-center justify-center shrink-0">
+            <PlusCircle size={22} className="text-[#192830]" />
+          </div>
+          <div className="text-left">
+            <p className="text-base font-semibold text-[#1b1c1a]">Log a dose</p>
+            <p className="text-sm text-[#73787b] mt-0.5">Record a medication taken outside your schedule</p>
           </div>
         </button>
       </div>

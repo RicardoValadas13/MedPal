@@ -15,6 +15,7 @@ import { ChatPage } from './pages/ChatPage'
 import { CaregiverSettingsPage } from './pages/CaregiverSettingsPage'
 import { AnalyticsPage } from './pages/AnalyticsPage'
 import { YourBoxPage } from './pages/YourBoxPage'
+import { LogAdHocDosePage } from './pages/LogAdHocDosePage'
 
 function AppRoutes() {
   return (
@@ -33,6 +34,7 @@ function AppRoutes() {
         <Route path="/assistant" element={<ChatPage />} />
         <Route path="/caregiver" element={<CaregiverSettingsPage />} />
         <Route path="/box" element={<YourBoxPage />} />
+        <Route path="/box/log" element={<LogAdHocDosePage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>
