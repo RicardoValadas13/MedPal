@@ -3,7 +3,6 @@ import { BottomNav } from './BottomNav'
 import { TopBar } from './TopBar'
 import { useMedicationReminders } from '../lib/reminders'
 import { WalkthroughOverlay } from './WalkthroughOverlay'
-import { EmergencyButton } from './EmergencyButton'
 
 export function AppShell() {
   useMedicationReminders()
@@ -14,7 +13,6 @@ export function AppShell() {
         <Outlet />
       </main>
       <BottomNav />
-      <EmergencyButton variant="floating" />
       <WalkthroughOverlay />
     </div>
   )

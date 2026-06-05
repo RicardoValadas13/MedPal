@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Plus, Check, Pill, Sun, Sunrise, Sunset, Pencil, Bell, X, Download } from 'lucide-react'
+import { Plus, Check, Pill, Sun, Sunrise, Sunset, Pencil, Bell, X, Download, ChevronRight } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import { usePushNotifications } from '../hooks/usePushNotifications'
@@ -333,7 +333,7 @@ export function HomePage() {
 
 {/* Progress bar card */}
       {!loading && totalCount > 0 && (
-        <div data-walkthrough="home-progress" className={`rounded-2xl px-4 py-4 ${allDone ? 'bg-[#192830]' : 'bg-white border border-[#e9e8e4] shadow-sm'}`}>
+        <Link to="/analytics" data-walkthrough="home-progress" className={`block rounded-2xl px-4 py-4 ${allDone ? 'bg-[#192830]' : 'bg-white border border-[#e9e8e4] shadow-sm'}`}>
           <div className="flex items-center justify-between mb-3">
             <div>
               {allDone ? (
@@ -350,13 +350,16 @@ export function HomePage() {
                 </>
               )}
             </div>
-            {allDone ? (
-              <div className="w-10 h-10 rounded-full bg-[#cbebcd] flex items-center justify-center shrink-0">
-                <Check size={20} className="text-[#192830]" strokeWidth={2.5} />
-              </div>
-            ) : (
-              <span className="text-2xl font-bold text-[#192830]">{progress}%</span>
-            )}
+            <div className="flex items-center gap-2 shrink-0">
+              {allDone ? (
+                <div className="w-10 h-10 rounded-full bg-[#cbebcd] flex items-center justify-center">
+                  <Check size={20} className="text-[#192830]" strokeWidth={2.5} />
+                </div>
+              ) : (
+                <span className="text-2xl font-bold text-[#192830]">{progress}%</span>
+              )}
+              <ChevronRight size={18} className={allDone ? 'text-[#cbebcd]' : 'text-[#c3c7ca]'} strokeWidth={2} />
+            </div>
           </div>
           {!allDone && (
             <div className="h-2 rounded-full bg-[#f4f3f0] overflow-hidden">
@@ -366,7 +369,7 @@ export function HomePage() {
               />
             </div>
           )}
-        </div>
+        </Link>
       )}
 
       {/* Skeleton */}

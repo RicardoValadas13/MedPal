@@ -33,6 +33,13 @@ export const WALKTHROUGH_STEPS: WalkthroughStep[] = [
     position: 'top',
   },
   {
+    id: 'topbar-emergency',
+    target: '[data-walkthrough="topbar-emergency"]',
+    title: 'Emergency call',
+    description: 'Tap 112 to call emergency services. MedPal announces your name and location first, then automatically dials — and notifies your caregiver at the same time.',
+    position: 'bottom',
+  },
+  {
     id: 'nav-prescriptions',
     target: '[data-walkthrough="nav-prescriptions"]',
     title: 'Prescriptions',
@@ -48,18 +55,10 @@ export const WALKTHROUGH_STEPS: WalkthroughStep[] = [
     position: 'bottom',
   },
   {
-    id: 'nav-medications',
-    target: '[data-walkthrough="nav-medications"]',
-    title: 'My Medications',
-    description: 'View and manage all your active medications. Edit schedules, dosages, and add medications manually if needed.',
-    position: 'top',
-  },
-  {
-    id: 'medications-scan',
-    route: '/medications',
-    target: '[data-walkthrough="medications-scan"]',
-    title: 'Scan Prescription',
-    description: 'This button is always accessible — tap it at any time to quickly scan and add a new prescription.',
+    id: 'nav-box',
+    target: '[data-walkthrough="nav-box"]',
+    title: 'Your Box',
+    description: 'View your active medications, manage your smart pill box, and track your daily intake schedule all in one place.',
     position: 'top',
   },
   {
@@ -68,6 +67,14 @@ export const WALKTHROUGH_STEPS: WalkthroughStep[] = [
     title: 'AI Assistant',
     description: 'Have questions about your medications or side effects? Your personal AI health assistant is always here to help.',
     position: 'top',
+  },
+  {
+    id: 'settings-emergency',
+    route: '/settings',
+    target: '[data-walkthrough="settings-emergency"]',
+    title: 'Emergency settings',
+    description: "Set your caregiver's phone number so they're notified when you call 112. You can also show or hide the emergency button from here.",
+    position: 'bottom',
   },
   {
     id: 'done',

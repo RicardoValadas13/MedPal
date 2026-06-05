@@ -1,10 +1,12 @@
-import { Bell, ShieldCheck, HelpCircle, Inbox } from 'lucide-react'
+import { Bell, HelpCircle, Inbox } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useWalkthrough } from '../contexts/WalkthroughContext'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import { pt } from '../i18n/pt'
+import { EmergencyButton } from './EmergencyButton'
+import { useEmergencySettings } from '../lib/emergencySettings'
 
 function getGreeting() {
   const h = new Date().getHours()
@@ -23,6 +25,7 @@ export function TopBar() {
   const initial = displayName.split(' ').map(w => w[0]).join('')
   const [imgFailed, setImgFailed] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
+  const { enabled: emergencyEnabled } = useEmergencySettings()
 
   useEffect(() => {
     if (!user) return
@@ -36,11 +39,11 @@ export function TopBar() {
 
   return (
     <header className="sticky top-0 z-40 bg-[#faf9f5] px-5 pb-4" style={{ paddingTop: 'max(20px, env(safe-area-inset-top))' }}>
-      <div className="flex justify-between items-start">
+      <div className="flex justify-between items-center">
         <div className="flex items-center gap-3">
           <button
-            onClick={() => navigate('/analytics')}
-            className="w-12 h-12 rounded-full bg-[#cbebcd] flex items-center justify-center text-[#49654d] font-bold text-lg shrink-0 shadow-sm active:scale-95 transition-transform overflow-hidden"
+            onClick={() => navigate('/settings')}
+            className="w-11 h-11 rounded-full bg-[#cbebcd] flex items-center justify-center text-[#49654d] font-bold text-lg shrink-0 shadow-sm active:scale-95 transition-transform overflow-hidden"
           >
             {imgFailed ? initial : (
               <img
@@ -52,39 +55,33 @@ export function TopBar() {
             )}
           </button>
           <div>
-            <p className="text-sm text-[#43474a] leading-tight">{getGreeting()}</p>
-            <p className="text-xl font-bold text-[#192830] leading-tight">{displayName}</p>
+            <p className="text-xs text-[#43474a] leading-tight">{getGreeting()}</p>
+            <p className="text-lg font-bold text-[#192830] leading-tight">{displayName}</p>
           </div>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center">
           {isAdmin && (
             <Link
               to="/admin"
               aria-label={pt.admin.title}
-              className="min-w-[48px] min-h-[48px] flex items-center justify-center rounded-full text-[#192830] hover:bg-[#efeeea] transition-colors active:scale-95"
+              className="w-10 h-10 flex items-center justify-center rounded-full text-[#43474a] hover:bg-[#efeeea] transition-colors active:scale-95"
             >
-              <Inbox size={22} strokeWidth={1.8} />
+              <Inbox size={20} strokeWidth={1.8} />
             </Link>
           )}
-          <Link
-            to="/caregiver"
-            aria-label="Caregiver"
-            className="min-w-[48px] min-h-[48px] flex items-center justify-center rounded-full text-[#192830] hover:bg-[#efeeea] transition-colors active:scale-95"
-          >
-            <ShieldCheck size={22} strokeWidth={1.8} />
-          </Link>
+          {emergencyEnabled && <EmergencyButton variant="inline" />}
           <button
             aria-label="Notifications"
-            className="min-w-[48px] min-h-[48px] flex items-center justify-center rounded-full text-[#192830] hover:bg-[#efeeea] transition-colors active:scale-95"
+            className="w-10 h-10 flex items-center justify-center rounded-full text-[#43474a] hover:bg-[#efeeea] transition-colors active:scale-95"
           >
-            <Bell size={22} strokeWidth={1.8} />
+            <Bell size={20} strokeWidth={1.8} />
           </button>
           <button
             onClick={start}
             aria-label="Start tour"
-            className="min-w-[48px] min-h-[48px] flex items-center justify-center rounded-full text-[#192830] hover:bg-[#efeeea] transition-colors active:scale-95"
+            className="w-10 h-10 flex items-center justify-center rounded-full text-[#43474a] hover:bg-[#efeeea] transition-colors active:scale-95"
           >
-            <HelpCircle size={22} strokeWidth={1.8} />
+            <HelpCircle size={20} strokeWidth={1.8} />
           </button>
         </div>
       </div>

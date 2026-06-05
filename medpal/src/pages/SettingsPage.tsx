@@ -1,20 +1,23 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ChevronLeft, LogOut, Lock, Mail, Eye, EyeOff } from 'lucide-react'
+import { ChevronLeft, LogOut, Lock, Mail, Eye, EyeOff, Phone, AlertCircle } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
+import { useEmergencySettings } from '../lib/emergencySettings'
 
 export function SettingsPage() {
   const { user, signOut } = useAuth()
   const navigate = useNavigate()
 
-  const [section, setSection] = useState<'main' | 'password' | 'email'>('main')
+  const [section, setSection] = useState<'main' | 'password' | 'email' | 'caregiver'>('main')
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [newEmail, setNewEmail] = useState('')
   const [status, setStatus] = useState<{ type: 'success' | 'error'; msg: string } | null>(null)
   const [loading, setLoading] = useState(false)
+  const { enabled: emergencyEnabled, setEnabled: setEmergencyEnabled, caregiverNumber, setCaregiverNumber } = useEmergencySettings()
+  const [caregiverInput, setCaregiverInput] = useState(caregiverNumber)
 
   async function handleSignOut() {
     await signOut()
@@ -76,7 +79,7 @@ export function SettingsPage() {
           <ChevronLeft size={22} strokeWidth={2} />
         </button>
         <h1 className="text-xl font-bold text-[#192830]">
-          {section === 'main' ? 'Settings' : section === 'password' ? 'Change Password' : 'Change Email'}
+          {section === 'main' ? 'Settings' : section === 'password' ? 'Change Password' : section === 'email' ? 'Change Email' : 'Caregiver Number'}
         </h1>
       </header>
 
@@ -116,6 +119,35 @@ export function SettingsPage() {
                 <span className="flex-1 text-left text-[#192830] font-medium">Change Password</span>
                 <ChevronLeft size={18} className="text-[#43474a] rotate-180" />
               </button>
+            </div>
+
+            {/* Emergency */}
+            <div className="bg-white rounded-2xl shadow-sm overflow-hidden" data-walkthrough="settings-emergency">
+              <p className="px-4 pt-4 pb-2 text-xs font-semibold text-[#8a8f93] uppercase tracking-widest">
+                Emergency
+              </p>
+              <button
+                onClick={() => { setCaregiverInput(caregiverNumber); setSection('caregiver') }}
+                className="w-full flex items-center gap-3 px-4 min-h-[52px] hover:bg-[#f5f4f0] transition-colors active:bg-[#efeeea]"
+              >
+                <Phone size={20} className="text-[#49654d]" strokeWidth={1.8} />
+                <span className="flex-1 text-left text-[#192830] font-medium">Caregiver Number</span>
+                <span className="text-sm text-[#8a8f93] mr-1">{caregiverNumber || 'Not set'}</span>
+                <ChevronLeft size={18} className="text-[#43474a] rotate-180" />
+              </button>
+              <div className="h-px bg-[#efeeea] mx-4" />
+              <div className="flex items-center gap-3 px-4 min-h-[52px]">
+                <AlertCircle size={20} className="text-[#49654d]" strokeWidth={1.8} />
+                <span className="flex-1 text-[#192830] font-medium">Show 112 button</span>
+                <button
+                  onClick={() => setEmergencyEnabled(!emergencyEnabled)}
+                  aria-checked={emergencyEnabled}
+                  role="switch"
+                  className={`relative w-12 h-6 rounded-full transition-colors ${emergencyEnabled ? 'bg-[#49654d]' : 'bg-[#c3c7ca]'}`}
+                >
+                  <span className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${emergencyEnabled ? 'translate-x-6' : 'translate-x-0'}`} />
+                </button>
+              </div>
             </div>
 
             {/* Sign out */}
@@ -181,6 +213,27 @@ export function SettingsPage() {
               {loading ? 'Updating...' : 'Update Password'}
             </button>
           </form>
+        )}
+
+        {section === 'caregiver' && (
+          <div className="space-y-4">
+            <div className="bg-white rounded-2xl shadow-sm p-4 space-y-1.5">
+              <label className="text-sm font-medium text-[#192830]">Phone number</label>
+              <input
+                type="tel"
+                value={caregiverInput}
+                onChange={e => setCaregiverInput(e.target.value)}
+                placeholder="+351 900 000 000"
+                className="w-full border border-[#c3c7ca] rounded-xl px-4 py-3 text-[#192830] text-base focus:outline-none focus:border-[#49654d]"
+              />
+            </div>
+            <button
+              onClick={() => { setCaregiverNumber(caregiverInput.trim()); setSection('main') }}
+              className="w-full bg-[#192830] text-white rounded-2xl py-4 font-semibold text-base active:scale-95 transition-transform"
+            >
+              Save
+            </button>
+          </div>
         )}
 
         {section === 'email' && (

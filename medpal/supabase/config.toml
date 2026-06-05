@@ -43,3 +43,6 @@ verify_jwt = false
 
 [functions.extract-prescription]
 verify_jwt = false
+
+[functions.medication-reminder]
+verify_jwt = false

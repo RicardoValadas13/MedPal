@@ -23,7 +23,7 @@ type Stage = 'idle' | 'confirm' | 'announcing'
 export function EmergencyButton({
   variant = 'floating',
 }: {
-  variant?: 'floating' | 'banner'
+  variant?: 'floating' | 'banner' | 'inline'
 }) {
   const [stage, setStage] = useState<Stage>('idle')
   const playbackRef = useRef<AnnouncementPlayback | null>(null)
@@ -65,18 +65,25 @@ export function EmergencyButton({
 
   const button =
     variant === 'floating' ? (
-      // Round FAB pinned to the bottom-right corner of the 430px app
-      // frame, 80px up so it clears the bottom nav.
-      <div className="fixed bottom-[80px] left-1/2 -translate-x-1/2 w-full max-w-[430px] z-50 pointer-events-none flex justify-end pr-5">
+      <div className="fixed top-[76px] left-1/2 -translate-x-1/2 w-full max-w-[430px] z-50 pointer-events-none flex justify-end pr-5">
         <button
           onClick={openConfirm}
           aria-label={`${pt.emergency.button} — ${pt.emergency.confirmTitle}`}
-          className={`${FACE} !rounded-full animate-emergency-pulse pointer-events-auto w-16 h-16 !flex-col !gap-0`}
+          className="pointer-events-auto flex items-center gap-2 px-4 h-11 rounded-full bg-[#efeeea] text-[#192830] font-semibold text-sm shadow-sm transition active:scale-95"
         >
-          <PhoneCall size={22} strokeWidth={2.5} aria-hidden />
-          <span className="text-[13px] leading-tight">112</span>
+          <Phone size={16} strokeWidth={2.5} aria-hidden />
+          <span>112</span>
         </button>
       </div>
+    ) : variant === 'inline' ? (
+      <button
+        data-walkthrough="topbar-emergency"
+        onClick={openConfirm}
+        aria-label={`${pt.emergency.button} — ${pt.emergency.confirmTitle}`}
+        className="px-3 h-9 flex items-center justify-center rounded-xl bg-[#ba1a1a] text-white hover:bg-[#9b1515] transition-colors active:scale-95 font-bold text-sm"
+      >
+        112
+      </button>
     ) : (
       <button
         onClick={openConfirm}
