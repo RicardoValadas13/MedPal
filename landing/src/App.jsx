@@ -6,10 +6,10 @@ import Tour from './Tour.jsx'
 import { Icon } from './Icons.jsx'
 
 const SCREENS = [
-  { id: 'today',     label: 'Today',     src: '/screens/today.png',     title: 'Your day at a glance', desc: 'All of today’s medications in one list, with a single tap to mark each dose as taken. Appointments and notes sit right beside them.' },
-  { id: 'meds',      label: 'My Meds',   src: '/screens/meds.png',      title: 'Your digital medicine cabinet', desc: 'Daily, as-needed and finished treatments, clearly sorted. Add a new one in seconds by scanning the prescription.' },
-  { id: 'chat',      label: 'Assistant', src: '/screens/chat.png',       title: 'The MedPal assistant', desc: 'Not feeling well? Tell MedPal. It checks your symptoms against your medications and can alert your doctor or care team.' },
-  { id: 'analytics', label: 'Reports',   src: '/screens/analytics.png', title: 'Reports and adherence', desc: 'See how well you are keeping up, log side effects, and share a clean summary with your doctor in one tap.' },
+  { id: 'home',          label: 'Home',          src: '/screens/home.png',          title: 'Your day at a glance', desc: 'Every medication for the day, grouped by time, with one tap to mark each dose taken — and your adherence right at the top.' },
+  { id: 'prescriptions', label: 'Prescriptions', src: '/screens/prescriptions.png', title: 'All your prescriptions', desc: 'Every prescription you have uploaded in one place, clearly marked as confirmed, under review, or just added.' },
+  { id: 'box',           label: 'Your Box',      src: '/screens/yourbox.png',       title: 'Manage your Smart Box', desc: 'See your medications, scan the box to check every slot is filled correctly, or log a dose taken outside your schedule.' },
+  { id: 'assistant',     label: 'Assistant',     src: '/screens/assistant.png',     title: 'The MedPal assistant', desc: 'Ask anything about your medication. The assistant gives general guidance, always points you to your doctor, and keeps a disclaimer in view.' },
 ]
 
 const FEATURE_GROUPS = [
@@ -147,7 +147,7 @@ const PARTNERS = [
 ]
 
 export default function App() {
-  const [activeScreen, setActiveScreen] = useState('today')
+  const [activeScreen, setActiveScreen] = useState('home')
   const [showQR, setShowQR] = useState(false)
   const current = SCREENS.find(s => s.id === activeScreen)
 
@@ -246,7 +246,7 @@ export default function App() {
           </div>
           <div className="hero-image">
             <div className="phone-frame">
-              <img src="/screens/hero.png" alt="MedPal app" />
+              <img src="/screens/home.png" alt="MedPal app" />
             </div>
           </div>
         </div>
@@ -381,7 +381,7 @@ export default function App() {
           <div className="benefits-inner reveal">
             <div className="benefits-image">
               <div className="phone-frame phone-frame-sm">
-                <img src="/screens/patient.png" alt="Patient view" />
+                <img src="/screens/home.png" alt="Patient view" />
               </div>
             </div>
             <div className="benefits-text">
@@ -428,7 +428,7 @@ export default function App() {
             </div>
             <div className="benefits-image">
               <div className="phone-frame phone-frame-sm">
-                <img src="/screens/caregiver.png" alt="Caregiver view" />
+                <img src="/screens/yourbox.png" alt="Caregiver view" />
               </div>
             </div>
           </div>
@@ -458,7 +458,7 @@ export default function App() {
             </div>
             <div className="benefits-image">
               <div className="phone-frame phone-frame-sm">
-                <img src="/screens/doctor.png" alt="Doctor view" />
+                <img src="/screens/prescriptions.png" alt="Doctor view" />
               </div>
             </div>
           </div>
@@ -493,7 +493,7 @@ export default function App() {
           <div className="demo-inner reveal">
             <div className="demo-phone">
               <div className="phone-frame">
-                <img src="/screens/demo.png" alt="MedPal demo mode" />
+                <img src="/screens/upload.png" alt="MedPal demo mode" />
               </div>
             </div>
             <div className="demo-cards">
