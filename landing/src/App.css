@@ -207,12 +207,13 @@ blockquote { font-size: 17px; line-height: 1.7; color: var(--on-surface); font-w
 .download h2 { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
 .download p { color: rgba(255,255,255,0.7); font-size: 16px; }
 .store-buttons { display: flex; flex-direction: column; justify-content: center; gap: 12px; width: 100%; max-width: 280px; margin-top: 4px; }
-.store-btn { display: flex; align-items: center; justify-content: center; gap: 14px; padding: 14px 24px; background: rgba(255,255,255,0.1); border: 1.5px solid rgba(255,255,255,0.25); border-radius: 12px; color: #fff; transition: background 0.2s; }
-.store-btn:hover { background: rgba(255,255,255,0.18); }
+.store-btn { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 12px 22px; background: #000; border: 1px solid rgba(255,255,255,0.3); border-radius: 11px; color: #fff; transition: transform 0.15s ease, background 0.2s; }
+.store-btn:hover { background: #161616; transform: translateY(-1px); }
 .store-icon { width: 26px; height: 26px; }
 .store-btn div { text-align: left; }
-.store-btn span { font-size: 11px; opacity: 0.7; display: block; }
-.store-btn strong { font-size: 16px; font-weight: 600; }
+.store-btn div { line-height: 1.05; }
+.store-btn span { font-size: 11px; opacity: 0.85; display: block; }
+.store-btn strong { font-size: 19px; font-weight: 600; letter-spacing: -0.01em; }
 .download .section-header h2 { color: #fff; }
 .download .section-header p { color: rgba(255,255,255,0.7); }
 .download .section-header .badge { background: rgba(255,255,255,0.12); color: #fff; border-color: rgba(255,255,255,0.25); }
