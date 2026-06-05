@@ -12,12 +12,14 @@ import { CheckinPage } from './pages/CheckinPage'
 import { SettingsPage } from './pages/SettingsPage'
 import { ChatPage } from './pages/ChatPage'
 import { CaregiverSettingsPage } from './pages/CaregiverSettingsPage'
+import { AnalyticsPage } from './pages/AnalyticsPage'
 
 function AppRoutes() {
   return (
     <Routes>
       <Route element={<AppShell />}>
         <Route path="/" element={<HomePage />} />
+        <Route path="/analytics" element={<AnalyticsPage />} />
         <Route path="/prescriptions" element={<PrescriptionsPage />} />
         <Route path="/prescriptions/upload" element={<UploadPrescriptionPage />} />
         <Route path="/prescriptions/:id/confirm" element={<ConfirmPrescriptionPage />} />

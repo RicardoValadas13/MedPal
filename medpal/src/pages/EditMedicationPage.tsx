@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { ChevronLeft, Search } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { pt } from '../i18n/pt'
+import { TimePickerField } from '../components/TimePickerField'
 import type { Drug } from '../types/database'
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as const
@@ -36,8 +37,6 @@ export function EditMedicationPage() {
   const [dose, setDose] = useState('')
   const [scheduleType, setScheduleType] = useState<ScheduleType>('fixed')
   const [times, setTimes] = useState<string[]>([])
-  const [customHour, setCustomHour] = useState('')
-  const [customMin, setCustomMin] = useState('')
   const [intervalHours, setIntervalHours] = useState(8)
   const [firstDose, setFirstDose] = useState('08:00')
   const [days, setDays] = useState<number[]>([0, 1, 2, 3, 4, 5, 6])
@@ -94,20 +93,6 @@ export function EditMedicationPage() {
 
   function toggleDay(idx: number) {
     setDays(prev => prev.includes(idx) ? prev.filter(d => d !== idx) : [...prev, idx])
-  }
-
-  function toggleTime(t: string) {
-    setTimes(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t])
-  }
-
-  function addCustomTime() {
-    const h = customHour.padStart(2, '0')
-    const m = (customMin || '00').padStart(2, '0')
-    if (!customHour) return
-    const t = `${h}:${m}`
-    if (!times.includes(t)) setTimes(prev => [...prev, t].sort())
-    setCustomHour('')
-    setCustomMin('')
   }
 
   const medicationName = selected ? selected.name : query.trim()
@@ -237,31 +222,7 @@ export function EditMedicationPage() {
         </div>
 
         {scheduleType === 'fixed' ? (
-          <div className="flex flex-wrap gap-2">
-            {DEFAULT_TIMES.map(t => (
-              <button key={t} onClick={() => toggleTime(t)}
-                className={`px-5 py-2.5 text-base font-semibold rounded-lg border-[1.5px] transition min-h-[48px] ${
-                  times.includes(t) ? 'bg-[#192830] text-white border-[#192830]' : 'bg-white text-[#1b1c1a] border-[#c3c7ca] hover:bg-[#f4f4f0]'
-                }`}>{t}</button>
-            ))}
-            {times.filter(t => !DEFAULT_TIMES.includes(t)).map(t => (
-              <button key={t} onClick={() => toggleTime(t)}
-                className="px-5 py-2.5 text-base font-semibold rounded-lg border-[1.5px] bg-[#192830] text-white border-[#192830] min-h-[48px]">{t}</button>
-            ))}
-            <div className="flex items-center gap-1.5">
-              <div className="flex items-center gap-1 border-[1.5px] border-[#c3c7ca] rounded-lg bg-white px-3 min-h-[48px] focus-within:border-[#49654d] focus-within:shadow-[0_0_0_3px_rgba(73,101,77,0.12)] transition">
-                <input type="number" min={0} max={23} value={customHour}
-                  onChange={e => setCustomHour(e.target.value.slice(-2))} placeholder="HH"
-                  className="w-9 text-center text-lg font-semibold text-[#1b1c1a] bg-transparent focus:outline-none placeholder:text-[#c3c7ca] [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" />
-                <span className="text-lg font-semibold text-[#73787b]">:</span>
-                <input type="number" min={0} max={59} value={customMin}
-                  onChange={e => setCustomMin(e.target.value.slice(-2))} placeholder="MM"
-                  className="w-9 text-center text-lg font-semibold text-[#1b1c1a] bg-transparent focus:outline-none placeholder:text-[#c3c7ca] [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" />
-              </div>
-              <button onClick={addCustomTime}
-                className="px-4 text-xl font-semibold rounded-lg border-[1.5px] border-[#c3c7ca] bg-white text-[#1b1c1a] hover:bg-[#f4f4f0] min-h-[48px] transition">+</button>
-            </div>
-          </div>
+          <TimePickerField times={times} onChange={setTimes} />
         ) : (
           <div className="space-y-3">
             <div className="flex items-center gap-3">
@@ -311,7 +272,7 @@ export function EditMedicationPage() {
           onClick={() => setWithFood(p => !p)}
           className={`relative w-12 h-7 rounded-full transition ${withFood ? 'bg-[#49654d]' : 'bg-[#c3c7ca]'}`}
         >
-          <span className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow transition-transform ${withFood ? 'translate-x-6' : 'translate-x-1'}`} />
+          <span className={`absolute top-1 left-0 w-5 h-5 bg-white rounded-full shadow transition-transform ${withFood ? 'translate-x-6' : 'translate-x-1'}`} />
         </button>
       </div>
 

@@ -1,9 +1,10 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ChevronLeft, Search, X, Plus, Clock } from 'lucide-react'
+import { ChevronLeft, Search, X } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import { pt } from '../i18n/pt'
+import { TimePickerField } from '../components/TimePickerField'
 import type { Drug } from '../types/database'
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as const
@@ -36,16 +37,12 @@ export function AddMedicationPage() {
   const [dose, setDose] = useState('')
   const [scheduleType, setScheduleType] = useState<ScheduleType>('fixed')
   const [times, setTimes] = useState<string[]>(['08:00'])
-  const [customHour, setCustomHour] = useState('')
-  const [customMin, setCustomMin] = useState('')
-  const [showCustomInput, setShowCustomInput] = useState(false)
   const [intervalHours, setIntervalHours] = useState(8)
   const [firstDose, setFirstDose] = useState('08:00')
   const [days, setDays] = useState<number[]>([0, 1, 2, 3, 4, 5, 6])
   const [withFood, setWithFood] = useState(false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const hourRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (query.length < 2) { setResults([]); return }
@@ -62,25 +59,6 @@ export function AddMedicationPage() {
 
   function toggleDay(idx: number) {
     setDays(prev => prev.includes(idx) ? prev.filter(d => d !== idx) : [...prev, idx])
-  }
-
-  function toggleTime(t: string) {
-    setTimes(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t])
-  }
-
-  function removeTime(t: string) {
-    setTimes(prev => prev.filter(x => x !== t))
-  }
-
-  function addCustomTime() {
-    const h = customHour.padStart(2, '0')
-    const m = (customMin || '00').padStart(2, '0')
-    if (!customHour) return
-    const t = `${h}:${m}`
-    if (!times.includes(t)) setTimes(prev => [...prev, t].sort())
-    setCustomHour('')
-    setCustomMin('')
-    setShowCustomInput(false)
   }
 
   const medicationName = selected ? selected.name : query.trim()
@@ -241,53 +219,9 @@ export function AddMedicationPage() {
             ))}
           </div>
 
-          {scheduleType === 'fixed' ? (<>
-            {/* Preset times grid */}
-            <div className="grid grid-cols-4 gap-2 mb-3">
-              {PRESET_TIMES.map(t => (
-                <button key={t} onClick={() => toggleTime(t)}
-                  className={`h-11 text-sm font-semibold rounded-xl border transition ${
-                    times.includes(t)
-                      ? 'bg-[#192830] text-white border-[#192830]'
-                      : 'bg-[#fafaf7] text-[#43474a] border-[#e4e4de] hover:border-[#192830] hover:text-[#192830]'
-                  }`}>{t}</button>
-              ))}
-            </div>
-
-            {times.filter(t => !PRESET_TIMES.includes(t)).length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-3">
-                {times.filter(t => !PRESET_TIMES.includes(t)).map(t => (
-                  <div key={t} className="flex items-center gap-1.5 h-9 pl-3 pr-2 bg-[#192830] text-white text-sm font-semibold rounded-xl">
-                    <Clock size={13} className="opacity-70" />{t}
-                    <button onClick={() => removeTime(t)} className="ml-0.5 opacity-60 hover:opacity-100 transition"><X size={13} /></button>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {showCustomInput ? (
-              <div className="flex items-center gap-2 mt-1">
-                <div className="flex items-center gap-1 flex-1 h-11 border border-[#49654d] rounded-xl bg-[#f0f7f1] px-3 shadow-[0_0_0_3px_rgba(73,101,77,0.10)]">
-                  <input ref={hourRef} type="number" min={0} max={23} value={customHour}
-                    onChange={e => setCustomHour(e.target.value.slice(-2))} placeholder="HH"
-                    className="w-8 text-center text-base font-semibold text-[#192830] bg-transparent focus:outline-none placeholder:text-[#b8bbbe] [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" />
-                  <span className="text-base font-bold text-[#9ba0a3]">:</span>
-                  <input type="number" min={0} max={59} value={customMin}
-                    onChange={e => setCustomMin(e.target.value.slice(-2))} placeholder="MM"
-                    onKeyDown={e => e.key === 'Enter' && addCustomTime()}
-                    className="w-8 text-center text-base font-semibold text-[#192830] bg-transparent focus:outline-none placeholder:text-[#b8bbbe] [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" />
-                </div>
-                <button onClick={addCustomTime} className="h-11 px-4 bg-[#192830] text-white text-sm font-semibold rounded-xl hover:opacity-90 transition">Add</button>
-                <button onClick={() => { setShowCustomInput(false); setCustomHour(''); setCustomMin('') }}
-                  className="h-11 w-11 flex items-center justify-center rounded-xl border border-[#e4e4de] text-[#9ba0a3] hover:text-[#43474a] transition"><X size={16} /></button>
-              </div>
-            ) : (
-              <button onClick={() => { setShowCustomInput(true); setTimeout(() => hourRef.current?.focus(), 50) }}
-                className="flex items-center gap-2 h-10 px-3 text-sm font-medium text-[#49654d] rounded-xl border border-dashed border-[#49654d]/40 hover:bg-[#f0f7f1] transition w-full justify-center">
-                <Plus size={15} />Add custom time
-              </button>
-            )}
-          </>) : (
+          {scheduleType === 'fixed' ? (
+            <TimePickerField times={times} onChange={setTimes} />
+          ) : (
             <div className="space-y-3">
               <div className="flex items-center gap-3">
                 <span className="text-sm text-[#43474a]">Every</span>
@@ -353,7 +287,7 @@ export function AddMedicationPage() {
               className={`relative w-12 h-7 rounded-full transition-colors duration-200 ${withFood ? 'bg-[#49654d]' : 'bg-[#d4d7d9]'}`}
             >
               <span
-                className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-200 ${
+                className={`absolute top-1 left-0 w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-200 ${
                   withFood ? 'translate-x-6' : 'translate-x-1'
                 }`}
               />

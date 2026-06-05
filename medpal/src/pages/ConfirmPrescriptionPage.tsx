@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { CheckCircle, AlertTriangle, ExternalLink, ChevronLeft, Plus, Trash2 } from 'lucide-react'
+import { TimePickerField } from '../components/TimePickerField'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import { pt } from '../i18n/pt'
@@ -33,8 +34,6 @@ interface ItemWithCandidates extends PrescriptionItem {
   _times: string[]
   _days: number[]
   _withFood: boolean
-  _customHour: string
-  _customMin: string
   _intervalHours: number
   _firstDose: string
   _startDate: string
@@ -50,8 +49,6 @@ interface ManualItem {
   times: string[]
   days: number[]
   withFood: boolean
-  customHour: string
-  customMin: string
   intervalHours: number
   firstDose: string
   startDate: string
@@ -95,7 +92,6 @@ function scheduleToState(sched: OcrSchedule | null, t0: string): Partial<ItemWit
       _times: ['08:00'],
       _days: ALL_DAYS,
       _withFood: false,
-      _customHour: '', _customMin: '',
       _intervalHours: 8, _firstDose: '08:00',
       _startDate: t0,
       _hasEndDate: false,
@@ -230,22 +226,8 @@ export function ConfirmPrescriptionPage() {
     setItems(prev => prev.map((item, i) => (i === index ? { ...item, ...patch } : item)))
   }
 
-  function toggleItemTime(index: number, t: string) {
-    setItems(prev => prev.map((item, i) => {
-      if (i !== index) return item
-      const times = item._times.includes(t) ? item._times.filter(x => x !== t) : [...item._times, t].sort()
-      return { ...item, _times: times }
-    }))
-  }
-
-  function addItemCustomTime(index: number) {
-    const item = items[index]
-    if (!item._customHour) return
-    const t = `${item._customHour.padStart(2, '0')}:${(item._customMin || '00').padStart(2, '0')}`
-    if (!item._times.includes(t))
-      updateItem(index, { _times: [...item._times, t].sort(), _customHour: '', _customMin: '' })
-    else
-      updateItem(index, { _customHour: '', _customMin: '' })
+  function updateItemTimes(index: number, newTimes: string[]) {
+    setItems(prev => prev.map((item, i) => i === index ? { ...item, _times: newTimes } : item))
   }
 
   function toggleItemDay(index: number, idx: number) {
@@ -263,7 +245,6 @@ export function ConfirmPrescriptionPage() {
       name: '', dosage: '',
       scheduleType: 'fixed',
       times: ['08:00'], days: ALL_DAYS, withFood: false,
-      customHour: '', customMin: '',
       intervalHours: 8, firstDose: '08:00',
       startDate: t0, endDate: addDays(t0, 30), hasEndDate: false,
     }])
@@ -273,22 +254,8 @@ export function ConfirmPrescriptionPage() {
     setManualItems(prev => prev.map(m => (m.id === id ? { ...m, ...patch } : m)))
   }
 
-  function toggleManualTime(id: string, t: string) {
-    setManualItems(prev => prev.map(m => {
-      if (m.id !== id) return m
-      const times = m.times.includes(t) ? m.times.filter(x => x !== t) : [...m.times, t].sort()
-      return { ...m, times }
-    }))
-  }
-
-  function addManualCustomTime(id: string) {
-    const m = manualItems.find(x => x.id === id)
-    if (!m || !m.customHour) return
-    const t = `${m.customHour.padStart(2, '0')}:${(m.customMin || '00').padStart(2, '0')}`
-    updateManualItem(id, {
-      times: m.times.includes(t) ? m.times : [...m.times, t].sort(),
-      customHour: '', customMin: '',
-    })
+  function updateManualTimes(id: string, newTimes: string[]) {
+    updateManualItem(id, { times: newTimes })
   }
 
   function toggleManualDay(id: string, idx: number) {
@@ -471,14 +438,10 @@ export function ConfirmPrescriptionPage() {
               </div>
               <ScheduleFields
                 scheduleType={m.scheduleType} times={m.times} days={m.days} withFood={m.withFood}
-                customHour={m.customHour} customMin={m.customMin}
                 intervalHours={m.intervalHours} firstDose={m.firstDose}
                 startDate={m.startDate} endDate={m.endDate} hasEndDate={m.hasEndDate}
                 onScheduleTypeChange={v => updateManualItem(m.id, { scheduleType: v })}
-                onToggleTime={t => toggleManualTime(m.id, t)}
-                onAddCustomTime={() => addManualCustomTime(m.id)}
-                onCustomHourChange={v => updateManualItem(m.id, { customHour: v })}
-                onCustomMinChange={v => updateManualItem(m.id, { customMin: v })}
+                onTimesChange={newTimes => updateManualTimes(m.id, newTimes)}
                 onToggleDay={idx => toggleManualDay(m.id, idx)}
                 onToggleWithFood={() => updateManualItem(m.id, { withFood: !m.withFood })}
                 onIntervalHoursChange={v => updateManualItem(m.id, { intervalHours: v })}
@@ -540,14 +503,10 @@ export function ConfirmPrescriptionPage() {
 
               <ScheduleFields
                 scheduleType={item._scheduleType} times={item._times} days={item._days} withFood={item._withFood}
-                customHour={item._customHour} customMin={item._customMin}
                 intervalHours={item._intervalHours} firstDose={item._firstDose}
                 startDate={item._startDate} endDate={item._endDate} hasEndDate={item._hasEndDate}
                 onScheduleTypeChange={v => updateItem(index, { _scheduleType: v })}
-                onToggleTime={t => toggleItemTime(index, t)}
-                onAddCustomTime={() => addItemCustomTime(index)}
-                onCustomHourChange={v => updateItem(index, { _customHour: v })}
-                onCustomMinChange={v => updateItem(index, { _customMin: v })}
+                onTimesChange={newTimes => updateItemTimes(index, newTimes)}
                 onToggleDay={idx => toggleItemDay(index, idx)}
                 onToggleWithFood={() => updateItem(index, { _withFood: !item._withFood })}
                 onIntervalHoursChange={v => updateItem(index, { _intervalHours: v })}
@@ -581,18 +540,13 @@ interface ScheduleFieldsProps {
   times: string[]
   days: number[]
   withFood: boolean
-  customHour: string
-  customMin: string
   intervalHours: number
   firstDose: string
   startDate: string
   endDate: string
   hasEndDate: boolean
   onScheduleTypeChange: (v: ScheduleType) => void
-  onToggleTime: (t: string) => void
-  onAddCustomTime: () => void
-  onCustomHourChange: (v: string) => void
-  onCustomMinChange: (v: string) => void
+  onTimesChange: (times: string[]) => void
   onToggleDay: (idx: number) => void
   onToggleWithFood: () => void
   onIntervalHoursChange: (v: number) => void
@@ -624,31 +578,7 @@ function ScheduleFields(p: ScheduleFieldsProps) {
         </div>
 
         {p.scheduleType === 'fixed' ? (
-          <div className="flex flex-wrap gap-2">
-            {DEFAULT_TIMES.map(t => (
-              <button key={t} type="button" onClick={() => p.onToggleTime(t)}
-                className={`px-5 py-2.5 text-base font-semibold rounded-lg border-[1.5px] transition min-h-[48px] ${
-                  p.times.includes(t) ? 'bg-[#192830] text-white border-[#192830]' : 'bg-white text-[#192830] border-[#c3c7ca] hover:bg-[#f4f4f0]'
-                }`}>{t}</button>
-            ))}
-            {p.times.filter(t => !DEFAULT_TIMES.includes(t)).map(t => (
-              <button key={t} type="button" onClick={() => p.onToggleTime(t)}
-                className="px-5 py-2.5 text-base font-semibold rounded-lg border-[1.5px] bg-[#192830] text-white border-[#192830] min-h-[48px]">{t}</button>
-            ))}
-            <div className="flex items-center gap-1.5">
-              <div className="flex items-center gap-1 border-[1.5px] border-[#d0d4d7] rounded-lg bg-white px-3 min-h-[48px] focus-within:border-[#49654d] focus-within:shadow-[0_0_0_3px_rgba(73,101,77,0.12)] transition">
-                <input type="number" min={0} max={23} value={p.customHour}
-                  onChange={e => p.onCustomHourChange(e.target.value.slice(-2))} placeholder="HH"
-                  className="w-9 text-center text-base font-semibold text-[#192830] bg-transparent focus:outline-none placeholder:text-[#c3c7ca] [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" />
-                <span className="text-base font-semibold text-[#73787b]">:</span>
-                <input type="number" min={0} max={59} value={p.customMin}
-                  onChange={e => p.onCustomMinChange(e.target.value.slice(-2))} placeholder="MM"
-                  className="w-9 text-center text-base font-semibold text-[#192830] bg-transparent focus:outline-none placeholder:text-[#c3c7ca] [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" />
-              </div>
-              <button type="button" onClick={p.onAddCustomTime}
-                className="px-4 text-xl font-semibold rounded-lg border-[1.5px] border-[#d0d4d7] bg-white text-[#192830] hover:bg-[#f4f4f0] min-h-[48px] transition">+</button>
-            </div>
-          </div>
+          <TimePickerField times={p.times} onChange={p.onTimesChange} />
         ) : (
           <div className="space-y-3">
             <div className="flex items-center gap-3">
@@ -694,7 +624,7 @@ function ScheduleFields(p: ScheduleFieldsProps) {
         <span className="text-base font-semibold text-[#192830]">{pt.addMedication.withFoodLabel}</span>
         <button type="button" onClick={p.onToggleWithFood}
           className={`relative w-12 h-7 rounded-full transition ${p.withFood ? 'bg-[#49654d]' : 'bg-[#c3c7ca]'}`}>
-          <span className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow transition-transform ${p.withFood ? 'translate-x-6' : 'translate-x-1'}`} />
+          <span className={`absolute top-1 left-0 w-5 h-5 bg-white rounded-full shadow transition-transform ${p.withFood ? 'translate-x-6' : 'translate-x-1'}`} />
         </button>
       </div>
 
@@ -713,7 +643,7 @@ function ScheduleFields(p: ScheduleFieldsProps) {
           </div>
           <button type="button" onClick={p.onToggleHasEndDate}
             className={`relative w-12 h-7 rounded-full transition ${!p.hasEndDate ? 'bg-[#49654d]' : 'bg-[#c3c7ca]'}`}>
-            <span className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow transition-transform ${!p.hasEndDate ? 'translate-x-6' : 'translate-x-1'}`} />
+            <span className={`absolute top-1 left-0 w-5 h-5 bg-white rounded-full shadow transition-transform ${!p.hasEndDate ? 'translate-x-6' : 'translate-x-1'}`} />
           </button>
         </div>
 
