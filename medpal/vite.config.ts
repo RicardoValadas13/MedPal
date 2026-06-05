@@ -8,15 +8,16 @@ export default defineConfig({
     react(),
     tailwindcss(),
     VitePWA({
-      // We maintain public/manifest.webmanifest by hand (linked in index.html)
+      strategies: 'injectManifest',
+      srcDir: 'src',
+      filename: 'sw.ts',
       manifest: false,
-      registerType: 'autoUpdate',
-      workbox: {
-        // Offline shell only: precache the built app shell and static
-        // assets. No runtimeCaching rules on purpose — Supabase data,
-        // auth and Edge Function calls are never cached.
+      injectManifest: {
         globPatterns: ['**/*.{js,css,html,png,svg,webmanifest}'],
-        navigateFallback: '/index.html',
+      },
+      devOptions: {
+        enabled: true,
+        type: 'module',
       },
     }),
   ],

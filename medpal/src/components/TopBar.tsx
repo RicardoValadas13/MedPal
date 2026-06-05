@@ -14,7 +14,7 @@ export function TopBar() {
   const displayName = 'User'
 
   return (
-    <header className="sticky top-0 z-40 bg-[#faf9f5] px-5 pt-5 pb-4">
+    <header className="sticky top-0 z-40 bg-[#faf9f5] px-5 pb-4" style={{ paddingTop: 'max(20px, env(safe-area-inset-top))' }}>
       <div className="flex justify-between items-start">
         <div className="flex items-center gap-3">
           <button
@@ -32,11 +32,14 @@ export function TopBar() {
           <Link
             to="/caregiver"
             aria-label="Caregiver"
-            className="w-10 h-10 flex items-center justify-center rounded-full text-[#192830] hover:bg-[#efeeea] transition-colors active:scale-95 mt-1"
+            className="min-w-[48px] min-h-[48px] flex items-center justify-center rounded-full text-[#192830] hover:bg-[#efeeea] transition-colors active:scale-95"
           >
             <ShieldCheck size={22} strokeWidth={1.8} />
           </Link>
-          <button className="w-10 h-10 flex items-center justify-center rounded-full text-[#192830] hover:bg-[#efeeea] transition-colors active:scale-95 mt-1">
+          <button
+            aria-label="Notifications"
+            className="min-w-[48px] min-h-[48px] flex items-center justify-center rounded-full text-[#192830] hover:bg-[#efeeea] transition-colors active:scale-95"
+          >
             <Bell size={22} strokeWidth={1.8} />
           </button>
         </div>

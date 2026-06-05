@@ -71,7 +71,7 @@ export function SettingsPage() {
       <header className="sticky top-0 z-40 bg-[#faf9f5] px-5 pt-5 pb-4 flex items-center gap-3">
         <button
           onClick={() => (section === 'main' ? navigate(-1) : (setSection('main'), setStatus(null)))}
-          className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-[#efeeea] transition-colors active:scale-95"
+          className="min-w-[48px] min-h-[48px] flex items-center justify-center rounded-full hover:bg-[#efeeea] transition-colors active:scale-95"
         >
           <ChevronLeft size={22} strokeWidth={2} />
         </button>
@@ -84,7 +84,7 @@ export function SettingsPage() {
         {section === 'main' && (
           <>
             {/* Profile card */}
-            <div className="flex items-center gap-4 bg-white rounded-2xl p-4 shadow-sm">
+            <div className="flex items-center gap-4 bg-white rounded-2xl p-4 shadow-sm border border-[#e9e8e4]">
               <div className="w-14 h-14 rounded-full bg-[#cbebcd] flex items-center justify-center text-[#49654d] font-bold text-xl shrink-0">
                 {initial}
               </div>
@@ -96,12 +96,12 @@ export function SettingsPage() {
 
             {/* Account settings */}
             <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-              <p className="px-4 pt-4 pb-2 text-xs font-semibold text-[#43474a] uppercase tracking-wide">
+              <p className="px-4 pt-4 pb-2 text-xs font-semibold text-[#8a8f93] uppercase tracking-widest">
                 Account
               </p>
               <button
                 onClick={() => { setSection('email'); setStatus(null) }}
-                className="w-full flex items-center gap-3 px-4 py-3.5 hover:bg-[#f5f4f0] transition-colors active:bg-[#efeeea]"
+                className="w-full flex items-center gap-3 px-4 min-h-[52px] hover:bg-[#f5f4f0] transition-colors active:bg-[#efeeea]"
               >
                 <Mail size={20} className="text-[#49654d]" strokeWidth={1.8} />
                 <span className="flex-1 text-left text-[#192830] font-medium">Change Email</span>
@@ -110,7 +110,7 @@ export function SettingsPage() {
               <div className="h-px bg-[#efeeea] mx-4" />
               <button
                 onClick={() => { setSection('password'); setStatus(null) }}
-                className="w-full flex items-center gap-3 px-4 py-3.5 hover:bg-[#f5f4f0] transition-colors active:bg-[#efeeea]"
+                className="w-full flex items-center gap-3 px-4 min-h-[52px] hover:bg-[#f5f4f0] transition-colors active:bg-[#efeeea]"
               >
                 <Lock size={20} className="text-[#49654d]" strokeWidth={1.8} />
                 <span className="flex-1 text-left text-[#192830] font-medium">Change Password</span>
@@ -122,10 +122,10 @@ export function SettingsPage() {
             <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
               <button
                 onClick={handleSignOut}
-                className="w-full flex items-center gap-3 px-4 py-3.5 hover:bg-[#fff0f0] transition-colors active:bg-[#ffe0e0]"
+                className="w-full flex items-center gap-3 px-4 min-h-[52px] hover:bg-[#fff5f5] transition-colors active:bg-[#ffe8e8]"
               >
-                <LogOut size={20} className="text-red-500" strokeWidth={1.8} />
-                <span className="flex-1 text-left text-red-500 font-medium">Sign Out</span>
+                <LogOut size={20} className="text-[#ba1a1a]" strokeWidth={1.8} />
+                <span className="flex-1 text-left text-[#ba1a1a] font-medium">Sign Out</span>
               </button>
             </div>
           </>
@@ -168,7 +168,7 @@ export function SettingsPage() {
             </div>
 
             {status && (
-              <p className={`text-sm text-center font-medium ${status.type === 'success' ? 'text-[#49654d]' : 'text-red-500'}`}>
+              <p className={`text-sm text-center font-medium ${status.type === 'success' ? 'text-[#49654d]' : 'text-[#ba1a1a]'}`}>
                 {status.msg}
               </p>
             )}
@@ -204,7 +204,7 @@ export function SettingsPage() {
             </div>
 
             {status && (
-              <p className={`text-sm text-center font-medium ${status.type === 'success' ? 'text-[#49654d]' : 'text-red-500'}`}>
+              <p className={`text-sm text-center font-medium ${status.type === 'success' ? 'text-[#49654d]' : 'text-[#ba1a1a]'}`}>
                 {status.msg}
               </p>
             )}
