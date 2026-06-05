@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Camera, FileText, ArrowRight, X, Loader2, Upload } from 'lucide-react'
+import { Camera, FileText, ArrowRight, X, Loader2, Upload, AlertCircle } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import { pt } from '../i18n/pt'
 import { runOcr, isOcrSupported } from '../lib/ocr'
 
-type UploadState = 'idle' | 'uploading' | 'processing' | 'error'
+type UploadState = 'idle' | 'uploading' | 'processing' | 'invalid' | 'error'
 
 function formatFileName(name: string, maxLen = 36): string {
   if (name.length <= maxLen) return name
@@ -56,6 +56,10 @@ export function UploadPrescriptionPage() {
 
       if (isOcrSupported(file)) {
         const { error: proxyError } = await runOcr(file, prescription.id)
+        if (proxyError === 'not_a_prescription') {
+          setState('invalid')
+          return
+        }
         if (proxyError) throw new Error(proxyError)
       } else {
         const { error: fnError } = await supabase.functions.invoke('extract-prescription', {
@@ -73,12 +77,11 @@ export function UploadPrescriptionPage() {
   }
 
   const isLoading = state === 'uploading' || state === 'processing'
+  const isInvalid = state === 'invalid'
   const isPdf = file?.type === 'application/pdf'
 
   return (
     <div className="px-5 pt-8 pb-6">
-
-
       <h1 className="text-2xl font-semibold tracking-[-0.02em] text-[#192830] mb-1">
         {pt.upload.title}
       </h1>
@@ -88,13 +91,20 @@ export function UploadPrescriptionPage() {
 
       {file ? (
         /* ── File selected ── */
-        <div className="space-y-4 mb-6">
-          <div className="flex items-center gap-4 bg-white border border-[#e9e8e4] rounded-2xl px-5 py-4">
-            <div className={`shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${isPdf ? 'bg-[#d5e5ef]' : 'bg-[#cbebcd]'}`}>
-              <FileText size={24} className={isPdf ? 'text-[#192830]' : 'text-[#49654d]'} />
+        <div className="space-y-3 mb-6">
+          <div className={`flex items-center gap-4 bg-white border rounded-2xl px-5 py-4 transition-colors ${
+            isInvalid ? 'border-[#ba1a1a]' : 'border-[#e9e8e4]'
+          }`}>
+            <div className={`shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${
+              isInvalid ? 'bg-[#ffdad6]' : isPdf ? 'bg-[#d5e5ef]' : 'bg-[#cbebcd]'
+            }`}>
+              {isInvalid
+                ? <AlertCircle size={24} className="text-[#ba1a1a]" />
+                : <FileText size={24} className={isPdf ? 'text-[#192830]' : 'text-[#49654d]'} />
+              }
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-base font-semibold text-[#1b1c1a] truncate">
+              <p className={`text-base font-semibold truncate ${isInvalid ? 'text-[#ba1a1a]' : 'text-[#1b1c1a]'}`}>
                 {formatFileName(file.name)}
               </p>
               <p className="text-sm text-[#73787b] mt-0.5">
@@ -110,6 +120,13 @@ export function UploadPrescriptionPage() {
               </button>
             )}
           </div>
+
+          {isInvalid && (
+            <div className="bg-[#ffdad6] rounded-2xl px-5 py-4">
+              <p className="text-sm font-semibold text-[#ba1a1a]">{pt.upload.errorNotPrescriptionTitle}</p>
+              <p className="text-sm text-[#ba1a1a]/80 mt-0.5">{pt.upload.errorNotPrescription}</p>
+            </div>
+          )}
 
           {isLoading && (
             <div className="bg-[#f4f4f0] rounded-2xl px-5 py-4 space-y-3">
@@ -159,7 +176,6 @@ export function UploadPrescriptionPage() {
             <input type="file" accept="image/*" className="hidden"
               onChange={e => e.target.files?.[0] && setFile(e.target.files[0])} />
           </label>
-
         </div>
       )}
 
@@ -168,7 +184,7 @@ export function UploadPrescriptionPage() {
       )}
 
       <button
-        onClick={handleContinue}
+        onClick={isInvalid ? clearFile : handleContinue}
         disabled={!file || isLoading}
         className="w-full flex items-center justify-center gap-2 min-h-[48px] py-3 bg-[#49654d] text-white text-base font-semibold rounded-lg hover:opacity-[0.88] hover:-translate-y-px active:scale-[0.98] transition disabled:opacity-40 shadow-[0_4px_16px_rgba(73,101,77,0.16)]"
       >
@@ -177,6 +193,8 @@ export function UploadPrescriptionPage() {
             <Loader2 size={18} className="animate-spin" />
             {state === 'uploading' ? 'Uploading…' : 'Processing…'}
           </>
+        ) : isInvalid ? (
+          'Try another file'
         ) : (
           <>
             {pt.upload.continue}
