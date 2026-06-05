@@ -301,12 +301,16 @@ export function AddMedicationPage() {
         )}
       </div>
 
-      {/* Sticky save button */}
-      <div className="fixed bottom-0 left-0 right-0 px-5 pb-6 pt-4 bg-gradient-to-t from-[#f5f5f0] via-[#f5f5f0] to-transparent">
+      {/* Sticky save button — lifted above the bottom nav (z-40) and
+          narrowed so the emergency FAB on the right stays tappable */}
+      <div
+        className="fixed left-1/2 -translate-x-1/2 w-full max-w-[430px] z-30 px-5 pt-4 pb-3 bg-gradient-to-t from-[#f5f5f0] via-[#f5f5f0] to-transparent"
+        style={{ bottom: 'calc(72px + env(safe-area-inset-bottom))' }}
+      >
         <button
           onClick={handleSave}
           disabled={saving || !medicationName || resolvedTimes.length === 0 || days.length === 0}
-          className="w-full h-14 bg-[#192830] text-white text-base font-semibold rounded-2xl hover:opacity-90 active:scale-[0.98] transition disabled:opacity-35 shadow-[0_4px_20px_rgba(25,40,48,0.18)]"
+          className="w-[calc(100%-76px)] h-14 bg-[#192830] text-white text-base font-semibold rounded-2xl hover:opacity-90 active:scale-[0.98] transition disabled:opacity-35 shadow-[0_4px_20px_rgba(25,40,48,0.18)]"
         >
           {saving ? pt.common.loading : pt.addMedication.saveButton}
         </button>
