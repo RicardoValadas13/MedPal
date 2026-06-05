@@ -98,7 +98,7 @@
 
 /* ── QR finale ── */
 .tour-qr-slide { text-align: center; display: flex; flex-direction: column; align-items: center; }
-.tour-qr-title { margin-bottom: clamp(20px, 3vh, 40px); }
+.tour-qr-title { margin-bottom: clamp(12px, 2vh, 26px); }
 .tour-qr-box {
   background: #fff;
   padding: clamp(18px, 2.5vw, 32px);
@@ -106,7 +106,7 @@
   box-shadow: 0 30px 80px rgba(25,40,48,0.22);
   line-height: 0;
 }
-.tour-qr-box svg { width: min(62vh, 82vw); height: auto; display: block; }
+.tour-qr-box svg { width: min(52vh, 78vw); height: auto; display: block; }
 .tour-qr-url {
   display: inline-block;
   margin-top: 22px;
