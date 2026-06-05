@@ -128,6 +128,15 @@ function DoseRow({ dose, now, marking, onMark, dimmed }: DoseRowProps) {
         <div className="w-7 h-7 rounded-full bg-[#cbebcd] border-2 border-[#49654d] flex items-center justify-center shrink-0 mt-1.5">
           <Check size={14} className="text-[#49654d]" strokeWidth={2.5} />
         </div>
+      ) : isOverdue ? (
+        <button
+          onClick={() => onMark(dose)}
+          disabled={!!marking}
+          className="shrink-0 min-h-[44px] px-3 py-2 rounded-xl bg-[#192830] text-white text-xs font-bold active:scale-95 transition-all disabled:opacity-50"
+          aria-label="Mark as taken"
+        >
+          {marking === dose.schedule.id ? <Check size={14} className="text-white" strokeWidth={2.5} /> : 'Take'}
+        </button>
       ) : (
         <button
           onClick={() => onMark(dose)}
@@ -140,8 +149,6 @@ function DoseRow({ dose, now, marking, onMark, dimmed }: DoseRowProps) {
               ? 'border-[#49654d] bg-[#cbebcd]'
               : isFuture
               ? 'border-[#dde0e3]'
-              : isOverdue
-              ? 'border-[#f4b8b8] hover:border-[#ba1a1a]'
               : 'border-[#f5c97a] hover:border-[#d97706]'
           }`}>
             {marking === dose.schedule.id && <Check size={14} className="text-[#49654d]" strokeWidth={2.5} />}
@@ -167,15 +174,22 @@ export function HomePage() {
   }, [user])
 
   async function loadTodayMedications() {
-    const today = new Date().toISOString().split('T')[0]
-    const todayDow = new Date().getDay()
+    const now = new Date()
+    const todayDow = now.getDay()
+
+    // Use local midnight so timezone offsets (e.g. UTC+1) don't push
+    // doses from 00:xx into yesterday's UTC range
+    const localMidnight = new Date(now)
+    localMidnight.setHours(0, 0, 0, 0)
+    const localEndOfDay = new Date(now)
+    localEndOfDay.setHours(23, 59, 59, 999)
 
     const [{ data: meds }, { data: scheduleRows }, { data: events }] = await Promise.all([
       supabase.from('user_medications').select('*').eq('user_id', user!.id).eq('is_active', true),
       supabase.from('schedules').select('*'),
       supabase.from('intake_events').select('*')
-        .gte('scheduled_at', `${today}T00:00:00`)
-        .lte('scheduled_at', `${today}T23:59:59`),
+        .gte('scheduled_at', localMidnight.toISOString())
+        .lte('scheduled_at', localEndOfDay.toISOString()),
     ])
 
     if (!meds) { setLoading(false); return }
@@ -206,14 +220,19 @@ export function HomePage() {
   async function handleMarkTaken(dose: ScheduledDose) {
     if (dose.taken || marking) return
     setMarking(dose.schedule.id)
-    const now = new Date().toISOString()
-    await supabase.from('intake_events').insert({
+    const respondedAt = new Date().toISOString()
+    const { error } = await supabase.from('intake_events').insert({
       user_medication_id: dose.med.id,
       schedule_id: dose.schedule.id,
       scheduled_at: dose.scheduledAt.toISOString(),
       status: 'taken',
-      responded_at: now,
+      responded_at: respondedAt,
     })
+    if (error) {
+      console.error('Mark taken failed:', error)
+      setMarking(null)
+      return
+    }
     await loadTodayMedications()
     setMarking(null)
   }
