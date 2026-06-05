@@ -9,6 +9,7 @@ import { ConfirmPrescriptionPage } from './pages/ConfirmPrescriptionPage'
 import { MedicationsPage } from './pages/MedicationsPage'
 import { AddMedicationPage } from './pages/AddMedicationPage'
 import { EditMedicationPage } from './pages/EditMedicationPage'
+import { MedicationGuidePage } from './pages/MedicationGuidePage'
 import { CheckinPage } from './pages/CheckinPage'
 import { SettingsPage } from './pages/SettingsPage'
 import { ChatPage } from './pages/ChatPage'
@@ -29,6 +30,7 @@ function AppRoutes() {
         <Route path="/medications" element={<MedicationsPage />} />
         <Route path="/medications/add" element={<AddMedicationPage />} />
         <Route path="/medications/:id/edit" element={<EditMedicationPage />} />
+        <Route path="/medications/:id/guide" element={<MedicationGuidePage />} />
         <Route path="/checkin" element={<CheckinPage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/assistant" element={<ChatPage />} />

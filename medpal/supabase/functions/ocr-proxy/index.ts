@@ -100,6 +100,7 @@ serve(async (req) => {
     if (Array.isArray(ocr.items) && ocr.items.length > 0) {
       const rows = ocr.items.map((item: {
         name: string
+        description: string | null
         dosage: string | null
         duration_days: number | null
         schedule: OcrSchedule | null
@@ -114,6 +115,7 @@ serve(async (req) => {
         return {
           prescription_id: prescriptionId,
           extracted_name: item.name,
+          description: item.description ?? null,
           extracted_dosage: item.dosage ?? null,
           extracted_form: null,
           quantity: null,
