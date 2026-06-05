@@ -173,17 +173,33 @@ export default function App() {
   // above the target don't throw off the landing position.
   useEffect(() => {
     const hash = window.location.hash
-    if (hash === '#tour') { setShowTour(true); return }
-    if (hash.length > 1) {
+    let onLoad
+    if (hash === '#tour') {
+      setShowTour(true)
+    } else if (hash.length > 1) {
       const scrollToTarget = () => {
         const el = document.getElementById(decodeURIComponent(hash.slice(1)))
         if (el) el.scrollIntoView({ behavior: 'auto', block: 'start' })
       }
       requestAnimationFrame(() => setTimeout(scrollToTarget, 0))
-      window.addEventListener('load', scrollToTarget, { once: true })
-      return () => window.removeEventListener('load', scrollToTarget)
+      onLoad = scrollToTarget
+      window.addEventListener('load', onLoad, { once: true })
+    }
+    // Open the tour whenever the URL hash becomes #tour (shared link, back/forward).
+    const onHashChange = () => { if (window.location.hash === '#tour') setShowTour(true) }
+    window.addEventListener('hashchange', onHashChange)
+    return () => {
+      window.removeEventListener('hashchange', onHashChange)
+      if (onLoad) window.removeEventListener('load', onLoad)
     }
   }, [])
+
+  const closeTour = () => {
+    setShowTour(false)
+    if (window.location.hash === '#tour') {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search)
+    }
+  }
 
   // Reveal elements as they scroll into view (skipped when reduced motion is preferred).
   useEffect(() => {
@@ -228,7 +244,7 @@ export default function App() {
     <div className="app">
       {showQR && <QRModal onClose={() => setShowQR(false)} />}
       {showReport && <ReportModal onClose={() => setShowReport(false)} />}
-      {showTour && <Tour onClose={() => setShowTour(false)} />}
+      {showTour && <Tour onClose={closeTour} />}
       {/* NAV */}
       <nav className="nav">
         <div className="nav-inner container">
@@ -238,7 +254,7 @@ export default function App() {
           <div className="nav-links">
             {NAV_LINKS.map(l => <a key={l.href} href={l.href}>{l.label}</a>)}
           </div>
-          <button className="btn btn-ghost btn-sm nav-tour" onClick={() => setShowTour(true)}>Guided tour</button>
+          <a href="#tour" className="btn btn-ghost btn-sm nav-tour" onClick={() => setShowTour(true)}>Guided tour</a>
           <a href="#download" className="btn btn-primary btn-sm nav-cta">Get Started</a>
           <button
             className={`nav-burger ${menuOpen ? 'is-open' : ''}`}
@@ -254,7 +270,7 @@ export default function App() {
             {NAV_LINKS.map(l => (
               <a key={l.href} href={l.href} onClick={() => setMenuOpen(false)}>{l.label}</a>
             ))}
-            <button className="nav-mobile-tour" onClick={() => { setMenuOpen(false); setShowTour(true) }}>Guided tour</button>
+            <a href="#tour" className="nav-mobile-tour" onClick={() => { setMenuOpen(false); setShowTour(true) }}>Guided tour</a>
             <a href="#download" className="btn btn-primary nav-mobile-cta" onClick={() => setMenuOpen(false)}>Get Started</a>
           </div>
         )}
