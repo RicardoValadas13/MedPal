@@ -73,6 +73,9 @@ export function CaregiverSettingsPage() {
   const [voiceTestError, setVoiceTestError] = useState(false)
   const testPlaybackRef = useRef<AnnouncementPlayback | null>(null)
 
+  // Demo caregiver call simulation
+  const [testCall, setTestCall] = useState<'idle' | 'calling' | 'done' | 'error'>('idle')
+
   // Stop a running test when leaving the page
   useEffect(() => () => testPlaybackRef.current?.stop(), [])
 
@@ -188,6 +191,27 @@ export function CaregiverSettingsPage() {
         setPinError(pt.caregiver.pinWrong)
       }
     }
+  }
+
+  async function handleTestCall() {
+    if (testCall === 'calling') return
+    setTestCall('calling')
+
+    const { data, error } = await supabase.functions.invoke('caregiver-call-demo')
+    if (error || !(data instanceof Blob) || !data.type.startsWith('audio/')) {
+      setTestCall('error')
+      return
+    }
+
+    const url = URL.createObjectURL(data)
+    const audio = new Audio(url)
+    await new Promise<void>(resolve => {
+      audio.onended = () => resolve()
+      audio.onerror = () => resolve()
+      audio.play().catch(() => resolve())
+    })
+    URL.revokeObjectURL(url)
+    setTestCall('done')
   }
 
   async function handleVoiceTest() {
@@ -437,7 +461,73 @@ export function CaregiverSettingsPage() {
             </p>
           )}
         </div>
+
+        {/* Demo: simulated caregiver call (orange — test, not a real emergency) */}
+        <div className="bg-white rounded-2xl border border-[#c3c7ca]/40 px-4 py-4">
+          <button
+            onClick={handleTestCall}
+            disabled={testCall === 'calling'}
+            className="w-full min-h-[52px] flex items-center justify-center gap-2 rounded-xl text-base font-semibold bg-[#ea580c] text-white border-b-4 border-[#9a3412] hover:opacity-[0.92] active:translate-y-[2px] active:border-b-2 transition disabled:opacity-60"
+          >
+            {pt.caregiver.testCallButton}
+          </button>
+          <p className="text-sm text-[#43474a] mt-2">{pt.caregiver.testCallHint}</p>
+        </div>
       </section>
+
+      {testCall !== 'idle' && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-6"
+        >
+          <div className="w-full max-w-[340px] bg-white rounded-3xl p-6 text-center shadow-2xl">
+            {testCall === 'calling' && (
+              <>
+                <div className="w-16 h-16 mx-auto rounded-full bg-[#ffdbd2] flex items-center justify-center mb-4">
+                  <span className="text-3xl animate-pulse">📞</span>
+                </div>
+                <p className="text-xl font-bold text-[#192830] mb-1">
+                  {pt.caregiver.testCallCalling}
+                </p>
+                <p className="text-base text-[#43474a]">
+                  {pt.caregiver.testCallCallingTo}{' '}
+                  {contacts[0]?.name?.trim() || 'Thomas Müller'}…
+                </p>
+              </>
+            )}
+            {testCall === 'done' && (
+              <>
+                <div className="w-16 h-16 mx-auto rounded-full bg-[#cbebcd] flex items-center justify-center mb-4">
+                  <ShieldCheck size={30} className="text-[#49654d]" aria-hidden />
+                </div>
+                <p className="text-xl font-bold text-[#192830] mb-4">
+                  ✅ {pt.caregiver.testCallDone}
+                </p>
+                <button
+                  onClick={() => setTestCall('idle')}
+                  className="w-full min-h-[52px] bg-[#192830] text-white text-base font-semibold rounded-xl hover:opacity-[0.88] transition"
+                >
+                  {pt.caregiver.testCallClose}
+                </button>
+              </>
+            )}
+            {testCall === 'error' && (
+              <>
+                <p className="text-base font-semibold text-[#ba1a1a] mb-4">
+                  {pt.caregiver.testCallError}
+                </p>
+                <button
+                  onClick={() => setTestCall('idle')}
+                  className="w-full min-h-[52px] bg-[#efeeea] text-[#192830] text-base font-semibold rounded-xl hover:bg-[#e9e8e4] transition"
+                >
+                  {pt.caregiver.testCallClose}
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Family contacts */}
       <section>
