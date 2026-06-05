@@ -204,14 +204,22 @@ export function MedicationsPage() {
             <h2 className="text-display-lg font-bold tracking-[-0.02em] text-[#192830]">My Meds</h2>
             <p className="text-body-md text-[#43474a] mt-1">Your digital health cabinet.</p>
           </div>
-          {hasAny && (
-            <button
-              onClick={() => window.print()}
-              className="meds-no-print flex items-center gap-1.5 px-3 min-h-[40px] rounded-xl border border-[#e9e8e4] text-xs font-semibold text-[#43474a] hover:bg-[#efeeea] transition active:scale-95 shrink-0 mt-1"
+          <div className="meds-no-print flex items-center gap-2 shrink-0 mt-1">
+            <Link
+              to="/medications/add"
+              className="flex items-center gap-1.5 px-3 min-h-[40px] rounded-xl bg-[#192830] text-white text-xs font-semibold hover:opacity-90 transition active:scale-95"
             >
-              <Download size={14} /> Export
-            </button>
-          )}
+              <Plus size={14} /> Add
+            </Link>
+            {hasAny && (
+              <button
+                onClick={() => window.print()}
+                className="flex items-center gap-1.5 px-3 min-h-[40px] rounded-xl border border-[#e9e8e4] text-xs font-semibold text-[#43474a] hover:bg-[#efeeea] transition active:scale-95"
+              >
+                <Download size={14} /> Export
+              </button>
+            )}
+          </div>
         </div>
 
         {loading ? (
@@ -292,16 +300,9 @@ export function MedicationsPage() {
       </div>
 
       <div
-        className="meds-no-print fixed z-40 right-5 flex items-center gap-3"
+        className="meds-no-print fixed z-40 right-5"
         style={{ bottom: 'calc(84px + env(safe-area-inset-bottom))' }}
       >
-        <Link
-          to="/medications/add"
-          className="w-14 h-14 bg-white border border-[#e9e8e4] rounded-full flex items-center justify-center shadow-md hover:bg-[#f4f4f0] active:scale-95 transition"
-          title="Add medication manually"
-        >
-          <Plus size={22} className="text-[#192830]" />
-        </Link>
         <Link
           to="/prescriptions/upload"
           data-walkthrough="medications-scan"
