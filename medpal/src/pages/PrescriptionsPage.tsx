@@ -60,21 +60,23 @@ export function PrescriptionsPage() {
             return (
               <Link
                 key={p.id}
-                to={p.status === 'extracted' ? `/prescriptions/${p.id}/confirm` : '#'}
-                className="flex items-center gap-md bg-[#ffffff] rounded-xl p-sm border border-[#c3c7ca]/30 shadow-sm hover:shadow-[0_8px_32px_rgba(25,40,48,0.08)] hover:-translate-y-0.5 transition"
+                to={p.status === 'extracted' ? `/prescriptions/${p.id}/confirm` : '/prescriptions'}
+                className={`flex items-center gap-3 bg-white rounded-2xl px-4 min-h-[72px] border border-[#e9e8e4] shadow-sm transition-all ${p.status === 'extracted' ? 'hover:shadow-md hover:-translate-y-0.5 active:scale-[0.99] cursor-pointer' : 'cursor-default'}`}
               >
-                <div className="w-10 h-10 bg-[#f4f4f0] rounded-xl flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 bg-[#f4f3f0] rounded-xl flex items-center justify-center shrink-0">
                   <FileText size={20} className="text-[#43474a]" />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-label-lg font-semibold text-[#1b1c1a] truncate">
+                <div className="flex-1 min-w-0 py-4">
+                  <p className="text-sm font-semibold text-[#192830] truncate">
                     {p.doctor_name ?? 'Prescription'}
                   </p>
-                  <p className="text-caption text-[#43474a]">
-                    {p.prescribed_at ?? new Date(p.created_at).toLocaleDateString('en-GB')}
+                  <p className="text-xs text-[#43474a] mt-0.5">
+                    {p.prescribed_at
+                      ? new Date(p.prescribed_at).toLocaleDateString('pt-PT', { day: '2-digit', month: '2-digit', year: 'numeric' })
+                      : new Date(p.created_at).toLocaleDateString('pt-PT', { day: '2-digit', month: '2-digit', year: 'numeric' })}
                   </p>
                 </div>
-                <span className={`inline-flex items-center gap-1 ${cfg.chip} text-caption font-semibold px-sm py-xs rounded-full shrink-0`}>
+                <span className={`inline-flex items-center gap-1 ${cfg.chip} text-xs font-semibold px-2.5 py-1 rounded-full shrink-0`}>
                   <cfg.Icon size={13} />
                   {cfg.label}
                 </span>

@@ -10,6 +10,21 @@ const DAY_INDICES: Record<typeof DAYS[number], number> = {
   Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6, Sun: 0,
 }
 const DEFAULT_TIMES = ['08:00', '20:00']
+const INTERVAL_OPTIONS = [4, 6, 8, 12, 24]
+
+type ScheduleType = 'fixed' | 'interval'
+
+function intervalToTimes(intervalHours: number, firstDose: string): string[] {
+  const [h, m] = firstDose.split(':').map(Number)
+  const count = Math.floor(24 / intervalHours)
+  const times: string[] = []
+  let minutes = h * 60 + (m || 0)
+  for (let i = 0; i < count; i++) {
+    times.push(`${String(Math.floor(minutes / 60) % 24).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`)
+    minutes += intervalHours * 60
+  }
+  return times
+}
 
 export function EditMedicationPage() {
   const { id } = useParams<{ id: string }>()
@@ -19,9 +34,12 @@ export function EditMedicationPage() {
   const [results, setResults] = useState<Drug[]>([])
   const [selected, setSelected] = useState<Drug | null>(null)
   const [dose, setDose] = useState('')
+  const [scheduleType, setScheduleType] = useState<ScheduleType>('fixed')
   const [times, setTimes] = useState<string[]>([])
   const [customHour, setCustomHour] = useState('')
   const [customMin, setCustomMin] = useState('')
+  const [intervalHours, setIntervalHours] = useState(8)
+  const [firstDose, setFirstDose] = useState('08:00')
   const [days, setDays] = useState<number[]>([0, 1, 2, 3, 4, 5, 6])
   const [withFood, setWithFood] = useState(false)
   const [scheduleIds, setScheduleIds] = useState<string[]>([])
@@ -94,8 +112,12 @@ export function EditMedicationPage() {
 
   const medicationName = selected ? selected.name : query.trim()
 
+  const resolvedTimes = scheduleType === 'interval'
+    ? intervalToTimes(intervalHours, firstDose)
+    : times
+
   async function handleSave() {
-    if (!id || !medicationName || times.length === 0 || days.length === 0) return
+    if (!id || !medicationName || resolvedTimes.length === 0 || days.length === 0) return
     setSaving(true)
     setError(null)
 
@@ -116,7 +138,7 @@ export function EditMedicationPage() {
         await supabase.from('schedules').delete().in('id', scheduleIds)
       }
 
-      for (const time of times) {
+      for (const time of resolvedTimes) {
         const { error: schedError } = await supabase.from('schedules').insert({
           user_medication_id: id,
           time_of_day: time,
@@ -201,57 +223,63 @@ export function EditMedicationPage() {
       {/* Times */}
       <div className="mb-6">
         <label className="block text-base font-semibold text-[#1b1c1a] mb-3">{pt.addMedication.hoursLabel}</label>
-        <div className="flex flex-wrap gap-2">
-          {DEFAULT_TIMES.map(t => (
-            <button
-              key={t}
-              onClick={() => toggleTime(t)}
-              className={`px-5 py-2.5 text-base font-semibold rounded-lg border-[1.5px] transition min-h-[48px] ${
-                times.includes(t) ? 'bg-[#192830] text-white border-[#192830]' : 'bg-white text-[#1b1c1a] border-[#c3c7ca] hover:bg-[#f4f4f0]'
-              }`}
-            >
-              {t}
+
+        {/* Mode toggle */}
+        <div className="flex rounded-xl border border-[#c3c7ca] overflow-hidden mb-3 w-fit">
+          {(['fixed', 'interval'] as ScheduleType[]).map(mode => (
+            <button key={mode} type="button" onClick={() => setScheduleType(mode)}
+              className={`px-4 py-2 text-sm font-semibold transition ${
+                scheduleType === mode ? 'bg-[#192830] text-white' : 'bg-white text-[#43474a] hover:bg-[#f4f4f0]'
+              }`}>
+              {mode === 'fixed' ? 'Fixed times' : 'Every N hours'}
             </button>
           ))}
-          {times.filter(t => !DEFAULT_TIMES.includes(t)).map(t => (
-            <button
-              key={t}
-              onClick={() => toggleTime(t)}
-              className="px-5 py-2.5 text-base font-semibold rounded-lg border-[1.5px] bg-[#192830] text-white border-[#192830] min-h-[48px]"
-            >
-              {t}
-            </button>
-          ))}
-          <div className="flex items-center gap-1.5">
-            <div className="flex items-center gap-1 border-[1.5px] border-[#c3c7ca] rounded-lg bg-white px-3 min-h-[48px] focus-within:border-[#49654d] focus-within:shadow-[0_0_0_3px_rgba(73,101,77,0.12)] transition">
-              <input
-                type="number"
-                min={0}
-                max={23}
-                value={customHour}
-                onChange={e => setCustomHour(e.target.value.slice(-2))}
-                placeholder="HH"
-                className="w-9 text-center text-lg font-semibold text-[#1b1c1a] bg-transparent focus:outline-none placeholder:text-[#c3c7ca] [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-              />
-              <span className="text-lg font-semibold text-[#73787b]">:</span>
-              <input
-                type="number"
-                min={0}
-                max={59}
-                value={customMin}
-                onChange={e => setCustomMin(e.target.value.slice(-2))}
-                placeholder="MM"
-                className="w-9 text-center text-lg font-semibold text-[#1b1c1a] bg-transparent focus:outline-none placeholder:text-[#c3c7ca] [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-              />
-            </div>
-            <button
-              onClick={addCustomTime}
-              className="px-4 text-xl font-semibold rounded-lg border-[1.5px] border-[#c3c7ca] bg-white text-[#1b1c1a] hover:bg-[#f4f4f0] min-h-[48px] transition"
-            >
-              +
-            </button>
-          </div>
         </div>
+
+        {scheduleType === 'fixed' ? (
+          <div className="flex flex-wrap gap-2">
+            {DEFAULT_TIMES.map(t => (
+              <button key={t} onClick={() => toggleTime(t)}
+                className={`px-5 py-2.5 text-base font-semibold rounded-lg border-[1.5px] transition min-h-[48px] ${
+                  times.includes(t) ? 'bg-[#192830] text-white border-[#192830]' : 'bg-white text-[#1b1c1a] border-[#c3c7ca] hover:bg-[#f4f4f0]'
+                }`}>{t}</button>
+            ))}
+            {times.filter(t => !DEFAULT_TIMES.includes(t)).map(t => (
+              <button key={t} onClick={() => toggleTime(t)}
+                className="px-5 py-2.5 text-base font-semibold rounded-lg border-[1.5px] bg-[#192830] text-white border-[#192830] min-h-[48px]">{t}</button>
+            ))}
+            <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1 border-[1.5px] border-[#c3c7ca] rounded-lg bg-white px-3 min-h-[48px] focus-within:border-[#49654d] focus-within:shadow-[0_0_0_3px_rgba(73,101,77,0.12)] transition">
+                <input type="number" min={0} max={23} value={customHour}
+                  onChange={e => setCustomHour(e.target.value.slice(-2))} placeholder="HH"
+                  className="w-9 text-center text-lg font-semibold text-[#1b1c1a] bg-transparent focus:outline-none placeholder:text-[#c3c7ca] [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" />
+                <span className="text-lg font-semibold text-[#73787b]">:</span>
+                <input type="number" min={0} max={59} value={customMin}
+                  onChange={e => setCustomMin(e.target.value.slice(-2))} placeholder="MM"
+                  className="w-9 text-center text-lg font-semibold text-[#1b1c1a] bg-transparent focus:outline-none placeholder:text-[#c3c7ca] [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" />
+              </div>
+              <button onClick={addCustomTime}
+                className="px-4 text-xl font-semibold rounded-lg border-[1.5px] border-[#c3c7ca] bg-white text-[#1b1c1a] hover:bg-[#f4f4f0] min-h-[48px] transition">+</button>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <span className="text-base text-[#43474a]">Every</span>
+              <select value={intervalHours} onChange={e => setIntervalHours(Number(e.target.value))}
+                className="min-h-[48px] px-4 py-2 text-base font-semibold rounded-lg border-[1.5px] border-[#c3c7ca] bg-white text-[#1b1c1a] focus:outline-none focus:border-[#49654d] transition">
+                {INTERVAL_OPTIONS.map(h => <option key={h} value={h}>{h}h</option>)}
+              </select>
+              <span className="text-base text-[#43474a]">hours</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-base text-[#43474a]">First dose</span>
+              <input type="time" value={firstDose} onChange={e => setFirstDose(e.target.value)}
+                className="min-h-[48px] px-4 py-2 text-base font-semibold rounded-lg border-[1.5px] border-[#c3c7ca] bg-white text-[#1b1c1a] focus:outline-none focus:border-[#49654d] transition" />
+            </div>
+            <p className="text-sm text-[#73787b]">Times: {intervalToTimes(intervalHours, firstDose).join(', ')}</p>
+          </div>
+        )}
       </div>
 
       {/* Days */}
@@ -291,7 +319,7 @@ export function EditMedicationPage() {
 
       <button
         onClick={handleSave}
-        disabled={saving || !medicationName || times.length === 0 || days.length === 0}
+        disabled={saving || !medicationName || resolvedTimes.length === 0 || days.length === 0}
         className="w-full min-h-[48px] py-3 bg-[#192830] text-white text-base font-semibold rounded-lg hover:opacity-[0.88] hover:-translate-y-px active:scale-[0.98] transition disabled:opacity-40 shadow-[0_4px_16px_rgba(25,40,48,0.12)]"
       >
         {saving ? pt.common.loading : 'Save Changes'}
