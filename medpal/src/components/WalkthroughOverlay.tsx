@@ -27,8 +27,9 @@ export function WalkthroughOverlay() {
       if (!currentStep.target) return
       const el = document.querySelector(currentStep.target)
       if (!el) return
-      el.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
-      setTimeout(() => {
+      el.scrollIntoView({ behavior: 'instant', block: 'center' })
+      // Wait two frames so the layout settles after the instant scroll
+      requestAnimationFrame(() => requestAnimationFrame(() => {
         const r = el.getBoundingClientRect()
         setRect(r)
         if (currentStep.position === 'top') {
@@ -36,7 +37,7 @@ export function WalkthroughOverlay() {
         } else {
           setTooltipPos({ top: r.bottom + PAD + GAP })
         }
-      }, 120)
+      }))
     }
 
     if (currentStep.route) {
