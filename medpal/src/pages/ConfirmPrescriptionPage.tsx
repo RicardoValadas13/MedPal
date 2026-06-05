@@ -624,7 +624,7 @@ function ScheduleFields(p: ScheduleFieldsProps) {
         <span className="text-base font-semibold text-[#192830]">{pt.addMedication.withFoodLabel}</span>
         <button type="button" onClick={p.onToggleWithFood}
           className={`relative w-12 h-7 rounded-full transition ${p.withFood ? 'bg-[#49654d]' : 'bg-[#c3c7ca]'}`}>
-          <span className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow transition-transform ${p.withFood ? 'translate-x-6' : 'translate-x-1'}`} />
+          <span className={`absolute top-1 left-0 w-5 h-5 bg-white rounded-full shadow transition-transform ${p.withFood ? 'translate-x-6' : 'translate-x-1'}`} />
         </button>
       </div>
 
@@ -643,7 +643,7 @@ function ScheduleFields(p: ScheduleFieldsProps) {
           </div>
           <button type="button" onClick={p.onToggleHasEndDate}
             className={`relative w-12 h-7 rounded-full transition ${!p.hasEndDate ? 'bg-[#49654d]' : 'bg-[#c3c7ca]'}`}>
-            <span className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow transition-transform ${!p.hasEndDate ? 'translate-x-6' : 'translate-x-1'}`} />
+            <span className={`absolute top-1 left-0 w-5 h-5 bg-white rounded-full shadow transition-transform ${!p.hasEndDate ? 'translate-x-6' : 'translate-x-1'}`} />
           </button>
         </div>
 

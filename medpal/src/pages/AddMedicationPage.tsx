@@ -287,7 +287,7 @@ export function AddMedicationPage() {
               className={`relative w-12 h-7 rounded-full transition-colors duration-200 ${withFood ? 'bg-[#49654d]' : 'bg-[#d4d7d9]'}`}
             >
               <span
-                className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-200 ${
+                className={`absolute top-1 left-0 w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-200 ${
                   withFood ? 'translate-x-6' : 'translate-x-1'
                 }`}
               />

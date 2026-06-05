@@ -272,7 +272,7 @@ export function EditMedicationPage() {
           onClick={() => setWithFood(p => !p)}
           className={`relative w-12 h-7 rounded-full transition ${withFood ? 'bg-[#49654d]' : 'bg-[#c3c7ca]'}`}
         >
-          <span className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow transition-transform ${withFood ? 'translate-x-6' : 'translate-x-1'}`} />
+          <span className={`absolute top-1 left-0 w-5 h-5 bg-white rounded-full shadow transition-transform ${withFood ? 'translate-x-6' : 'translate-x-1'}`} />
         </button>
       </div>
 
