@@ -35,37 +35,38 @@ Deno.serve(async (req) => {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!
     const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!
 
-    // User-scoped client — RLS restricts all reads to the caller's rows.
-    const authHeader = req.headers.get('Authorization')
-    if (!authHeader) {
-      return new Response(JSON.stringify({ error: 'Missing authorization header' }), {
-        status: 401,
-        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
-      })
-    }
-    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-      global: { headers: { Authorization: authHeader } },
-    })
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+    const DEMO_USER_ID = '00000000-0000-0000-0000-000000000001'
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-    if (!user) {
-      return new Response(JSON.stringify({ error: 'Not authenticated' }), {
-        status: 401,
-        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+    // Hybrid auth (same pattern as chat-agent): real session -> RLS
+    // client; public demo -> demo user via service role.
+    let supabase = createClient(supabaseUrl, supabaseServiceKey)
+    let userId = DEMO_USER_ID
+    const authHeader = req.headers.get('Authorization')
+    if (authHeader) {
+      const userClient = createClient(supabaseUrl, supabaseAnonKey, {
+        global: { headers: { Authorization: authHeader } },
       })
+      const {
+        data: { user },
+      } = await userClient.auth.getUser()
+      if (user) {
+        supabase = userClient
+        userId = user.id
+      }
     }
 
     const [{ data: profile }, { data: account }, { data: contacts }] = await Promise.all([
       supabase
         .from('patient_profiles')
         .select('full_name, address, floor')
+        .eq('id', userId)
         .maybeSingle(),
-      supabase.from('profiles').select('timezone').maybeSingle(),
+      supabase.from('profiles').select('timezone').eq('id', userId).maybeSingle(),
       supabase
         .from('family_contacts')
         .select('name, phone, priority')
+        .eq('user_id', userId)
         .eq('notify_emergency', true)
         .order('priority', { ascending: true }),
     ])
