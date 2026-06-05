@@ -39,29 +39,28 @@ Deno.serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!
     const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     const elevenLabsKey = Deno.env.get('ELEVENLABS_API_KEY')!
     const voiceId = Deno.env.get('ELEVENLABS_VOICE_ID') ?? DEFAULT_VOICE_ID
 
-    // User-scoped client — RLS restricts all reads to the caller's rows.
-    const authHeader = req.headers.get('Authorization')
-    if (!authHeader) {
-      return new Response(JSON.stringify({ error: 'Missing authorization header' }), {
-        status: 401,
-        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
-      })
-    }
-    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-      global: { headers: { Authorization: authHeader } },
-    })
+    const DEMO_USER_ID = '00000000-0000-0000-0000-000000000001'
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-    if (!user) {
-      return new Response(JSON.stringify({ error: 'Not authenticated' }), {
-        status: 401,
-        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+    // Hybrid auth (same pattern as chat-agent): real session -> RLS
+    // client; public demo -> demo user via service role.
+    let supabase = createClient(supabaseUrl, supabaseServiceKey)
+    let userId = DEMO_USER_ID
+    const authHeader = req.headers.get('Authorization')
+    if (authHeader) {
+      const userClient = createClient(supabaseUrl, supabaseAnonKey, {
+        global: { headers: { Authorization: authHeader } },
       })
+      const {
+        data: { user },
+      } = await userClient.auth.getUser()
+      if (user) {
+        supabase = userClient
+        userId = user.id
+      }
     }
 
     // Test mode (caregiver settings) bypasses the toggle so the
@@ -79,6 +78,7 @@ Deno.serve(async (req) => {
       const { data: settings } = await supabase
         .from('caregiver_settings')
         .select('emergency_voice')
+        .eq('user_id', userId)
         .maybeSingle()
       if (settings && !settings.emergency_voice) {
         return new Response(JSON.stringify({ enabled: false }), {
@@ -91,8 +91,9 @@ Deno.serve(async (req) => {
       supabase
         .from('patient_profiles')
         .select('full_name, address, floor')
+        .eq('id', userId)
         .maybeSingle(),
-      supabase.from('profiles').select('locale').maybeSingle(),
+      supabase.from('profiles').select('locale').eq('id', userId).maybeSingle(),
     ])
 
     if (!profile?.full_name || !profile?.address) {
