@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import {
   ScanLine, MoreVertical, Pencil, Trash2, Utensils,
   Download, ChevronDown, ChevronUp, Sunrise, Sun, Sunset,
-  Moon, Plus, History, Pill,
+  Moon, Plus, History, Pill, type LucideIcon,
 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
@@ -16,7 +16,7 @@ interface MedicationWithSchedule extends UserMedication {
 
 type SlotKey = 'morning' | 'afternoon' | 'evening' | 'night'
 
-const SLOTS: { key: SlotKey; label: string; Icon: React.ComponentType<{ size?: number; className?: string }>; iconColor: string }[] = [
+const SLOTS: { key: SlotKey; label: string; Icon: LucideIcon; iconColor: string }[] = [
   { key: 'morning',   label: 'Morning',   Icon: Sunrise, iconColor: '#d97706' },
   { key: 'afternoon', label: 'Afternoon', Icon: Sun,     iconColor: '#2563eb' },
   { key: 'evening',   label: 'Evening',   Icon: Sunset,  iconColor: '#ea580c' },
