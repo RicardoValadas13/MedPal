@@ -56,6 +56,8 @@ export const pt = {
     processing: 'Processing prescription...',
     errorUpload: 'Error uploading file. Please try again.',
     errorExtract: 'Could not extract prescription. Please check the image.',
+    errorNotPrescriptionTitle: 'Document not recognized',
+    errorNotPrescription: 'This doesn\'t appear to be a prescription. Please upload a document from your doctor.',
   },
   // Confirmation gate
   confirm: {

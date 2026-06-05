@@ -18,7 +18,11 @@ export async function runOcr(
 
   if (!res.ok) {
     const body = await res.json().catch(() => ({ error: res.statusText }))
-    return { error: body?.error ?? `OCR proxy error ${res.status}` }
+    const err: string = body?.error ?? `OCR proxy error ${res.status}`
+    if (err === 'not_a_prescription' || err.includes('prescription_type') || err.includes('OCR failed:')) {
+      return { error: 'not_a_prescription' }
+    }
+    return { error: err }
   }
 
   return { error: null }

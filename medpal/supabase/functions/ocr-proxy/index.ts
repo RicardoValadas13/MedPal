@@ -82,6 +82,12 @@ serve(async (req) => {
 
     if (!ocrRes.ok) {
       const text = await ocrRes.text()
+      let parsed: { detail?: string } | null = null
+      try { parsed = JSON.parse(text) } catch { /* ignore */ }
+      const detail = typeof parsed?.detail === 'string' ? parsed.detail : ''
+      if (detail.includes('prescription_type') || detail.startsWith('OCR failed:')) {
+        return json({ error: 'not_a_prescription' }, 422)
+      }
       return json({ error: `OCR API error ${ocrRes.status}: ${text}` }, 502)
     }
 
