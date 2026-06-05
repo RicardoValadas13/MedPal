@@ -296,7 +296,7 @@ export function HomePage() {
 
       {/* Progress bar card */}
       {!loading && totalCount > 0 && (
-        <div className={`rounded-2xl px-4 py-4 ${allDone ? 'bg-[#192830]' : 'bg-white border border-[#e9e8e4] shadow-sm'}`}>
+        <div data-walkthrough="home-progress" className={`rounded-2xl px-4 py-4 ${allDone ? 'bg-[#192830]' : 'bg-white border border-[#e9e8e4] shadow-sm'}`}>
           <div className="flex items-center justify-between mb-3">
             <div>
               {allDone ? (
@@ -450,7 +450,7 @@ export function HomePage() {
 
       {/* Quick actions */}
       {!loading && (
-        <section>
+        <section data-walkthrough="home-quick-actions">
           <h2 className="text-sm font-semibold text-[#43474a] mb-2 px-1">Quick actions</h2>
           <Link
             to="/prescriptions/upload"

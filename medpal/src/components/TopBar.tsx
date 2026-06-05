@@ -1,5 +1,6 @@
-import { Bell, ShieldCheck } from 'lucide-react'
+import { Bell, ShieldCheck, HelpCircle } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useWalkthrough } from '../contexts/WalkthroughContext'
 
 function getGreeting() {
   const h = new Date().getHours()
@@ -10,6 +11,7 @@ function getGreeting() {
 
 export function TopBar() {
   const navigate = useNavigate()
+  const { start } = useWalkthrough()
   const initial = 'U'
   const displayName = 'User'
 
@@ -41,6 +43,13 @@ export function TopBar() {
             className="min-w-[48px] min-h-[48px] flex items-center justify-center rounded-full text-[#192830] hover:bg-[#efeeea] transition-colors active:scale-95"
           >
             <Bell size={22} strokeWidth={1.8} />
+          </button>
+          <button
+            onClick={start}
+            aria-label="Start tour"
+            className="min-w-[48px] min-h-[48px] flex items-center justify-center rounded-full text-[#192830] hover:bg-[#efeeea] transition-colors active:scale-95"
+          >
+            <HelpCircle size={22} strokeWidth={1.8} />
           </button>
         </div>
       </div>

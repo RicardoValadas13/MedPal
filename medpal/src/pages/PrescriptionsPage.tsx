@@ -39,6 +39,7 @@ export function PrescriptionsPage() {
         </div>
         <Link
           to="/prescriptions/upload"
+          data-walkthrough="prescriptions-new"
           className="flex items-center gap-2 px-md py-sm bg-[#192830] text-white text-label-lg font-semibold rounded-lg min-h-[48px] hover:opacity-[0.88] transition shadow-[0_4px_16px_rgba(25,40,48,0.12)]"
         >
           <Plus size={18} />

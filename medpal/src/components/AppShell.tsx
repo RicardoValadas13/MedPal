@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom'
 import { BottomNav } from './BottomNav'
 import { TopBar } from './TopBar'
+import { WalkthroughOverlay } from './WalkthroughOverlay'
 
 export function AppShell() {
   return (
@@ -10,6 +11,7 @@ export function AppShell() {
         <Outlet />
       </main>
       <BottomNav />
+      <WalkthroughOverlay />
     </div>
   )
 }
