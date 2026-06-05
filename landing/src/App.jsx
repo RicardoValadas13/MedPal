@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import './App.css'
 import QRModal, { DEMO_URL } from './QRModal.jsx'
 import ReportModal from './ReportModal.jsx'
+import Tour from './Tour.jsx'
 import { Icon } from './Icons.jsx'
 
 const SCREENS = [
@@ -152,6 +153,12 @@ export default function App() {
 
   const [partnerSubmitted, setPartnerSubmitted] = useState(false)
   const [showReport, setShowReport] = useState(false)
+  const [showTour, setShowTour] = useState(false)
+
+  // Auto-open the guided tour when the page is opened with #tour (handy for presenting).
+  useEffect(() => {
+    if (window.location.hash === '#tour') setShowTour(true)
+  }, [])
 
   // Reveal elements as they scroll into view (skipped when reduced motion is preferred).
   useEffect(() => {
@@ -196,6 +203,7 @@ export default function App() {
     <div className="app">
       {showQR && <QRModal onClose={() => setShowQR(false)} />}
       {showReport && <ReportModal onClose={() => setShowReport(false)} />}
+      {showTour && <Tour onClose={() => setShowTour(false)} />}
       {/* NAV */}
       <nav className="nav">
         <div className="nav-inner container">
@@ -211,6 +219,7 @@ export default function App() {
             <a href="#partnerships">Partners</a>
             <a href="#download">Pricing</a>
           </div>
+          <button className="btn btn-ghost btn-sm nav-tour" onClick={() => setShowTour(true)}>Guided tour</button>
           <a href="#download" className="btn btn-primary btn-sm">Get Started</a>
         </div>
       </nav>
