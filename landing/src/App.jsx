@@ -147,6 +147,17 @@ const PARTNERS = [
   { icon: 'dumbbell', name: 'KineticLab', area: 'Sports nutrition', detail: 'Creatine and electrolyte schedules become smart reminders.' },
 ]
 
+const NAV_LINKS = [
+  { href: '#features', label: 'Features' },
+  { href: '#screens', label: 'App' },
+  { href: '#patients', label: 'Patients' },
+  { href: '#doctors', label: 'Doctors' },
+  { href: '#caregivers', label: 'Caregivers' },
+  { href: '#team', label: 'Team' },
+  { href: '#partnerships', label: 'Partners' },
+  { href: '#download', label: 'Pricing' },
+]
+
 export default function App() {
   const [activeScreen, setActiveScreen] = useState('home')
   const [showQR, setShowQR] = useState(false)
@@ -155,6 +166,7 @@ export default function App() {
   const [partnerSubmitted, setPartnerSubmitted] = useState(false)
   const [showReport, setShowReport] = useState(false)
   const [showTour, setShowTour] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
 
   // Handle the URL hash on load: open the tour for #tour, otherwise scroll to the
   // shared section — re-running after the window fully loads so large images/video
@@ -224,18 +236,28 @@ export default function App() {
             <img className="logo-img" src="/logo.png" alt="" /> MedPal
           </span>
           <div className="nav-links">
-            <a href="#features">Features</a>
-            <a href="#screens">App</a>
-            <a href="#patients">Patients</a>
-            <a href="#doctors">Doctors</a>
-            <a href="#caregivers">Caregivers</a>
-            <a href="#team">Team</a>
-            <a href="#partnerships">Partners</a>
-            <a href="#download">Pricing</a>
+            {NAV_LINKS.map(l => <a key={l.href} href={l.href}>{l.label}</a>)}
           </div>
           <button className="btn btn-ghost btn-sm nav-tour" onClick={() => setShowTour(true)}>Guided tour</button>
-          <a href="#download" className="btn btn-primary btn-sm">Get Started</a>
+          <a href="#download" className="btn btn-primary btn-sm nav-cta">Get Started</a>
+          <button
+            className={`nav-burger ${menuOpen ? 'is-open' : ''}`}
+            onClick={() => setMenuOpen(o => !o)}
+            aria-label="Menu"
+            aria-expanded={menuOpen}
+          >
+            <span /><span /><span />
+          </button>
         </div>
+        {menuOpen && (
+          <div className="nav-mobile">
+            {NAV_LINKS.map(l => (
+              <a key={l.href} href={l.href} onClick={() => setMenuOpen(false)}>{l.label}</a>
+            ))}
+            <button className="nav-mobile-tour" onClick={() => { setMenuOpen(false); setShowTour(true) }}>Guided tour</button>
+            <a href="#download" className="btn btn-primary nav-mobile-cta" onClick={() => setMenuOpen(false)}>Get Started</a>
+          </div>
+        )}
       </nav>
 
       {/* HERO */}
