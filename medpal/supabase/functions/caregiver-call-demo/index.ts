@@ -107,8 +107,13 @@ Deno.serve(async (req) => {
     )
 
     if (!ttsResponse.ok) {
-      const body = await ttsResponse.text()
-      throw new Error(`ElevenLabs API error ${ttsResponse.status}: ${body}`)
+      // ElevenLabs unavailable (quota, plan, account flag) — hand the
+      // script to the client so it can fall back to the browser's
+      // built-in speech synthesis. The demo must never die on stage.
+      console.error(`ElevenLabs error ${ttsResponse.status}: ${await ttsResponse.text()}`)
+      return new Response(JSON.stringify({ fallback: true, script: text, locale }), {
+        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+      })
     }
 
     return new Response(ttsResponse.body, {

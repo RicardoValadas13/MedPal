@@ -198,20 +198,41 @@ export function CaregiverSettingsPage() {
     setTestCall('calling')
 
     const { data, error } = await supabase.functions.invoke('caregiver-call-demo')
-    if (error || !(data instanceof Blob) || !data.type.startsWith('audio/')) {
+    if (error) {
       setTestCall('error')
       return
     }
 
-    const url = URL.createObjectURL(data)
-    const audio = new Audio(url)
-    await new Promise<void>(resolve => {
-      audio.onended = () => resolve()
-      audio.onerror = () => resolve()
-      audio.play().catch(() => resolve())
-    })
-    URL.revokeObjectURL(url)
-    setTestCall('done')
+    if (data instanceof Blob && data.type.startsWith('audio/')) {
+      const url = URL.createObjectURL(data)
+      const audio = new Audio(url)
+      await new Promise<void>(resolve => {
+        audio.onended = () => resolve()
+        audio.onerror = () => resolve()
+        audio.play().catch(() => resolve())
+      })
+      URL.revokeObjectURL(url)
+      setTestCall('done')
+      return
+    }
+
+    // ElevenLabs unavailable — speak the script with the browser's
+    // built-in voice so the demo always completes
+    const payload = data as { fallback?: boolean; script?: string; locale?: string }
+    if (payload?.fallback && payload.script && 'speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(payload.script)
+      utterance.lang = payload.locale?.startsWith('pt') ? 'pt-PT' : 'en-GB'
+      utterance.rate = 0.95
+      await new Promise<void>(resolve => {
+        utterance.onend = () => resolve()
+        utterance.onerror = () => resolve()
+        window.speechSynthesis.speak(utterance)
+      })
+      setTestCall('done')
+      return
+    }
+
+    setTestCall('error')
   }
 
   async function handleVoiceTest() {
