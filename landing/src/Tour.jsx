@@ -6,11 +6,11 @@ import './Tour.css'
 // The opener + a guided run through the best features + a big final QR screen.
 const STOPS = [
   { type: 'title', title: 'Now we have MedPal', sub: 'Care that understands you.' },
-  { type: 'media', title: 'Manage every prescription', sub: 'Scan a paper or PDF prescription and MedPal builds your whole medicine cabinet — no typing.', img: '/screens/meds.png' },
-  { type: 'media', title: 'Reminders & alarms that work', sub: 'A reminder for every dose, refill alerts before you run out, and even a voice call if you miss one.', img: '/screens/today.png' },
-  { type: 'media', title: 'A medical team on call', sub: 'Real doctors and pharmacists, plus an AI assistant that speaks over 100 languages.', img: '/screens/chat.png' },
-  { type: 'media', title: 'Reports for your doctor', sub: 'See adherence at a glance and share your full history in a single tap.', img: '/screens/analytics.png' },
-  { type: 'media', title: 'Peace of mind for family', sub: 'Caregivers get notified when a dose is taken or missed — and before the box runs out.', img: '/screens/caregiver.png' },
+  { type: 'media', title: 'Manage every prescription', sub: 'Take a photo or upload a PDF, and MedPal builds your whole medicine cabinet — no typing.', img: '/screens/upload.png' },
+  { type: 'media', title: 'Reminders & alarms that work', sub: 'A reminder for every dose, refill alerts before you run out, and even a voice call if you miss one.', img: '/screens/home.png' },
+  { type: 'media', title: 'A medical team on call', sub: 'Real doctors and pharmacists, plus an AI assistant that speaks over 100 languages.', img: '/screens/assistant.png' },
+  { type: 'media', title: 'Reports for your doctor', sub: 'See adherence at a glance and share your full prescription history in a single tap.', img: '/screens/prescriptions.png' },
+  { type: 'media', title: 'Peace of mind for family', sub: 'Caregivers get notified when a dose is taken or missed — and before the box runs out.', img: '/screens/yourbox.png' },
   { type: 'media', title: 'The free Smart Box', sub: 'A 28-day pill organiser, included free. Scan it and MedPal checks every slot.', img: '/screens/box1.png' },
   { type: 'qr', title: 'Scan to try MedPal', sub: 'Point your phone camera at the code.' },
 ]
