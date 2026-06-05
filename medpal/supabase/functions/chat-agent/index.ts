@@ -7,8 +7,8 @@ const CORS_HEADERS = {
 
 const HISTORY_LIMIT = 20
 
-const GEMINI_URL =
-  'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent'
+const OPENAI_URL = 'https://api.openai.com/v1/chat/completions'
+const OPENAI_MODEL = 'gpt-4o-mini'
 
 const SYSTEM_PROMPT = `You are the MedPal assistant — a careful, friendly helper inside a medication-management app for patients in Portugal.
 
@@ -20,7 +20,11 @@ Hard rules:
 - If the user describes symptoms that could be an emergency (chest pain, trouble breathing, stroke signs, severe allergic reaction, overdose, self-harm), tell them to call 112 immediately.
 - For anything beyond general information or the user's own data, recommend their doctor or pharmacist.
 - Reply ONLY in English or Portuguese: match the user's language, and default to English if they write in any other language.
-- Be friendly and concise: short paragraphs, plain language, no medical jargon without explanation.`
+- Be friendly and concise: short paragraphs, plain language, no medical jargon without explanation.
+
+Response format — return ONLY a JSON object, nothing else:
+{"reply": "<your answer to the user>", "medication_question": <true|false>}
+Set "medication_question" to true when the user asks about a specific medication — whether they can take it, side effects, dosage, timing, or interactions. Otherwise set it to false.`
 
 // Emergency keyword screen (English + Portuguese). This is a coarse safety
 // net on the user's message — the model is additionally instructed to
@@ -67,42 +71,41 @@ function detectEmergency(text: string): boolean {
   return EMERGENCY_KEYWORDS.some((k) => t.includes(k))
 }
 
-async function askGemini(
+async function askOpenAI(
   apiKey: string,
   systemPrompt: string,
   history: Array<{ role: 'user' | 'assistant'; content: string }>,
   userMessage: string
 ): Promise<string> {
-  const response = await fetch(`${GEMINI_URL}?key=${apiKey}`, {
+  const response = await fetch(OPENAI_URL, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify({
-      system_instruction: {
-        parts: [{ text: systemPrompt }],
-      },
-      contents: [
-        ...history.map((m) => ({
-          role: m.role === 'assistant' ? 'model' : 'user',
-          parts: [{ text: m.content }],
-        })),
-        { role: 'user', parts: [{ text: userMessage }] },
+      model: OPENAI_MODEL,
+      max_completion_tokens: 1024,
+      // JSON mode — the system prompt instructs the {reply,
+      // medication_question} shape
+      response_format: { type: 'json_object' },
+      messages: [
+        { role: 'system', content: systemPrompt },
+        ...history.map((m) => ({ role: m.role, content: m.content })),
+        { role: 'user', content: userMessage },
       ],
-      generationConfig: { maxOutputTokens: 1024 },
     }),
   })
 
   if (!response.ok) {
     const body = await response.text()
-    throw new Error(`Gemini API error ${response.status}: ${body}`)
+    throw new Error(`OpenAI API error ${response.status}: ${body}`)
   }
 
   const data = await response.json()
-  const text: string =
-    data?.candidates?.[0]?.content?.parts
-      ?.map((p: { text?: string }) => p.text ?? '')
-      .join('') ?? ''
+  const text: string = data?.choices?.[0]?.message?.content ?? ''
 
-  if (!text) throw new Error('Empty response from Gemini')
+  if (!text) throw new Error('Empty response from OpenAI')
   return text
 }
 
@@ -162,7 +165,7 @@ Deno.serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!
     const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!
-    const geminiKey = Deno.env.get('GEMINI_API_KEY')!
+    const openaiKey = Deno.env.get('OPENAI_API_KEY')!
 
     // User-scoped client: every query below runs under the caller's JWT,
     // so RLS guarantees we only ever touch this user's rows.
@@ -285,8 +288,8 @@ Deno.serve(async (req) => {
 
     const emergency = detectEmergency(message)
 
-    const reply = await askGemini(
-      geminiKey,
+    const raw = await askOpenAI(
+      openaiKey,
       `${SYSTEM_PROMPT}\n\n${contextBlock}`,
       (history ?? []).map((m) => ({
         role: m.role as 'user' | 'assistant',
@@ -295,18 +298,41 @@ Deno.serve(async (req) => {
       message.trim()
     )
 
+    // Structured output: {reply, medication_question}. Fall back to the
+    // raw text if the model ever returns prose instead of JSON.
+    let reply = raw
+    let medicationQuestion = false
+    try {
+      const parsed = JSON.parse(raw)
+      if (typeof parsed?.reply === 'string' && parsed.reply.trim()) {
+        reply = parsed.reply
+        medicationQuestion = parsed.medication_question === true
+      }
+    } catch {
+      // keep raw text
+    }
+
     // Persist the assistant message, recording which rows informed it
     const { error: assistantMsgError } = await supabase.from('messages').insert({
       conversation_id: conversationId,
       role: 'assistant',
       sender_type: 'agent',
       content: reply,
-      context_refs: { medication_ids: contextMeds.map((m) => m.id), emergency },
+      context_refs: {
+        medication_ids: contextMeds.map((m) => m.id),
+        emergency,
+        medication_question: medicationQuestion,
+      },
     })
     if (assistantMsgError) throw new Error('Failed to save reply')
 
     return new Response(
-      JSON.stringify({ conversation_id: conversationId, reply, emergency }),
+      JSON.stringify({
+        conversation_id: conversationId,
+        reply,
+        emergency,
+        medication_question: medicationQuestion,
+      }),
       { headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } }
     )
   } catch (err) {
