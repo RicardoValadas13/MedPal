@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { CheckCircle, AlertTriangle, ExternalLink, ChevronLeft, Plus, Trash2 } from 'lucide-react'
+import { CheckCircle, AlertTriangle, ExternalLink, ChevronLeft, Plus, Trash2, Save, Loader2 } from 'lucide-react'
 import { TimePickerField } from '../components/TimePickerField'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
@@ -401,7 +401,8 @@ export function ConfirmPrescriptionPage() {
   }
 
   return (
-    <div className="px-5 pt-8 pb-6">
+    <>
+    <div className="px-5 pt-8 pb-[152px]">
       <button onClick={() => navigate(-1)} className="flex items-center gap-1.5 text-base font-medium text-[#43474a] mb-6 min-h-[48px]">
         <ChevronLeft size={18} />{pt.common.back}
       </button>
@@ -522,14 +523,27 @@ export function ConfirmPrescriptionPage() {
         })}
       </div>
 
-      {error && <p className="text-[#ba1a1a] text-base mt-4">{error}</p>}
+    </div>
 
-      <button onClick={handleConfirm}
+    <div
+      className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] px-5 pt-8 z-30"
+      style={{ paddingBottom: 'calc(max(8px, env(safe-area-inset-bottom)) + 80px)', background: 'linear-gradient(to top, #faf9f5 60%, transparent)' }}
+    >
+      {error && (
+        <p className="text-[#ba1a1a] text-sm font-medium text-center mb-2">{error}</p>
+      )}
+      <button
+        onClick={handleConfirm}
         disabled={saving || (items.length === 0 && manualItems.filter(m => m.name.trim()).length === 0)}
-        className="mt-8 w-full min-h-[48px] py-3 bg-[#49654d] text-white text-base font-semibold rounded-lg hover:opacity-[0.88] hover:-translate-y-px active:scale-[0.98] transition disabled:opacity-40 shadow-[0_4px_16px_rgba(25,40,48,0.12)]">
-        {saving ? pt.confirm.confirmingButton : pt.confirm.confirmButton}
+        className="w-full min-h-[56px] flex items-center justify-center gap-2.5 bg-[#49654d] text-white text-base font-bold rounded-2xl active:scale-[0.97] transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed shadow-[0_8px_24px_rgba(73,101,77,0.35)] border-b-[4px] border-[#2e4231] active:border-b-[1px] active:translate-y-[3px]"
+      >
+        {saving
+          ? <><Loader2 size={18} className="animate-spin" />{pt.confirm.confirmingButton}</>
+          : <><Save size={18} strokeWidth={2.2} />{pt.confirm.confirmButton}</>
+        }
       </button>
     </div>
+    </>
   )
 }
 
