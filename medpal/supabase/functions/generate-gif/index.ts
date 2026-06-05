@@ -44,22 +44,30 @@ Deno.serve(async (req) => {
     const actionHash = await hashAction(action)
 
     // Look up (or create) the deduped row for this action.
-    let { data: row } = await supabase
+    let { data: row, error: selErr } = await supabase
       .from('action_gifs')
       .select('*')
       .eq('action_hash', actionHash)
       .maybeSingle()
+    if (selErr) {
+      return json({ status: 'error', error: `DB lookup failed: ${selErr.message}` })
+    }
 
     if (!row) {
-      const { data: inserted, error } = await supabase
+      const { data: inserted, error: insErr } = await supabase
         .from('action_gifs')
         .insert({ action_hash: actionHash, action: action.trim(), status: 'pending' })
         .select()
         .single()
-      // If two requests raced, fall back to the existing row.
-      if (error) {
+      if (insErr) {
+        // Either two requests raced (row now exists) or the insert genuinely
+        // failed. Re-read; if still nothing, surface the real error instead of
+        // dereferencing a null row below.
         const { data: existing } = await supabase
-          .from('action_gifs').select('*').eq('action_hash', actionHash).single()
+          .from('action_gifs').select('*').eq('action_hash', actionHash).maybeSingle()
+        if (!existing) {
+          return json({ status: 'error', error: `DB insert failed: ${insErr.message}` })
+        }
         row = existing
       } else {
         row = inserted
