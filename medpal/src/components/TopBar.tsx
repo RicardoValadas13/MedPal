@@ -21,7 +21,7 @@ export function TopBar() {
   const navigate = useNavigate()
   const { start } = useWalkthrough()
   const { user } = useAuth()
-  const displayName = 'Mary Johnson'
+  const [displayName, setDisplayName] = useState('MedPal User')
   const initial = displayName.split(' ').map(w => w[0]).join('')
   const [imgFailed, setImgFailed] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
@@ -31,10 +31,13 @@ export function TopBar() {
     if (!user) return
     supabase
       .from('profiles')
-      .select('is_admin')
+      .select('is_admin, full_name')
       .eq('id', user.id)
       .maybeSingle()
-      .then(({ data }) => setIsAdmin(data?.is_admin ?? false))
+      .then(({ data }) => {
+        setIsAdmin(data?.is_admin ?? false)
+        if (data?.full_name) setDisplayName(data.full_name)
+      })
   }, [user])
 
   return (
