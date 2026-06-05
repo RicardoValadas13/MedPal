@@ -65,21 +65,38 @@ export default function Tour({ onClose }) {
         )}
 
         {stop.type === 'qr' && (
-          <div className="tour-qr-slide">
+          <div className="tour-qr-slide" onClick={e => e.stopPropagation()}>
             <h2 className="tour-h2 tour-qr-title">{stop.title}</h2>
-            <div className="tour-qr-box">
-              <QRCodeSVG
-                value={DEMO_URL}
-                size={520}
-                bgColor="#ffffff"
-                fgColor="#192830"
-                level="H"
-                includeMargin={false}
-                imageSettings={{ src: '/logo.png', height: 84, width: 42, excavate: true }}
-              />
+            <div className="tour-qr-live">
+              <div className="tour-qr-col">
+                <div className="tour-qr-box">
+                  <QRCodeSVG
+                    value={DEMO_URL}
+                    size={520}
+                    bgColor="#ffffff"
+                    fgColor="#192830"
+                    level="H"
+                    includeMargin={false}
+                    imageSettings={{ src: '/logo.png', height: 84, width: 42, excavate: true }}
+                  />
+                </div>
+                <span className="tour-qr-cap">Scan with your phone</span>
+              </div>
+              <div className="tour-phone-col">
+                <div className="tour-phone">
+                  <span className="tour-phone-notch" />
+                  <iframe
+                    className="tour-phone-screen"
+                    src={DEMO_URL}
+                    title="MedPal live demo"
+                    loading="lazy"
+                    allow="camera; microphone; clipboard-read; clipboard-write"
+                  />
+                </div>
+                <span className="tour-qr-cap">…or follow along live here</span>
+              </div>
             </div>
             <a className="tour-qr-url" href={DEMO_URL} target="_blank" rel="noopener noreferrer">{DEMO_URL}</a>
-            <p className="tour-sub">{stop.sub}</p>
           </div>
         )}
       </div>
