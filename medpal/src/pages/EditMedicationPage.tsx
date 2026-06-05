@@ -10,7 +10,6 @@ const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as const
 const DAY_INDICES: Record<typeof DAYS[number], number> = {
   Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6, Sun: 0,
 }
-const DEFAULT_TIMES = ['08:00', '20:00']
 const INTERVAL_OPTIONS = [4, 6, 8, 12, 24]
 
 type ScheduleType = 'fixed' | 'interval'

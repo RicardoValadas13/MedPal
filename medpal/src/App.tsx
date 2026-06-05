@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './contexts/AuthContext'
+import { WalkthroughProvider } from './contexts/WalkthroughContext'
 import { AppShell } from './components/AppShell'
 import { HomePage } from './pages/HomePage'
 import { PrescriptionsPage } from './pages/PrescriptionsPage'
@@ -40,7 +41,9 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <AppRoutes />
+        <WalkthroughProvider>
+          <AppRoutes />
+        </WalkthroughProvider>
       </AuthProvider>
     </BrowserRouter>
   )

@@ -244,6 +244,7 @@ export function MedicationsPage() {
         <div className="meds-no-print fixed z-40 right-5" style={{ bottom: 'calc(84px + env(safe-area-inset-bottom))' }}>
           <Link
             to="/prescriptions/upload"
+            data-walkthrough="medications-scan"
             className="bg-[#192830] hover:bg-[#2f3e46] text-white rounded-full h-16 pl-md pr-lg flex items-center gap-sm shadow-[0_12px_24px_rgba(47,62,70,0.2)] hover:scale-105 active:scale-95 transition-transform duration-200"
           >
             <ScanLine size={26} />
