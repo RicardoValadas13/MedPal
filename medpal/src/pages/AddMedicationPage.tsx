@@ -129,8 +129,9 @@ export function AddMedicationPage() {
         </h1>
       </div>
 
-      {/* Scrollable content */}
-      <div className="flex-1 overflow-auto px-5 pb-32 space-y-4">
+      {/* Scrollable content — generous bottom padding so the last card
+          and the floating save bar clear the bottom nav (~80px) */}
+      <div className="flex-1 overflow-auto px-5 pb-48 space-y-4">
 
         {/* Search card */}
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
