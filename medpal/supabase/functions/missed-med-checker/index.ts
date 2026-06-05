@@ -170,7 +170,9 @@ Deno.serve(async (req) => {
       // Alerts must be enabled and only critical medications qualify
       if (!settings?.missed_med_alert) continue
       const criticalIds = new Set(settings.critical_med_ids ?? [])
-      const locale = account?.locale ?? 'en'
+      // The caregiver call is always English, regardless of the
+      // patient's app locale — the caregiver's language can differ.
+      const locale = 'en'
 
       for (const event of userEvents) {
         const med = event.user_medications as unknown as {
