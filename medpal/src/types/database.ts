@@ -11,6 +11,7 @@ export interface Database {
           sns_number: string | null
           timezone: string
           locale: string
+          is_admin: boolean
           created_at: string
         }
         Insert: {
@@ -298,31 +299,42 @@ export interface Database {
         Row: {
           id: string
           user_id: string
+          type: 'agent' | 'support'
+          resolved: boolean
           created_at: string
         }
         Insert: {
           user_id: string
+          type?: 'agent' | 'support'
+          resolved?: boolean
         }
-        Update: Record<string, never>
+        Update: {
+          resolved?: boolean
+        }
       }
       messages: {
         Row: {
           id: string
           conversation_id: string
           role: 'user' | 'assistant'
+          sender_type: 'admin' | 'patient' | 'agent'
           content: string
           context_refs: Json | null
+          read: boolean
           created_at: string
         }
         Insert: {
           conversation_id: string
           role: 'user' | 'assistant'
+          sender_type?: 'admin' | 'patient' | 'agent'
           content: string
           context_refs?: Json | null
+          read?: boolean
         }
         Update: {
           content?: string
           context_refs?: Json | null
+          read?: boolean
         }
       }
       patient_profiles: {

@@ -2,10 +2,16 @@ import { useState, useEffect, useRef } from 'react'
 import { Send, MessageCirclePlus } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
+import { EmergencyButton } from '../components/EmergencyButton'
+import { CallProfessionalCard, type NearbyState } from '../components/CallProfessionalCard'
+import { resolvePatientLocation } from '../lib/location'
+import { findNearbyProfessionals } from '../lib/nearbyPlaces'
 import { pt } from '../i18n/pt'
 import type { Message } from '../types/database'
 
-type ChatMessage = Pick<Message, 'role' | 'content'>
+type ChatMessage = Pick<Message, 'role' | 'content'> & {
+  medication_question?: boolean
+}
 
 export function ChatPage() {
   const { user } = useAuth()
@@ -14,7 +20,47 @@ export function ChatPage() {
   const [input, setInput] = useState('')
   const [sending, setSending] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [emergency, setEmergency] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
+
+  // "Call a professional" card — fetched once per session, cached in state
+  const [nearby, setNearby] = useState<NearbyState>({ status: 'idle' })
+  const [lang, setLang] = useState<'en' | 'pt'>('en')
+  const [searchAddress, setSearchAddress] = useState<string | null>(null)
+  const nearbyStartedRef = useRef(false)
+
+  const hasMedicationQuestion = messages.some(
+    m => m.role === 'assistant' && m.medication_question
+  )
+
+  useEffect(() => {
+    if (!hasMedicationQuestion || nearbyStartedRef.current) return
+    nearbyStartedRef.current = true
+
+    void (async () => {
+      setNearby({ status: 'loading' })
+      const [{ data: profile }, { data: account }] = await Promise.all([
+        supabase.from('patient_profiles').select('address').maybeSingle(),
+        supabase.from('profiles').select('locale').maybeSingle(),
+      ])
+      setLang(account?.locale?.startsWith('pt') ? 'pt' : 'en')
+      const address = (profile?.address as string | null) ?? null
+      setSearchAddress(address)
+
+      // Coords stay in memory only — never persisted (privacy)
+      const coords = await resolvePatientLocation(address)
+      if (!coords) {
+        setNearby({ status: 'error' })
+        return
+      }
+      try {
+        const results = await findNearbyProfessionals(coords)
+        setNearby({ status: 'ready', results })
+      } catch {
+        setNearby({ status: 'error' })
+      }
+    })()
+  }, [hasMedicationQuestion])
 
   useEffect(() => {
     if (!user) return
@@ -24,6 +70,7 @@ export function ChatPage() {
       const { data: conversations } = await supabase
         .from('conversations')
         .select('id')
+        .eq('type', 'agent')
         .order('created_at', { ascending: false })
         .limit(1)
 
@@ -32,13 +79,21 @@ export function ChatPage() {
 
       const { data: history } = await supabase
         .from('messages')
-        .select('role, content')
+        .select('role, content, context_refs')
         .eq('conversation_id', latest.id)
         .order('created_at', { ascending: true })
 
       if (cancelled) return
       setConversationId(latest.id)
-      setMessages((history as ChatMessage[]) ?? [])
+      setMessages(
+        (history ?? []).map(m => ({
+          role: m.role as ChatMessage['role'],
+          content: m.content as string,
+          medication_question:
+            (m.context_refs as { medication_question?: boolean } | null)
+              ?.medication_question === true,
+        }))
+      )
     }
 
     loadLatestConversation()
@@ -79,7 +134,15 @@ export function ChatPage() {
     }
 
     setConversationId(data.conversation_id)
-    setMessages(prev => [...prev, { role: 'assistant', content: data.reply }])
+    setEmergency(Boolean(data.emergency))
+    setMessages(prev => [
+      ...prev,
+      {
+        role: 'assistant',
+        content: data.reply,
+        medication_question: data.medication_question === true,
+      },
+    ])
   }
 
   return (
@@ -103,7 +166,14 @@ export function ChatPage() {
         {pt.chat.disclaimer}
       </p>
 
-
+      {emergency && (
+        <div className="mb-4">
+          <p className="text-base font-semibold text-[#93000a] mb-2">
+            {pt.emergency.chatBanner}
+          </p>
+          <EmergencyButton variant="banner" />
+        </div>
+      )}
 
       <div className="flex-1 overflow-y-auto space-y-3 scrollbar-none [&::-webkit-scrollbar]:hidden">
         {messages.length === 0 && !sending && (
@@ -113,7 +183,7 @@ export function ChatPage() {
           </div>
         )}
         {messages.map((m, i) => (
-          <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+          <div key={i} className={`flex flex-col ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
             <div
               className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap ${
                 m.role === 'user'
@@ -123,6 +193,9 @@ export function ChatPage() {
             >
               {m.content}
             </div>
+            {m.role === 'assistant' && m.medication_question && (
+              <CallProfessionalCard state={nearby} lang={lang} searchAddress={searchAddress} />
+            )}
           </div>
         ))}
         {sending && (

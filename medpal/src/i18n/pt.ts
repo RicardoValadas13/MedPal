@@ -16,7 +16,32 @@ export const pt = {
     medications: 'Medications',
     checkin: 'Check-in',
     assistant: 'Assistant',
+    messages: 'Messages',
     yourBox: 'Your Box',
+  },
+  // Support messages (patient)
+  messages: {
+    title: 'Messages',
+    subtitle: 'Support messages from the MedPal team.',
+    empty: 'No messages yet. Write to us below if you need anything.',
+    inputPlaceholder: 'Write a message…',
+    send: 'Send',
+    resolvedNote: 'This conversation was marked as resolved. Reply to reopen it.',
+    adminName: 'MedPal Admin',
+  },
+  // Admin dashboard
+  admin: {
+    title: 'Support inbox',
+    notAdmin: 'You do not have access to this page.',
+    noUsers: 'No users yet.',
+    noMessages: 'No messages yet',
+    unreadSuffix: 'unread',
+    resolve: 'Mark resolved',
+    reopen: 'Reopen',
+    resolvedChip: 'Resolved',
+    inputPlaceholder: 'Reply to the patient…',
+    send: 'Send',
+    backToList: 'All conversations',
   },
   // Upload prescription
   upload: {

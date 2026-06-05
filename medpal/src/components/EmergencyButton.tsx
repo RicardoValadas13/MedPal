@@ -65,15 +65,16 @@ export function EmergencyButton({
 
   const button =
     variant === 'floating' ? (
-      // Sits above the bottom nav (72px) inside the 430px app frame.
-      <div className="fixed bottom-[88px] left-1/2 -translate-x-1/2 w-full max-w-[430px] px-5 z-30 pointer-events-none">
+      // Round FAB pinned to the bottom-right corner of the 430px app
+      // frame, 80px up so it clears the bottom nav.
+      <div className="fixed bottom-[80px] left-1/2 -translate-x-1/2 w-full max-w-[430px] z-50 pointer-events-none flex justify-end pr-5">
         <button
           onClick={openConfirm}
-          aria-label={pt.emergency.confirmTitle}
-          className={`${FACE} animate-emergency-pulse pointer-events-auto w-full min-h-[72px] text-[26px]`}
+          aria-label={`${pt.emergency.button} — ${pt.emergency.confirmTitle}`}
+          className={`${FACE} !rounded-full animate-emergency-pulse pointer-events-auto w-16 h-16 !flex-col !gap-0`}
         >
-          <PhoneCall size={30} strokeWidth={2.5} aria-hidden />
-          {pt.emergency.button}
+          <PhoneCall size={22} strokeWidth={2.5} aria-hidden />
+          <span className="text-[13px] leading-tight">112</span>
         </button>
       </div>
     ) : (

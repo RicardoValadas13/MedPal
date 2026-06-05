@@ -1,7 +1,10 @@
-import { Bell, ShieldCheck, HelpCircle } from 'lucide-react'
-import { useState } from 'react'
+import { Bell, ShieldCheck, HelpCircle, Inbox } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useWalkthrough } from '../contexts/WalkthroughContext'
+import { supabase } from '../lib/supabase'
+import { useAuth } from '../contexts/AuthContext'
+import { pt } from '../i18n/pt'
 
 function getGreeting() {
   const h = new Date().getHours()
@@ -15,9 +18,21 @@ const AVATAR_URL = '/avatar-user.jpg'
 export function TopBar() {
   const navigate = useNavigate()
   const { start } = useWalkthrough()
+  const { user } = useAuth()
   const displayName = 'Mary Johnson'
   const initial = displayName.split(' ').map(w => w[0]).join('')
   const [imgFailed, setImgFailed] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  useEffect(() => {
+    if (!user) return
+    supabase
+      .from('profiles')
+      .select('is_admin')
+      .eq('id', user.id)
+      .maybeSingle()
+      .then(({ data }) => setIsAdmin(data?.is_admin ?? false))
+  }, [user])
 
   return (
     <header className="sticky top-0 z-40 bg-[#faf9f5] px-5 pb-4" style={{ paddingTop: 'max(20px, env(safe-area-inset-top))' }}>
@@ -42,6 +57,15 @@ export function TopBar() {
           </div>
         </div>
         <div className="flex items-center gap-1">
+          {isAdmin && (
+            <Link
+              to="/admin"
+              aria-label={pt.admin.title}
+              className="min-w-[48px] min-h-[48px] flex items-center justify-center rounded-full text-[#192830] hover:bg-[#efeeea] transition-colors active:scale-95"
+            >
+              <Inbox size={22} strokeWidth={1.8} />
+            </Link>
+          )}
           <Link
             to="/caregiver"
             aria-label="Caregiver"

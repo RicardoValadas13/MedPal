@@ -13,6 +13,8 @@ import { CheckinPage } from './pages/CheckinPage'
 import { SettingsPage } from './pages/SettingsPage'
 import { ChatPage } from './pages/ChatPage'
 import { CaregiverSettingsPage } from './pages/CaregiverSettingsPage'
+import { MessagesPage } from './pages/MessagesPage'
+import { AdminPage } from './pages/AdminPage'
 import { AnalyticsPage } from './pages/AnalyticsPage'
 import { YourBoxPage } from './pages/YourBoxPage'
 import { LogAdHocDosePage } from './pages/LogAdHocDosePage'
@@ -33,6 +35,8 @@ function AppRoutes() {
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/assistant" element={<ChatPage />} />
         <Route path="/caregiver" element={<CaregiverSettingsPage />} />
+        <Route path="/messages" element={<MessagesPage />} />
+        <Route path="/admin" element={<AdminPage />} />
         <Route path="/box" element={<YourBoxPage />} />
         <Route path="/box/log" element={<LogAdHocDosePage />} />
         <Route path="*" element={<Navigate to="/" replace />} />

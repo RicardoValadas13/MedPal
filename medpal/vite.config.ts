@@ -8,10 +8,14 @@ export default defineConfig({
     react(),
     tailwindcss(),
     VitePWA({
+      // We maintain public/manifest.webmanifest by hand (linked in index.html)
+      manifest: false,
+      registerType: 'autoUpdate',
+      // Custom SW: offline shell precache plus push and medication
+      // reminder notification handlers.
       strategies: 'injectManifest',
       srcDir: 'src',
       filename: 'sw.ts',
-      manifest: false,
       injectManifest: {
         globPatterns: ['**/*.{js,css,html,png,svg,webmanifest}'],
       },
