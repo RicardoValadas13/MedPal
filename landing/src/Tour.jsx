@@ -78,8 +78,6 @@ export default function Tour({ onClose }) {
                 imageSettings={{ src: '/logo.png', height: 84, width: 42, excavate: true }}
               />
             </div>
-            <a className="tour-qr-url" href={DEMO_URL} target="_blank" rel="noopener noreferrer">{DEMO_URL}</a>
-            <p className="tour-sub">{stop.sub}</p>
           </div>
         )}
       </div>
